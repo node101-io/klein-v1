@@ -4,33 +4,24 @@
   "description": "Klein helps you install, run, and manage your node without the need of technical skills.",
   "main": "app.js",
   "scripts": {
-    "start": "electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/node101-io/klein.git"
+    "url": "git+https://github.com/node101-io/klein-v1.git"
   },
   "author": "node101",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/node101-io/klein/issues"
+    "url": "https://github.com/node101-io/klein-v1/issues"
   },
-  "homepage": "https://github.com/node101-io/klein#readme",
+  "homepage": "https://github.com/node101-io/klein-v1#readme",
   "devDependencies": {
-    "@electron-forge/cli": "^7.2.0",
-    "@electron-forge/maker-deb": "^7.2.0",
-    "@electron-forge/maker-rpm": "^7.2.0",
-    "@electron-forge/maker-squirrel": "^7.2.0",
-    "@electron-forge/maker-zip": "^7.2.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
     "electron": "^28.1.3"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
     "pug": "^3.0.2"
   }
