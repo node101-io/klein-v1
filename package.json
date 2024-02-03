@@ -1,6 +1,7 @@
 {
   "name": "klein",
-  "version": "1.0.0",
+  "productName": "Klein",
+  "version": "0.0.1",
   "description": "Klein helps you install, run, and manage your node without the need of technical skills.",
   "main": "app.js",
   "scripts": {
@@ -11,7 +12,11 @@
     "type": "git",
     "url": "git+https://github.com/node101-io/klein-v1.git"
   },
-  "author": "node101",
+  "author": {
+    "name": "node101",
+    "email": "hello@node101.io",
+    "url": "https://node101.io"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/node101-io/klein-v1/issues"
