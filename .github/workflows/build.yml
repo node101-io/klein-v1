@@ -1,12 +1,6 @@
 name: Build/release
 
-on:
-  push:
-    tags:
-      - "v*"
-  workflow_dispatch:
-
-# on: push
+on: push
 
 jobs:
   release:
