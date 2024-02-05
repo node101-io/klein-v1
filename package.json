@@ -1,12 +1,13 @@
 {
   "name": "klein",
   "productName": "Klein",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Klein helps you install, run, and manage your node without the need of technical skills.",
   "main": "app/electron/main.js",
   "scripts": {
     "start": "electron .",
-    "test": ""
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,9 @@
     "url": "https://github.com/node101-io/klein-v1/issues"
   },
   "homepage": "https://github.com/node101-io/klein-v1#readme",
+  "build": {
+    "appId": "io.node101.klein"
+  },
   "devDependencies": {
     "@wdio/cli": "^8.29.7",
     "@wdio/local-runner": "^8.29.7",
