@@ -24,10 +24,8 @@ jobs:
 
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v1
-        # Only install Snapcraft on Ubuntu
         if: startsWith(matrix.os, 'ubuntu')
         with:
-          # Log in to Snap Store
           snapcraft_token: ${{ secrets.SNAPCRAFT_TOKEN }}
 
       - name: Build/release Electron app
@@ -35,3 +33,4 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           release: true
+          args: '--publish always'
