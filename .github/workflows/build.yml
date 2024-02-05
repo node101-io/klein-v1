@@ -1,10 +1,8 @@
 name: Build/release
 
 on:
-  push:
-    tags:
-      - "v*"
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   release:
@@ -30,7 +28,5 @@ jobs:
           # (No need to define this secret in the repo settings)
           github_token: ${{ secrets.github_token }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: ${{ 1 }}
+          release: true
           args: '--publish always'
