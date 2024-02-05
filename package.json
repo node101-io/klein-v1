@@ -6,7 +6,7 @@
   "main": "app/electron/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "rm -rf ./output/Klein.app ;cd ./output; unzip '*mac-aarch*.zip'; cd -; wdio run ./wdio.conf.js"
+    "test": ""
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "@wdio/mocha-framework": "^8.29.3",
     "@wdio/spec-reporter": "^8.29.7",
     "electron": "^28.1.3",
+    "electron-builder": "^24.9.1",
     "wdio-electron-service": "^6.2.0"
   },
   "dependencies": {
