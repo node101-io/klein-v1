@@ -1,14 +1,15 @@
 const dotenv = require('dotenv');
 const path = require('path');
-const windowStateKeeper = require('electron-window-state');
-const { app, BrowserWindow } = require('electron');
 
-dotenv.config({ path: path.join(__dirname, '.env') });
+const { app, BrowserWindow } = require('electron');
+const windowStateKeeper = require('electron-window-state');
+
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 let mainWindow;
 
-const renderPugFile = require('./utils/renderPugFile');
-// const ipcSSH = require('./ipc/ssh');
+const renderPugFile = require('../src/js/functions/renderPugFile');
+const ipcSSH = require('./modules/ssh');
 
 const createMainWindow = () => {
   let mainWindowState = windowStateKeeper({
@@ -21,9 +22,18 @@ const createMainWindow = () => {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
 
   mainWindowState.manage(mainWindow);
+
+  mainWindow.webContents.on("did-finish-load", () => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
 
   if (process.env.DEV_MODE)
     mainWindow.on("ready-to-show", () => {
@@ -32,6 +42,11 @@ const createMainWindow = () => {
 
   renderPugFile('login/index', {
     page: 'login/index',
+    includes: {
+      external: {
+        js: ['page']
+      }
+    }
   }, (err, path) => {
     if (err)
       return console.error(err);
