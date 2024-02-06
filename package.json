@@ -6,6 +6,7 @@
   "main": "app/electron/main.js",
   "scripts": {
     "start": "electron .",
+    "build": "echo '' > ./resources/temp.html",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
