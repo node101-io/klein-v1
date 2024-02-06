@@ -10,6 +10,9 @@ module.exports = (pugFile, locals, callback) => {
     locals
   );
 
+  if (!fs.existsSync(tempFilePath))
+    fs.mkdirSync(path.dirname(tempFilePath), { recursive: true });
+
   fs.writeFile(tempFilePath, htmlContent, err => {
     if (err)
       return callback(err);
