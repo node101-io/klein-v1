@@ -2,9 +2,12 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 const { app, BrowserWindow } = require('electron');
+const { autoUpdater } = require("electron-updater")
 const windowStateKeeper = require('electron-window-state');
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
+
+autoUpdater.checkForUpdatesAndNotify();
 
 let mainWindow;
 
