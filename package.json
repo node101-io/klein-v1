@@ -1,7 +1,7 @@
 {
   "name": "klein",
   "productName": "Klein",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Klein helps you install, run, and manage your node without the need of technical skills.",
   "main": "app/electron/main.js",
   "scripts": {
