@@ -1,15 +1,26 @@
 const SSH = require('../modules/ssh/ssh');
 
-test('connection to vps', () => {
-  // expect(sum(1, 2)).toBe(3);
-  expect(SSH.connect({
-    username: 'root',
-    host: '',
-    password: ''
-  }, (err, res) => {
-    if (err)
-      return false
+describe('connect', () => {
+  it('should call callback with null and "Connected" on success', done => {
+    SSH.connect({
+      host: '144.91.93.154',
+      username: 'root',
+      password: 'password',
+    }, (err, message) => {
+      expect(err).toBeNull();
+      expect(message).toBe('Connected');
+      done();
+    });
+  });
 
-    return true
-  })).toBe(true);
+  it('should call callback with error on failure', done => {
+    SSH.connect({
+      host: '144.91.93.154',
+      username: 'root',
+      password: 'wrongpassword',
+    }, err => {
+      expect(err).not.toBeNull();
+      done();
+    });
+  });
 });
