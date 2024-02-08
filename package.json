@@ -3,10 +3,9 @@
   "productName": "Klein",
   "version": "0.0.2",
   "description": "Klein helps you install, run, and manage your node without the need of technical skills.",
-  "main": "app/electron/main.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "echo '' > ./resources/temp.html",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -30,7 +29,6 @@
       "app/**/*",
       "build/**/*",
       "node_modules/**/*",
-      "resources/**/*",
       "package.json",
       "yarn.lock"
     ],
@@ -52,7 +50,6 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "electron-updater": "^6.1.7",
-    "electron-window-state": "^5.0.3",
-    "pug": "^3.0.2"
+    "electron-window-state": "^5.0.3"
   }
 }
