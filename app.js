@@ -10,10 +10,8 @@ const session = require('express-session');
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const { app, Tray, Menu, nativeImage, shell } = require('electron');
-const { spawn } = require('child_process');
 
 let tray;
-let nodeAppProcess;
 
 app.whenReady().then(() => {
   app.dock.hide();
@@ -29,15 +27,11 @@ app.whenReady().then(() => {
     {
       label: 'Quit',
       click: () => {
-        if (nodeAppProcess) nodeAppProcess.kill();
         app.quit();
       }
     }
   ]);
   tray.setToolTip('Klein');
-
-  nodeAppProcess = spawn('node', [path.join(__dirname, 'app')]);
-
   tray.setContextMenu(contextMenu);
 });
 
