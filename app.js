@@ -42,9 +42,10 @@ const PORT = process.env.PORT || 3000;
 const MAX_QUERY_LIMIT = 1e3;
 const QUERY_LIMIT = 20;
 
-const loginRouteController = require('./routes/loginRoute.js');
-const homeRouteController = require('./routes/homeRoute.js');
-const nodeRouteController = require('./routes/nodeRoute.js');
+const loginRouteController = require('./routes/loginRoute');
+const homeRouteController = require('./routes/homeRoute');
+const nodeRouteController = require('./routes/nodeRoute');
+const sshRouteController = require('./routes/sshRoute');
 
 expressApp.set('views', path.join(__dirname, 'views'));
 expressApp.set('view engine', 'pug');
@@ -88,6 +89,7 @@ expressApp.get('/', (req, res) => {
 expressApp.use('/login', loginRouteController);
 expressApp.use('/home', homeRouteController);
 expressApp.use('/node', nodeRouteController);
+expressApp.use('/ssh', sshRouteController);
 
 server.listen(PORT, () => {
   console.log(`Server is on port ${PORT} and is running.`);
