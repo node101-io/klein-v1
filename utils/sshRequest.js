@@ -1,21 +1,13 @@
-const fs = require('fs');
+const { readFileSync } = require('fs');
 const os = require('os');
 const path = require('path');
-const ssh2 = require('ssh2');
+const { Client, utils } = require('ssh2');
 
 const TYPE_VALUES = ['connect', 'disconnect', 'exec', 'stream'];
+const privateKeyPath = path.join(os.homedir(), '.ssh', 'id_rsa');
 
-const conn = new ssh2.Client();
-
-// leave this for now, will implement later
-// class SSHConnection {
-//   constructor(id, client) {
-//     this.id = id;
-//     this.client = client;
-//     this.lastSeenAt = Date.now();
-//   };
-// };
-
+const conn = new Client();
+let uptimeIntervalId = null;
 
 const IsSSHKeyEncrypted = (privateKey) => {
   const parsedKey = utils.parseKey(privateKey);
@@ -29,7 +21,7 @@ const IsSSHKeyEncrypted = (privateKey) => {
     return parsedKey.message.includes('Encrypted private key detected, but no passphrase given');
   } else {
     return false;
-  };
+  }
 };
 
 const getAuthMethod = (data) => {
@@ -43,7 +35,35 @@ const getAuthMethod = (data) => {
       auth.passphrase = data.passphrase;
 
     return auth;
+  }
+};
+
+const startUptimeChecks = (callback) => {
+  const checkUptime = () => {
+    conn.exec('uptime', (err, stream) => {
+      if (err) {
+        callback(err, null);
+        return;
+      };
+
+      let stdout = '';
+
+      stream.on('data', data => {
+        stdout += data;
+      }).on('close', () => {
+        callback(null, stdout.trim());
+      });
+    });
   };
+
+  uptimeIntervalId = setInterval(checkUptime, 10000);
+};
+
+const stopUptimeChecks = () => {
+  if (uptimeIntervalId) {
+    clearInterval(uptimeIntervalId);
+    uptimeIntervalId = null;
+  }
 };
 
 module.exports = (type, data, callback) => {
@@ -55,8 +75,16 @@ module.exports = (type, data, callback) => {
 
   if (type == 'connect') {
     conn.on('ready', () => {
+      startUptimeChecks((err, uptime) => {
+        if (err) {
+          console.error('Uptime check error:', err);
+        } else {
+          console.log('Server uptime:', uptime);
+        };
+      });
       callback(null, 'Connected');
     }).on('error', err => {
+      stopUptimeChecks();
       callback(err);
     }).connect({
       host: data.host,
@@ -65,23 +93,22 @@ module.exports = (type, data, callback) => {
       ...getAuthMethod(data)
     });
   } else if (type == 'disconnect') {
+    stopUptimeChecks();
     conn.end();
-    callback();
+    callback(null, 'Disconnected');
   } else if (type == 'exec') {
     conn.exec(data.command, (err, stream) => {
       if (err) return callback(err);
 
       let stdout = '';
-
+      
       stream.on('data', data => {
         stdout += data;
-      });
-      
-      stream.on('close', () => {
+      }).on('close', () => {
         callback(null, stdout);
       });
     });
-  } else if (type == 'stream') {
+  } else if ( type == 'stream') {
     // leave this for now
   };
 };
