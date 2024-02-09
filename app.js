@@ -21,7 +21,9 @@ app.whenReady().then(() => {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Launch',
-      click: () => shell.openExternal('http://localhost:3000'),
+      click: () => {
+        shell.openExternal('http://localhost:3000')
+      }
     },
     {
       label: 'Quit',
@@ -45,6 +47,7 @@ const loginRouteController = require('./routes/loginRoute');
 const homeRouteController = require('./routes/homeRoute');
 const nodeRouteController = require('./routes/nodeRoute');
 const sshRouteController = require('./routes/sshRoute');
+const notificationRouteController = require('./routes/notificationRoute');
 
 expressApp.set('views', path.join(__dirname, 'views'));
 expressApp.set('view engine', 'pug');
@@ -88,6 +91,7 @@ expressApp.use('/login', loginRouteController);
 expressApp.use('/home', homeRouteController);
 expressApp.use('/node', nodeRouteController);
 expressApp.use('/ssh', sshRouteController);
+expressApp.use('/notification', notificationRouteController);
 
 server.listen(PORT, () => {
   console.log(`Server is on port ${PORT} and is running.`);

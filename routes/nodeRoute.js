@@ -6,7 +6,7 @@ const indexGetController = require('../controllers/node/index/get');
 
 router.get(
   '/',
-  indexGetController
+    indexGetController
 );
 
 module.exports = router;

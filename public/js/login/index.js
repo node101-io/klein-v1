@@ -1,8 +1,8 @@
 window.addEventListener('load', () => {
   document.addEventListener('click', event => {
     if (event.target.closest('#login-button')) {
-      console.log('Login button clicked')
-      serverRequest('/ssh/connect', 'POST', {
+      serverRequest('/ssh', 'POST', {
+        type: 'connect',
         username: 'root',
         host: '144.91.93.154',
       }, response => {
@@ -15,8 +15,9 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('#logout-button')) {
-      console.log('Logout button clicked')
-      serverRequest('/ssh/disconnect', 'POST', {}, response => {
+      serverRequest('/ssh', 'POST', {
+        type: 'disconnect'
+      }, response => {
         if (response.success) {
           console.log('Disconnected from server');
         } else {
@@ -26,8 +27,8 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('#exec-button')) {
-      console.log('Exec button clicked')
-      serverRequest('/ssh/exec', 'POST', {
+      serverRequest('/ssh', 'POST', {
+        type: 'exec',
         command: 'ls -a'
       }, response => {
         if (response.success) {
@@ -35,6 +36,17 @@ window.addEventListener('load', () => {
         } else {
           console.error(response.error);
         };
+      });
+    };
+
+    if (event.target.closest('#notification-button')) {
+      serverRequest('/notification', 'POST', {
+        title: 'Welcome to the Klein',
+        body: 'Login to the server to get started',
+        icon: 'img/icons/favicon.ico',
+        sound: 'default',
+      }, (err, res) => {
+        console.log(err, res);
       });
     };
   });
