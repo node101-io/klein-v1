@@ -1,3 +1,4 @@
+const autoUpdater = require('update-electron-app');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -34,6 +35,8 @@ app.whenReady().then(() => {
   ]);
   tray.setToolTip('Klein');
   tray.setContextMenu(contextMenu);
+
+  autoUpdater.updateElectronApp()
 });
 
 const expressApp = express();
