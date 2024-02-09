@@ -19,7 +19,8 @@ app.whenReady().then(() => {
   );
   const tray = new Tray(image.resize({ width: 16, height: 16 }));
 
-  const contextMenu = Menu.buildFromTemplate([
+  tray.setToolTip('Klein');
+  tray.setContextMenu(Menu.buildFromTemplate([
     {
       label: 'Launch',
       click: () => {
@@ -32,9 +33,7 @@ app.whenReady().then(() => {
         app.quit();
       }
     }
-  ]);
-  tray.setToolTip('Klein');
-  tray.setContextMenu(contextMenu);
+  ]));
 
   autoUpdater.updateElectronApp()
 });
