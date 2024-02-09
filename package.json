@@ -27,9 +27,17 @@
   "build": {
     "appId": "io.node101.klein",
     "files": [
-      "app/**/*",
       "build/**/*",
+      "controllers/**/*",
+      "middleware/**/*",
+      "modules/**/*",
       "node_modules/**/*",
+      "public/**/*",
+      "routes/**/*",
+      "translations/**/*",
+      "utils/**/*",
+      "views/**/*",
+      "app.js",
       "package.json",
       "yarn.lock"
     ],
@@ -46,7 +54,6 @@
   },
   "dependencies": {
     "body-parser": "^1.20.2",
-    "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
     "electron-updater": "^6.1.7",
     "electron-window-state": "^5.0.3",
