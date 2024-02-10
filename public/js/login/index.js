@@ -3,8 +3,8 @@ window.addEventListener('load', () => {
     if (event.target.closest('#login-button')) {
       serverRequest('/ssh', 'POST', {
         type: 'connect',
-        username: 'root',
         host: '144.91.93.154',
+        password: 'foo'
       }, response => {
         if (response.success) {
           console.log('Connected to server');

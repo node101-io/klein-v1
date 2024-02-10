@@ -50,8 +50,10 @@ const startUptimeChecks = (callback) => {
 
       stream.on('data', data => {
         stdout += data;
-      }).on('close', () => {
-        callback(null, stdout.trim());
+      })
+      
+      stream.on('close', () => {
+        callback(null, stdout);
       });
     });
   };
@@ -73,23 +75,29 @@ module.exports = (type, data, callback) => {
   if (!data || typeof data != 'object')
     return callback('bad_request');
 
+  if (type == 'connect' && !data.host)
+    return callback('bad_request');
+
+  if (type == 'exec' && !data.command)
+    return callback('bad_request');
+
+  const { username = 'root', port = '22', host } = data;
+
   if (type == 'connect') {
     conn.on('ready', () => {
-      startUptimeChecks((err, uptime) => {
-        if (err) {
-          console.error('Uptime check error:', err);
-        } else {
-          console.log('Server uptime:', uptime);
-        };
-      });
+      startUptimeChecks();
       callback(null, 'Connected');
-    }).on('error', err => {
-      stopUptimeChecks();
-      callback(err);
-    }).connect({
-      host: data.host,
-      port: data.port,
-      username: data.username,
+    });
+    
+    conn.on('error', err => {
+      if (err.level == 'client-authentication')
+        callback('authentication_failed');
+    });
+    
+    conn.connect({
+      username,
+      port,
+      host,
       ...getAuthMethod(data)
     });
   } else if (type == 'disconnect') {
