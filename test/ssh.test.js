@@ -1,27 +1,30 @@
 const sshRequest = require('../utils/sshRequest');
 
 jest.mock('fs');
-
 jest.mock('os');
-
 jest.mock('path');
-
 jest.mock('ssh2', () => {
   return {
     Client: class {
       constructor() {
-        this.on = jest.fn().mockImplementation((event, callback) => {
-          if (event === 'ready') {
-            process.nextTick(callback);
-          }
+        this.events = {};
+        this.on = jest.fn((event, callback) => {
+          this.events[event] = callback;
           return this;
         });
-        this.connect = jest.fn().mockImplementation(() => {});
+        this.connect = jest.fn((options) => {
+          if (options.password === 'bar') {
+            process.nextTick(() => this.events['error']({ level: 'client-authentication' }));
+          } else {
+            process.nextTick(() => this.events['ready']());
+          }
+        });
         this.end = jest.fn();
-      }
-      exec(command, callback) {
-        process.nextTick(() => {
-          callback(null, { on: jest.fn(), end: jest.fn() });
+        this.exec = jest.fn((command, callback) => {
+          process.nextTick(() => {
+            const stream = { on: jest.fn(), end: jest.fn() };
+            callback(null, stream);
+          });
         });
       }
     },
@@ -89,6 +92,16 @@ describe('sshRequest', () => {
       password: 'foo'
     }, (error, data) => {
       expect(data).toBe('Connected');
+      done();
+    });
+  });
+
+  it('should call callback with "authentication_failed" if type is "connect" and an error occurs', done => {
+    sshRequest('connect', {
+      host: '144.91.93.154',
+      password: 'bar'
+    }, (error, data) => {
+      expect(error).toBe('authentication_failed');
       done();
     });
   });
