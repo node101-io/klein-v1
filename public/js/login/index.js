@@ -1,8 +1,21 @@
 window.addEventListener('load', () => {
   document.addEventListener('click', event => {
-    if (event.target.closest('#login-button')) {
+    if (event.target.closest('#login-button-key')) {
       serverRequest('/ssh', 'POST', {
-        type: 'connect',
+        type: 'connect:key',
+        host: '144.91.93.154'
+      }, response => {
+        if (response.success) {
+          console.log('Connected to server');
+        } else {
+          console.error(response.error);
+        };
+      });
+    };
+
+    if (event.target.closest('#login-button-password')) {
+      serverRequest('/ssh', 'POST', {
+        type: 'connect:password',
         host: '144.91.93.154',
         password: 'foo'
       }, response => {
