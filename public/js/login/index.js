@@ -3,7 +3,8 @@ window.addEventListener('load', () => {
     if (event.target.closest('#login-button-key')) {
       serverRequest('/ssh', 'POST', {
         type: 'connect:key',
-        host: '144.91.93.154'
+        host: '144.91.93.154',
+        passphrase: 'essek',
       }, response => {
         if (response.success) {
           console.log('Connected to server');
@@ -17,7 +18,7 @@ window.addEventListener('load', () => {
       serverRequest('/ssh', 'POST', {
         type: 'connect:password',
         host: '144.91.93.154',
-        password: 'foo'
+        // password: ''
       }, response => {
         if (response.success) {
           console.log('Connected to server');
@@ -29,7 +30,8 @@ window.addEventListener('load', () => {
 
     if (event.target.closest('#logout-button')) {
       serverRequest('/ssh', 'POST', {
-        type: 'disconnect'
+        host: '144.91.93.154',
+        type: 'disconnect',
       }, response => {
         if (response.success) {
           console.log('Disconnected from server');
@@ -42,7 +44,8 @@ window.addEventListener('load', () => {
     if (event.target.closest('#exec-button')) {
       serverRequest('/ssh', 'POST', {
         type: 'exec',
-        command: 'ls -a'
+        host: '144.91.93.154',
+        command: 'ls -a',
       }, response => {
         if (response.success) {
           console.log(response);
