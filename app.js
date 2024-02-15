@@ -5,7 +5,7 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const http = require('http');
 const path = require('path');
-const session = require('express-session');
+// const session = require('express-session');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 

@@ -4,7 +4,8 @@ window.addEventListener('load', () => {
       serverRequest('/ssh', 'POST', {
         type: 'connect:key',
         host: '144.91.93.154',
-        passphrase: 'essek',
+        privateKeyPath: '/Users/necipsagiroglu/.ssh/2',
+        passphrase: '2',
       }, response => {
         if (response.success) {
           console.log('Connected to server');
@@ -18,7 +19,7 @@ window.addEventListener('load', () => {
       serverRequest('/ssh', 'POST', {
         type: 'connect:password',
         host: '144.91.93.154',
-        // password: ''
+        password: 'correctpass'
       }, response => {
         if (response.success) {
           console.log('Connected to server');
@@ -47,6 +48,31 @@ window.addEventListener('load', () => {
         host: '144.91.93.154',
         command: 'ls -a',
       }, response => {
+        if (response.success) {
+          console.log(response);
+        } else {
+          console.error(response.error);
+        };
+      });
+    };
+
+    if (event.target.closest('#exec-stream-button')) {
+      const webSocket = new WebSocket('ws://localhost:8080/');
+
+      webSocket.onmessage = event => {
+        message = JSON.parse(event.data);
+
+        if (message.host == '144.91.93.154')
+          console.log(message.data);
+      };
+
+      serverRequest('/ssh', 'POST', {
+        type: 'exec:stream',
+        host: '144.91.93.154',
+        command: 'journalctl -fu nolusd -o cat',
+      }, response => {
+        webSocket.close();
+
         if (response.success) {
           console.log(response);
         } else {
