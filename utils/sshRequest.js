@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 const ssh2 = require('ssh2');
 
-const webSocketInstance = require('../webSocket/Instance');
+const webSocketInstance = require('../websocket/Instance');
 
 const BAD_PASSPHRASE_MESSAGE = 'bad passphrase';
 const CONNECTION_EXPIRED_INTERVAL = 30 * 1000;

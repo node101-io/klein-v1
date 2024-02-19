@@ -7,7 +7,7 @@ const favicon = require('serve-favicon');
 const http = require('http');
 const path = require('path');
 
-const webSocketInstance = require('./webSocket/Instance');
+const webSocketInstance = require('./websocket/Instance');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
