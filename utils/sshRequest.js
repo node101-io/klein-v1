@@ -2,10 +2,17 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const ssh2 = require('ssh2');
-const ws = require('ws')
 
+const webSocketInstance = require('../webSocket/Instance');
+
+const BAD_PASSPHRASE_MESSAGE = 'bad passphrase';
+const CONNECTION_EXPIRED_INTERVAL = 30 * 1000;
 const DEFAULT_PRIVATE_KEY_PATH = path.join(os.homedir(), '.ssh', 'id_rsa');
-const FIFTEN_MINUTES_IN_MS = 15 * 60 * 1000;
+const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
+const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
+const ONE_MINUTE_IN_MS = 60 * 1000;
+const SSH_CONNECT_TIMEOUT = 10 * 1000;
+const SSH_KEEP_ALIVE_INTERVAL = 1000;
 const TYPE_VALUES = [
   'connect:key',
   'connect:password',
@@ -15,25 +22,7 @@ const TYPE_VALUES = [
 ];
 
 const connections = {};
-
-// TODO: cron ile mi yapılmalı?
-setInterval(() => {
-  for (const host in connections) {
-    if (Date.now() - connections[host].lastSeenAt > FIFTEN_MINUTES_IN_MS) {
-      if (!connections[host].client._sock.destroyed)
-        connections[host].client.end();
-      
-      delete connections[host];
-    };
-  };
-});
-
-let webSocket;
-const wss = new ws.WebSocketServer({
-  port: 8080
-}).on('connection', ws => {
-  webSocket = ws;
-});
+let endExpiredConnectionsLastCalledTime = 0;
 
 class SSHConnection {
   constructor() {
@@ -42,19 +31,46 @@ class SSHConnection {
   };
 };
 
+const endExpiredConnections = () => {
+  endExpiredConnectionsLastCalledTime = Date.now();
+
+  if (!Object.keys(connections).length) {
+    endExpiredConnectionsLastCalledTime = 0;
+    return;
+  };
+
+  for (const host in connections)
+    if (Date.now() - connections[host].lastSeenAt > FIFTEEN_MINUTES_IN_MS) {
+      if (!connections[host].client._sock.destroyed)
+        connections[host].client.end();
+
+      delete connections[host]; // TODO: optimize delete
+    };
+
+  setTimeout(endExpiredConnections, CONNECTION_EXPIRED_INTERVAL);
+};
+
 const isSSHKeyEncrypted = privateKey => {
   const parsedKey = ssh2.utils.parseKey(privateKey);
-  
+
   if (Array.isArray(parsedKey))
-    return parsedKey.some(key => key instanceof Error && key.message.includes('Encrypted'));
-  
+    return parsedKey.some(key => key instanceof Error && key.message.includes(ENCRYPTED_KEY_MESSAGE));
+
   if (parsedKey instanceof Error)
-    return parsedKey.message.includes('Encrypted');
+    return parsedKey.message.includes(ENCRYPTED_KEY_MESSAGE);
 
   return false;
 };
 
 module.exports = (type, data, callback) => {
+  const ws = webSocketInstance.get();
+
+  if (Date.now() - endExpiredConnectionsLastCalledTime > ONE_MINUTE_IN_MS) {
+    endExpiredConnectionsLastCalledTime = Date.now();
+
+    endExpiredConnections();
+  };
+
   if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
     return callback('bad_request');
 
@@ -66,13 +82,13 @@ module.exports = (type, data, callback) => {
       return callback('bad_request');
 
     if (connections[data.host])
-      return callback('bad_request');
+      return callback('action_already_done');
 
     const connectData = {
       username: data.username && typeof data.username == 'string' && data.title.trim().length ? data.username.trim() : 'root',
       host: data.host.trim(),
-      readyTimeout: 5000,
-      keepaliveInterval: 1000
+      readyTimeout: SSH_CONNECT_TIMEOUT,
+      keepaliveInterval: SSH_KEEP_ALIVE_INTERVAL
     };
 
     if (data.port && typeof data.port == 'number' && 0 < data.port)
@@ -104,25 +120,31 @@ module.exports = (type, data, callback) => {
     connections[data.host] = new SSHConnection();
 
     try {
-      connections[data.host].client.on('ready', () => {
-        callback();
-      }).on('close', () => {
-        delete connections[data.host];
-      }).on('timeout', () => {
-        delete connections[data.host];
+      connections[data.host].client
+        .on('ready', () => {
+          return callback(null);
+        })
+        .on('timeout', () => {
+          delete connections[data.host];
 
-        callback('network_error');
-      }).on('error', err => {
-        delete connections[data.host];
+          return callback('timed_out');
+        })
+        .on('error', err => {
+          delete connections[data.host];
 
-        if (err.level == 'client-authentication')
-          callback('authentication_failed');
-      }).connect(connectData);
+          if (err && err.level == 'client-authentication')
+            return callback('authentication_failed');
+
+          return callback('unknown_error');
+        })
+        .connect(connectData);
     } catch (err) {
       delete connections[data.host];
 
-      if (err.message.includes('bad passphrase'))
+      if (err.message.includes(BAD_PASSPHRASE_MESSAGE))
         return callback('bad_passphrase');
+
+      return callback('unknown_error');
     };
   } else if (type == 'disconnect') {
     if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
@@ -138,7 +160,7 @@ module.exports = (type, data, callback) => {
 
     delete connections[data.host];
 
-    callback();
+    callback(null);
   } else if (type == 'exec' || type == 'exec:stream') {
     if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
       return callback('bad_request');
@@ -157,30 +179,45 @@ module.exports = (type, data, callback) => {
         if (err) return callback(err);
 
         let stdout = '';
-        
-        stream.on('data', data => {
-          console.log(Buffer.from(data).toString('utf8'));
-          stdout += data;
-        }).on('close', () => {
-          connections[data.host].lastSeenAt = Date.now();
 
-          callback(null, stdout);
-        });
+        stream
+          .on('data', data => {
+            stdout += data;
+          })
+          .on('close', () => {
+            connections[data.host].lastSeenAt = Date.now();
+
+            callback(null, stdout);
+          });
       });
     } else if (type == 'exec:stream') {
-      connections[data.host].client.shell((err, stream) => {
+      if (data.id && typeof data.id != 'string' && data.id.trim().length)
+        return callback('bad_request');
+
+      if (!ws || ws.readyState != ws.OPEN)
+        return callback('websocket_error');
+
+      connections[data.host].client.exec(data.command, (err, stream) => {
         if (err) return callback(err);
+
+        stream
+          .on('data', streamData => {
+            ws.send(JSON.stringify({
+              id: data.id,
+              data: Buffer.from(streamData).toString('utf8'),
+            }));
+          })
+          .on('close', () => callback(null));
         
-        stream.on('data', streamData => {
-          webSocket.send(JSON.stringify({
-            host: data.host,
-            data: Buffer.from(streamData).toString('utf8'),
-          }));
-        }).on('close', () => {
-          callback(null, 'stream_closed');
+        ws.on('message', message => {
+          const parsedMessage = JSON.parse(message);
+
+          if (parsedMessage.id == data.id && parsedMessage.type == 'end')
+            stream.close();
         });
-        stream.end(data.command + '\n');
       });
     };
+  } else {
+    return callback('not_possible_error');
   };
 };

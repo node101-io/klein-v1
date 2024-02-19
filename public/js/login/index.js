@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
       serverRequest('/ssh', 'POST', {
         type: 'connect:password',
         host: '144.91.93.154',
-        password: 'correctpass'
+        password: 'correctpassword'
       }, response => {
         if (response.success) {
           console.log('Connected to server');
@@ -57,28 +57,26 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('#exec-stream-button')) {
-      const webSocket = new WebSocket('ws://localhost:8080/');
+      const requestId = generateRandomHEX();
 
-      webSocket.onmessage = event => {
-        message = JSON.parse(event.data);
-
-        if (message.host == '144.91.93.154')
-          console.log(message.data);
-      };
+      onWebSocketData(requestId, (data) => console.log(data));
 
       serverRequest('/ssh', 'POST', {
         type: 'exec:stream',
         host: '144.91.93.154',
-        command: 'journalctl -fu nolusd -o cat',
+        command: 'journalctl -fu babylond -o cat',
+        id: requestId,
       }, response => {
-        webSocket.close();
-
         if (response.success) {
           console.log(response);
         } else {
           console.error(response.error);
         };
       });
+    };
+
+    if (event.target.closest('#end-stream-button')) {
+      endWebSocket(document.getElementById('id-value').value);
     };
 
     if (event.target.closest('#notification-button')) {
