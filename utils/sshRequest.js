@@ -135,6 +135,12 @@ module.exports = (type, data, callback) => {
           if (err && err.level == 'client-authentication')
             return callback('authentication_failed');
 
+          if (err && err.level == 'client-socket')
+            return callback('network_error');
+
+          if (err && err.level == 'client-timeout')
+            return callback('timed_out');
+
           return callback('unknown_error');
         })
         .connect(connectData);
