@@ -1,36 +1,37 @@
 const autoUpdater = require('update-electron-app');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const electron = require('electron');
 const express = require('express');
 const favicon = require('serve-favicon');
 const http = require('http');
 const path = require('path');
-const session = require('express-session');
+
+const webSocketInstance = require('./websocket/Instance');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-const { app, Tray, Menu, nativeImage, shell } = require('electron');
+electron.app.whenReady().then(() => {
+  electron.app.dock.hide();
 
-app.whenReady().then(() => {
-  app.dock.hide();
-
-  const image = nativeImage.createFromPath(
+  const image = electron.nativeImage.createFromPath(
     path.join(__dirname, 'public/img/icons/favicon.ico')
   );
-  const tray = new Tray(image.resize({ width: 16, height: 16 }));
+
+  const tray = new electron.Tray(image.resize({ width: 16, height: 16 }));
 
   tray.setToolTip('Klein');
-  tray.setContextMenu(Menu.buildFromTemplate([
+  tray.setContextMenu(electron.Menu.buildFromTemplate([
     {
       label: 'Launch',
       click: () => {
-        shell.openExternal('http://localhost:3000')
+        electron.shell.openExternal('http://localhost:3000')
       }
     },
     {
       label: 'Quit',
       click: () => {
-        app.quit();
+        electron.app.quit();
       }
     }
   ]));
@@ -41,9 +42,8 @@ app.whenReady().then(() => {
 const expressApp = express();
 const server = http.createServer(expressApp);
 
-const PORT = process.env.PORT || 3000;
-const MAX_QUERY_LIMIT = 1e3;
-const QUERY_LIMIT = 20;
+const PORT = process.env.PORT || 10101;
+const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 10180;
 
 const loginRouteController = require('./routes/loginRoute');
 const homeRouteController = require('./routes/homeRoute');
@@ -57,17 +57,9 @@ expressApp.set('view engine', 'pug');
 expressApp.use(express.static(path.join(__dirname, 'public')));
 expressApp.use(favicon(path.join(__dirname, 'public', 'img/icons/favicon.ico')));
 expressApp.use(bodyParser.json());
-expressApp.use(bodyParser.urlencoded({
-  extended: true
-}));
+expressApp.use(bodyParser.urlencoded({ extended: true }));
 
-// const sessionOptions = session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: false,
-//   saveUninitialized: false,
-// });
-
-// expressApp.use(sessionOptions);
+webSocketInstance.create(WEBSOCKET_PORT);
 
 expressApp.use((req, res, next) => {
   if (!req.query || typeof req.query != 'object')
@@ -75,19 +67,13 @@ expressApp.use((req, res, next) => {
   if (!req.body || typeof req.body != 'object')
     req.body = {};
 
-  if (!req.query.limit || isNaN(parseInt(req.query.limit)) || parseInt(req.query.limit) < 1 || parseInt(req.query.limit) > MAX_QUERY_LIMIT) {
-    res.locals.QUERY_LIMIT = QUERY_LIMIT;
-    req.query.limit = QUERY_LIMIT;
-  } else {
-    res.locals.QUERY_LIMIT = parseInt(req.query.limit);
-    req.query.limit = parseInt(req.query.limit);
-  };
+  res.locals.WEBSOCKET_PORT = WEBSOCKET_PORT;
 
   next();
 });
 
 expressApp.get('/', (req, res) => {
-  return res.redirect('/login');
+  return res.redirect('/login'); // TODO
 });
 expressApp.use('/login', loginRouteController);
 expressApp.use('/home', homeRouteController);
@@ -98,6 +84,3 @@ expressApp.use('/notification', notificationRouteController);
 server.listen(PORT, () => {
   console.log(`Server is on port ${PORT} and is running.`);
 });
-
-
-// TODO: cluster

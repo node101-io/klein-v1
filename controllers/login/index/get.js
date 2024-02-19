@@ -4,7 +4,7 @@ module.exports = (req, res) => {
     title: 'Login',
     includes: {
       css: ['page'],
-      js: ['page', 'serverRequest']
+      js: ['page', 'serverRequest', 'generateRandomHEX', 'webSocket']
     }
   });
 };

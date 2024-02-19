@@ -43,4 +43,4 @@ function serverRequest(url, method, data, callback) {
       return callback({ success: false, error: 'network_error' });
     }
   };
-}
+};
