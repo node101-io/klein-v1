@@ -11,34 +11,6 @@ const webSocketInstance = require('./websocket/Instance');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-electron.app.whenReady().then(() => {
-  electron.app.dock.hide();
-
-  const image = electron.nativeImage.createFromPath(
-    path.join(__dirname, 'public/img/icons/favicon.ico')
-  );
-
-  const tray = new electron.Tray(image.resize({ width: 16, height: 16 }));
-
-  tray.setToolTip('Klein');
-  tray.setContextMenu(electron.Menu.buildFromTemplate([
-    {
-      label: 'Launch',
-      click: () => {
-        electron.shell.openExternal('http://localhost:3000')
-      }
-    },
-    {
-      label: 'Quit',
-      click: () => {
-        electron.app.quit();
-      }
-    }
-  ]));
-
-  autoUpdater.updateElectronApp()
-});
-
 const expressApp = express();
 const server = http.createServer(expressApp);
 
@@ -83,4 +55,28 @@ expressApp.use('/notification', notificationRouteController);
 
 server.listen(PORT, () => {
   console.log(`Server is on port ${PORT} and is running.`);
+});
+
+electron.app.whenReady().then(() => {
+  electron.app.dock.hide();
+
+  const image = electron.nativeImage.createFromPath(
+    path.join(__dirname, 'public/img/icons/favicon.ico')
+  );
+
+  const tray = new electron.Tray(image.resize({ width: 16, height: 16 }));
+
+  tray.setToolTip('Klein');
+  tray.setContextMenu(electron.Menu.buildFromTemplate([
+    {
+      label: 'Launch',
+      click: () => electron.shell.openExternal(`http://localhost:${PORT}`)
+    },
+    {
+      label: 'Quit',
+      click: () => electron.app.quit()
+    }
+  ]));
+
+  autoUpdater.updateElectronApp()
 });

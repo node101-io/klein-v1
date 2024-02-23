@@ -5,20 +5,29 @@ const ssh2 = require('ssh2');
 
 const webSocketInstance = require('../websocket/Instance');
 
-const BAD_PASSPHRASE_MESSAGE = 'bad passphrase';
+const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
+const ERROR_MESSAGE_NO_FILE = 'No such file or directory';
 const CONNECTION_EXPIRED_INTERVAL = 30 * 1000;
-const DEFAULT_PRIVATE_KEY_PATH = path.join(os.homedir(), '.ssh', 'id_rsa');
+const DEFAULT_SSH_FOLDER_PATH = path.join(os.homedir(), '.ssh');
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
 const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const SSH_CONNECT_TIMEOUT = 10 * 1000;
 const SSH_KEEP_ALIVE_INTERVAL = 1000;
+const SSH_KEY_TYPE_TO_GENERATE = 'rsa';
+const SSH_KEY_BITS_TO_GENERATE = 1024;
 const TYPE_VALUES = [
   'connect:key',
   'connect:password',
   'disconnect',
   'exec',
-  'exec:stream'
+  'exec:stream',
+  'key:local:create',
+  'key:local:delete',
+  'key:local:list',
+  'key:remote:add',
+  'key:remote:list',
+  'key:remote:remove'
 ];
 
 const connections = {};
@@ -63,6 +72,14 @@ const isSSHKeyEncrypted = privateKey => {
 };
 
 module.exports = (type, data, callback) => {
+  const sshRequest = module.exports;
+
+  if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
+    return callback('bad_request');
+
+  if (!data || typeof data != 'object')
+    return callback('bad_request');
+
   const ws = webSocketInstance.get();
 
   if (Date.now() - endExpiredConnectionsLastCalledTime > ONE_MINUTE_IN_MS) {
@@ -70,12 +87,6 @@ module.exports = (type, data, callback) => {
 
     endExpiredConnections();
   };
-
-  if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
-    return callback('bad_request');
-
-  if (!data || typeof data != 'object')
-    return callback('bad_request');
 
   if (type == 'connect:password' || type == 'connect:key') {
     if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
@@ -100,7 +111,7 @@ module.exports = (type, data, callback) => {
 
       connectData.password = data.password;
     } else if (type == 'connect:key') {
-      const privateKeyPath = data.privateKeyPath && typeof data.privateKeyPath == 'string' && data.privateKeyPath.trim().length ? data.privateKeyPath.trim() : DEFAULT_PRIVATE_KEY_PATH;
+      const privateKeyPath = data.privateKeyPath && typeof data.privateKeyPath == 'string' && data.privateKeyPath.trim().length ? data.privateKeyPath.trim() : path.join(DEFAULT_SSH_FOLDER_PATH, 'id_rsa');
 
       if (!fs.existsSync(privateKeyPath))
         return callback('document_not_found');
@@ -147,7 +158,7 @@ module.exports = (type, data, callback) => {
     } catch (err) {
       delete connections[data.host];
 
-      if (err.message.includes(BAD_PASSPHRASE_MESSAGE))
+      if (err.message.includes(ERROR_MESSAGE_BAD_PASSPHRASE))
         return callback('bad_passphrase');
 
       return callback('unknown_error');
@@ -185,6 +196,7 @@ module.exports = (type, data, callback) => {
         if (err) return callback(err);
 
         let stdout = '';
+        let stderr = '';
 
         stream
           .on('data', data => {
@@ -193,7 +205,17 @@ module.exports = (type, data, callback) => {
           .on('close', () => {
             connections[data.host].lastSeenAt = Date.now();
 
-            callback(null, stdout);
+            if (stderr && stderr.trim().length) {
+              if (stderr.includes(ERROR_MESSAGE_NO_FILE))
+                return callback('document_not_found');
+
+              return callback(stderr.trim());
+            };
+
+            return callback(null, stdout);
+          })
+          .stderr.on('data', data => {
+            stderr += data;
           });
       });
     } else if (type == 'exec:stream') {
@@ -221,6 +243,98 @@ module.exports = (type, data, callback) => {
           if (parsedMessage.id == data.id && parsedMessage.type == 'end')
             stream.close();
         });
+      });
+    };
+  } else if (type == 'key:local:create' || type == 'key:local:delete' || type == 'key:local:list') {
+    const sshFolderPath = data.path && typeof data.path == 'string' && data.path.trim().length ? data.path.trim() : DEFAULT_SSH_FOLDER_PATH;
+
+    if (!fs.existsSync(sshFolderPath))
+      fs.mkdir(sshFolderPath, { recursive: true }, err => {
+        if (err) return callback(err);
+      });
+
+    if (type == 'key:local:create') {
+      const keyData = {
+        bits: SSH_KEY_BITS_TO_GENERATE,
+      };
+
+      if (data.passphrase && typeof data.passphrase == 'string' && data.passphrase.trim().length)
+        keyData.passphrase = data.passphrase;
+
+      ssh2.utils.generateKeyPair(SSH_KEY_TYPE_TO_GENERATE, keyData, (err, keys) => {
+        if (err) return callback(err);
+        
+        if (!data.filename || typeof data.filename != 'string' || !data.filename.trim().length)
+          data.filename = `id_rsa_${Date.now()}`;
+
+        fs.writeFile(path.join(sshFolderPath, data.filename), keys.private, err => {
+          if (err) return callback(err);
+
+          fs.writeFile(path.join(sshFolderPath, `${data.filename}.pub`), keys.public, err => {
+            if (err) return callback(err);
+
+            return callback(null);
+          });
+        });
+      });
+    } else if (type == 'key:local:delete') {
+      if (!data.filename || typeof data.filename != 'string' || !data.filename.trim().length)
+        return callback('bad_request');
+
+      fs.unlink(path.join(sshFolderPath, `${data.filename}.pub`), err => {
+        if (err && err.code == 'ENOENT') return callback('document_not_found');
+        if (err) return callback(err);
+
+        fs.unlink(path.join(sshFolderPath, data.filename), err => {
+          if (err && err.code == 'ENOENT') return callback('document_not_found');
+          if (err) return callback(err);
+
+          return callback(null);
+        });
+      });
+    } else if (type == 'key:local:list') {
+      fs.readdir(sshFolderPath, (err, files) => {
+        if (err) return callback(err);
+
+        return callback(null, files.filter(file => file.endsWith('.pub')));
+      });
+    };
+  } else if (type == 'key:remote:add' || type == 'key:remote:list' || type == 'key:remote:remove') {
+    if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
+      return callback('bad_request');
+
+    if (type == 'key:remote:add') {
+      if (!data.pubkey || typeof data.pubkey != 'string' || !data.pubkey.trim().length)
+        return callback('bad_request');
+
+      sshRequest('exec', {
+        host: data.host,
+        command: `touch ~/.ssh/authorized_keys && echo "${data.pubkey}" >> ~/.ssh/authorized_keys`
+      }, (err, res) => {
+        if (err) return callback(err);
+
+        return callback(null, res);
+      });
+    } else if (type == 'key:remote:list') {
+      sshRequest('exec', {
+        host: data.host,
+        command: 'touch ~/.ssh/authorized_keys && cat ~/.ssh/authorized_keys'
+      }, (err, res) => {
+        if (err) return callback(err);
+
+        return callback(null, res);
+      });
+    } else if (type == 'key:remote:remove') {
+      if (!data.pubkey || typeof data.pubkey != 'string' || !data.pubkey.trim().length)
+        return callback('bad_request');
+
+      sshRequest('exec', {
+        host: data.host,
+        command: `touch ~/.ssh/authorized_keys && sed -i '/${data.pubkey}/d' ~/.ssh/authorized_keys`
+      }, (err, res) => {
+        if (err) return callback(err);
+
+        return callback(null, res);
       });
     };
   } else {

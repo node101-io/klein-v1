@@ -89,5 +89,32 @@ window.addEventListener('load', () => {
         console.log(err, res);
       });
     };
+
+    if (event.target.closest('#pubkey-get-button')) {
+      serverRequest('/ssh', 'POST', {
+        type: 'key:local:create',
+        path: '/Users/necipsagiroglu/.ssh/',
+      }, (err, res) => {
+        console.log(err, res);
+      });
+    };
+
+    if (event.target.closest('#pubkey-remove-button')) {
+      serverRequest('/ssh', 'POST', {
+        type: 'key:local:delete',
+        path: '/Users/necipsagiroglu/.ssh/',
+        filename: '2',
+      }, (err, res) => {
+        console.log(err, res);
+      });
+    };
+
+    if (event.target.closest('#pubkey-show-button')) {
+      serverRequest('/ssh', 'POST', {
+        type: 'key:local:list',
+      }, (err, res) => {
+        console.log(err, res);
+      });
+    };
   });
 });
