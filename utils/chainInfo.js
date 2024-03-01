@@ -17,14 +17,17 @@ const getRPCList = (data, callback) => {
   if (!data.identifier || typeof data.identifier != 'string')
     return callback('bad_request');
 
-  fetch(`https://raw.githubusercontent.com/cosmos/chain-registry/master${data.is_mainnet ? '' : '/testnets'}/${data.identifier}/chain.json`)
-    .then(res => res.json())
-    .then(res => {
-      if (res.apis && res.apis.rpc) {
-        callback(null, res.apis.rpc.map(rpc => rpc.address));
-      };
-    })
-    .catch(err => callback('document_not_found'));
+  fetchWithTimeout(`https://raw.githubusercontent.com/cosmos/chain-registry/master${data.is_mainnet ? '' : '/testnets'}/${data.identifier}/chain.json`, (err, res) => {
+    if (err) return;
+
+    res.json()
+      .then(res => {
+        if (res.apis && res.apis.rpc) {
+          callback(null, res.apis.rpc.map(rpc => rpc.address));
+        };
+      })
+      .catch(err => callback('document_not_found'));
+  });
 };
 
 const fetchWithTimeout = (url, callback, timeout = FETCH_TIMEOUT_IN_MS) => {
