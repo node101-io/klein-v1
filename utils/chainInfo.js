@@ -3,7 +3,8 @@ const fetch = require('node-fetch');
 const controller = new AbortController();
 
 const FETCH_TIMEOUT_IN_MS = 5000;
-const PEER_COUNT = 5;
+const RETURN_TIMEOUT_IN_MS = 1000;
+const RANDOM_PEER_COUNT = 5;
 const TYPE_VALUES = [
   'chain_info',
   'state_sync_info'
@@ -20,21 +21,19 @@ const getRPCList = (data, callback) => {
     .then(res => res.json())
     .then(res => {
       if (res.apis && res.apis.rpc) {
-        callback(null, res.apis.rpc.map(rpc => {
-          rpc.address
-        }));
+        callback(null, res.apis.rpc.map(rpc => rpc.address));
       };
     })
-    .catch(err => callback('chain_folder_not_found'));
+    .catch(err => callback('document_not_found'));
 };
 
-const fetchWithTimeout = (rpc, callback) => {
+const fetchWithTimeout = (url, callback, timeout = FETCH_TIMEOUT_IN_MS) => {
   const timeoutId = setTimeout(() => {
     controller.abort();
     callback('request_timeout');
-  }, FETCH_TIMEOUT_IN_MS);
+  }, timeout);
 
-  fetch(rpc, { signal: controller.signal })
+  fetch(url, { signal: controller.signal })
     .then(res => {
       clearTimeout(timeoutId);
       callback(null, res);
@@ -45,13 +44,13 @@ const fetchWithTimeout = (rpc, callback) => {
     });
 };
 
-const getChainInfo = (rpc, callback) => {
+const getRPCInfo = (rpc, callback) => {
   const chainInfo = {
     rpc: rpc,
     chainID: null,
     version: null,
     peers: null,
-    height: null 
+    height: null
   };
 
   fetchWithTimeout(`${rpc}/status`, (err, res) => {
@@ -88,7 +87,7 @@ const getChainInfo = (rpc, callback) => {
             const listenAddrParts = peer.node_info.listen_addr.split(':');
             const lastPartOfListenAddr = listenAddrParts[listenAddrParts.length - 1];
             return `${id}@${remoteIp}:${lastPartOfListenAddr}`;
-          }).slice(0, PEER_COUNT);
+          }).slice(0, RANDOM_PEER_COUNT);
       })
       .catch(err => null);
   });
@@ -106,34 +105,31 @@ const getChainInfo = (rpc, callback) => {
 
   setTimeout(() => {
     if (!chainInfo.chainID && !chainInfo.version && !chainInfo.peers && !chainInfo.height)
-      return callback('no_chain_info_found');
+      return;
 
     return callback(null, chainInfo);
-  }, FETCH_TIMEOUT_IN_MS + 1000); // ????
+  }, FETCH_TIMEOUT_IN_MS + RETURN_TIMEOUT_IN_MS); // ????
 };
 
-const findRPCListWithChainInfo = (rpcList, callback) => {
+const filterAndFormatTheRPCList = (rpcList, callback) => {
   const rpcListWithChainInfo = [];
 
   for (let i = 0; i < rpcList.length; i++)
-    getChainInfo(rpcList[i], (err, res) => {
-      if (err) return;
+    getRPCInfo(rpcList[i], (err, rpcInfo) => {
+      if (err) return callback(err);
 
-      rpcListWithChainInfo.push(res);
-
-      if (rpcListWithChainInfo.length == rpcList.length)
-        return callback(null, rpcListWithChainInfo);
+      rpcListWithChainInfo.push(rpcInfo);
     });
 
   setTimeout(() => {
-    if (rpcListWithChainInfo.length == 0)
-      return callback('no_rpc_responses');
+    if (!rpcListWithChainInfo.length)
+      return callback('no_response_from_any_rpc');
 
-    const maxHeight = Math.max(...rpcListWithChainInfo.map(res => res.height));
-    const filteredResults = rpcListWithChainInfo.filter(res => res.height >= maxHeight - 20);
+    const maxHeight = Math.max(...rpcListWithChainInfo.map(info => info.height));
+    const filteredRPCList = rpcListWithChainInfo.filter(info => info.height >= maxHeight - 20);
 
-    return callback(null, filteredResults);
-  }, FETCH_TIMEOUT_IN_MS + 1000); // ????
+    return callback(null, filteredRPCList);
+  }, FETCH_TIMEOUT_IN_MS + RETURN_TIMEOUT_IN_MS); // ????
 };
 
 const findMostCommon = object => {
@@ -149,13 +145,60 @@ const findMostCommon = object => {
   return mostCommon;
 };
 
-const getSyncHeightHash = (data, callback) => {
-  fetch(`${data.rpc}/block?height=${data.height}`)
-    .then(res => res.json())
-    .then(res => res.result.block_id.hash)
-    .then(res => callback(null, res))
-    .catch();
+const getChainInfo = (filteredRPCList, callback) => {
+  const chainIDs = {};
+  const versions = {};
+  let allPeers = [];
+
+  filteredRPCList.forEach(({ chainID, version, peers }) => {
+    chainIDs[chainID] = (chainIDs[chainID] || 0) + 1;
+    versions[version] = (versions[version] || 0) + 1;
+    allPeers = allPeers.concat(peers);
+  });
+
+  const filteredPeers = allPeers.filter(peer => peer !== null);
+  const randomPeers = filteredPeers.length >= 5 ? filteredPeers.sort(() => Math.random() - 0.5).slice(0, RANDOM_PEER_COUNT) : filteredPeers;
+
+  callback(null, {
+    chainID: findMostCommon(chainIDs),
+    version: findMostCommon(versions),
+    peers: randomPeers
+  });
 };
+
+// const getStateSyncInfo = (filteredRPCList, callback, index = 0) => {
+//   const stateSyncInfo = {
+//     rpc: null,
+//     height: null,
+//     hash: null
+//   };
+
+//   const chainRPC = filteredRPCList[index];
+//   const trustHeight = chainRPC.height - 1000;
+
+//   fetchWithTimeout(`${chainRPC.rpc}/block?height=${trustHeight}`, (err, res) => {
+//     if (err) return;
+
+//     res.json()
+//       .then(res => {
+//         if (res.result && res.result.block_id && res.result.block_id.hash) {
+//           stateSyncInfo.rpc = chainRPC.rpc;
+//           stateSyncInfo.height = trustHeight;
+//           stateSyncInfo.hash = res.result.block_id.hash;
+//         };
+//       })
+//       .catch(err =>
+//         getStateSyncInfo(filteredRPCList, callback, index + 1)
+//       );
+//   }, FETCH_TIMEOUT_IN_MS * 3);
+
+//   setTimeout(() => {
+//     if (!stateSyncInfo.rpc && !stateSyncInfo.height && !stateSyncInfo.hash)
+//       return;
+
+//     return callback(null, stateSyncInfo);
+//   }, FETCH_TIMEOUT_IN_MS * 3 + RETURN_TIMEOUT_IN_MS); // ????
+// };
 
 module.exports = (type, data, callback) => {
   if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
@@ -165,60 +208,22 @@ module.exports = (type, data, callback) => {
     return callback('bad_request');
 
   if (type == 'chain_info') {
-    getRPCList(data, (err, res) => {
+    getRPCList(data, (err, rpcList) => {
       if (err) return callback(err);
 
-      findRPCListWithChainInfo(res, (err, res) => {
+      filterAndFormatTheRPCList(rpcList, (err, filteredRPCList) => {
         if (err) return callback(err);
 
-        if (res.length == 0) return callback('no_valid_rpc_responses');
+        getChainInfo(filteredRPCList, (err, chainInfo) => {
+          if (err) return callback(err);
 
-        const chainIDs = {};
-        const versions = {};
-        const allPeers = [];
-
-        res.forEach(({ chainID, version, peers }) => {
-          chainIDs[chainID] = (chainIDs[chainID] || 0) + 1;
-          versions[version] = (versions[version] || 0) + 1;
-          allPeers = allPeers.concat(peers);
-        });
-
-        const filteredPeers = allPeers.filter(peer => peer !== null);
-        const randomPeers = filteredPeers.length >= 5 ? filteredPeers.sort(() => Math.random() - 0.5).slice(0, PEER_COUNT) : filteredPeers;
-
-        callback(null, {
-          chainID: findMostCommon(chainIDs),
-          version: findMostCommon(versions),
-          peers: randomPeers
+          callback(null, chainInfo);
         });
       });
     });
   } else if (type == 'state_sync_info') {
-    getRPCList(data, (err, res) => {
-      if (err) return callback(err);
-
-      findRPCListWithChainInfo(res, (err, res) => {
-        if (err) return callback(err);
-
-        if (res.length == 0) return callback('no_valid_rpc_responses');
-
-        const randomChainInfo = res[Math.floor(Math.random() * res.length)];
-        const latestHeight = randomChainInfo.height;
-        const syncHeight = latestHeight - 1000;
-
-        getSyncHeightHash({ 
-          rpc: randomChainInfo.rpc,
-          height: syncHeight
-        }, (err, res) => {
-          if (err) return callback(err);
-
-          callback(null, {
-            rpc: randomChainInfo.rpc,
-            height: syncHeight,
-            hash: res
-          });
-        });
-      });
-    });
+    return callback('bad_request');
+  } else {
+    return callback('not_possible_error');
   };
 };
