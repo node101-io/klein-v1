@@ -1,0 +1,46 @@
+extends ../partials/head
+block content
+  body
+    .all-wrapper= __('Klein')
+      br
+      button#login-button-password
+        | Login Password
+      input#login-key-value
+      button#login-button-key
+        | Login Key
+      button#logout-button
+        | Logout
+      br
+      button#exec-button
+        | Execute
+      input#id-value
+      button#end-stream-button
+        | End stream
+      br
+      button#notification-button
+        | Notification
+      br
+      button#create-local-key-button
+        | Create Local Key
+      input#local-key-value
+      button#remove-local-key-button
+        | Remove Local Key
+      button#show-local-keys-button
+        | Show Local Keys
+      br
+      input#remote-key-value
+      button#add-remote-key-button
+        | Add Remote Key
+      button#remove-remote-key-button
+        | Remove Remote Key
+      button#show-remote-keys-button
+        | Show Remote Keys
+      br
+      button#check-availability-button
+        | Check Availability For Installation
+      br
+      button#install-docker-button
+        | Install Docker
+      br
+      button#uninstall-docker-button
+        | Uninstall Docker

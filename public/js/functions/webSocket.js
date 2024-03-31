@@ -4,7 +4,9 @@ const wsStreams = {};
 
 const webSocket = new WebSocket(`ws://localhost:${WEBSOCKET_PORT}/`);
 
-function onWebSocketData(requestId, callback) {
+function onStreamData(callback) {
+  const requestId = generateRandomHEX();
+
   wsStreams[requestId] = callback;
 
   webSocket.addEventListener('message', message => {
@@ -14,9 +16,11 @@ function onWebSocketData(requestId, callback) {
       return wsStreams[requestId](data);
     };
   });
+
+  return requestId;
 };
 
-function endWebSocket(requestId) {
+function endStream(requestId) {
   webSocket.send(JSON.stringify({
     id: requestId,
     type: 'end'

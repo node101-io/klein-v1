@@ -13,6 +13,8 @@ jest.mock('electron', () => {
         if (event == 'click') {
           callback();
         };
+
+        return this;
       };
     }
   };
