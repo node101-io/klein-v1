@@ -1,20 +1,23 @@
-head
-  meta(name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0')
-  meta(charset='UTF-8')
-  if includes
-    if includes.css
-      each file_name in includes.css
-        if file_name == 'page'
-          link(rel='stylesheet' href=`/css/${page}.css`)
-        else
-          link(rel='stylesheet' href=`/css/general/${file_name}.css`)
-    if includes.js
-      each file_name in includes.js
-        if file_name == 'page'
-          script(src=`/js/${page}.js`)
-        else if file_name == 'webSocket'
-          if WEBSOCKET_PORT
-            meta#data-websocket-port(data=WEBSOCKET_PORT)
-            script(src=`/js/functions/webSocket.js`)
-        else
-          script(src=`/js/functions/${file_name}.js`)
+html(lang='en')
+  head
+    meta(name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=0')
+    meta(charset='UTF-8')
+    if includes
+      if includes.css
+        each file_name in includes.css
+          if file_name == 'page'
+            link(rel='stylesheet' href=`/css/${page}.css`)
+          else
+            link(rel='stylesheet' href=`/css/general/${file_name}.css`)
+      if includes.js
+        each file_name in includes.js
+          if file_name == 'page'
+            script(src=`/js/${page}.js`)
+          else if file_name == 'webSocket'
+            if WEBSOCKET_PORT
+              meta#data-websocket-port(data=WEBSOCKET_PORT)
+              script(src=`/js/functions/webSocket.js`)
+          else
+            script(src=`/js/functions/${file_name}.js`)
+  body
+    block content

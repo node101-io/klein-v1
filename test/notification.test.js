@@ -1,6 +1,6 @@
 const notificationRequest = require('../utils/notificationRequest');
 
-jest.mock('electron', () => {
+jest.mock('electron', _ => {
   return {
     Notification: class {
       constructor(options) {
@@ -13,12 +13,14 @@ jest.mock('electron', () => {
         if (event == 'click') {
           callback();
         };
+
+        return this;
       };
     }
   };
 });
 
-describe('notificationRequest', () => {
+describe('notificationRequest', _ => {
   it('should call callback with "bad_request" if data is not an object', done => {
     notificationRequest('data', (error, data) => {
       expect(error).toBe('bad_request');
@@ -51,7 +53,7 @@ describe('notificationRequest', () => {
         {
           type: 'button',
           text: 'Text',
-          onClick: () => {}
+          onClick: _ => {}
         }
       ],
       closeButtonText: 'Close Button Text',

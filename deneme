@@ -1,0 +1,22 @@
+- [ ]  Node update mevzuu (cosmovisor)
+    - https://docs.cosmos.network/main/build/tooling/cosmovisor#detecting-upgrades
+    - https://github.com/cosmos/cosmos-sdk/blob/7155a1cd5278879dd7a747e39888239959bf9083/tools/cosmovisor/CHANGELOG.md
+- [ ]  Dockerfile geliştirmeleri
+    - https://vsupalov.com/docker-arg-env-variable-guide/#arg-and-env
+    - https://docs.docker.com/config/containers/start-containers-automatically/
+- [ ]  Transaction modülü
+    - Keplr wallet bağlama ve transaction gönderme de var
+- [ ]  Klein admin ve API’lar
+    - Notification modeli ve testleri
+- [ ]  Merkezi analitiks
+- [ ]  Node modülü
+    - Node kurulumu vs
+- [ ]  Frontend
+                                                                        - [X]  Settings
+                                                                        - [ ]  Node listener modülü
+                                                                            - asgari
+                                                                            - Serverda websocket ile event dinleyen app
+                                                                            - Tam nasıl olacak bilmiyorum biraz deneysel
+                                                                        - [ ]  Local storage modülü
+                                                                            - Projelerin front için gereken detaylarını localde de saklamalı
+.env chmod

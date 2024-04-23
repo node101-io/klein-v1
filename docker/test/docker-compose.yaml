@@ -1,0 +1,7 @@
+services:
+  ssh-test:
+    build:
+      context: .
+    container_name: ssh-test
+    ports:
+      - 2222:22
