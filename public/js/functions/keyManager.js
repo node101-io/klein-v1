@@ -1,4 +1,4 @@
-const makeKeyManager = () => {
+const makeKeyManager = _ => {
   return {
     showKeysLocal: (data, callback) => {
       localhostRequest('/ssh/key/local/show', 'POST', {

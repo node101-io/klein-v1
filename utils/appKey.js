@@ -1,24 +1,23 @@
-const crypto = require('crypto');
-const electron = require('electron');
+const { randomBytes } = require('crypto');
+const { safeStorage } = require('electron');
 
 let appKey = null;
 let isEncryptionAvailable = false;
 
-const Instance = {
-  create() {
-    isEncryptionAvailable = electron.safeStorage.isEncryptionAvailable();
+const AppKey = {
+  create: callback => {
+    isEncryptionAvailable = safeStorage.isEncryptionAvailable();
 
-    appKey = isEncryptionAvailable ?
-      electron.safeStorage.encryptString(crypto.randomBytes(16).toString('hex')) :
-      crypto.randomBytes(16).toString('hex');
+    const randomString = randomBytes(16).toString('hex');
 
-    return appKey;
+    appKey = isEncryptionAvailable ? safeStorage.encryptString(randomString) : randomString;
+
+    return callback(null, {
+      key: appKey,
+      encrypted: isEncryptionAvailable
+    });
   },
-  get() {
-    return isEncryptionAvailable ?
-      electron.safeStorage.decryptString(appKey) :
-      appKey;
-  }
+  get: _ => isEncryptionAvailable ? safeStorage.decryptString(appKey) : appKey
 };
 
-module.exports = Instance;
+module.exports = AppKey;

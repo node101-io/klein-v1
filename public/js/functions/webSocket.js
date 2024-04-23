@@ -31,6 +31,6 @@ function endStream(requestId) {
   delete wsStreams[requestId];
 };
 
-window.addEventListener('beforeunload', () => {
+window.addEventListener('beforeunload', _ => {
   webSocket.close();
 });

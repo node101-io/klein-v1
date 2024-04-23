@@ -51,7 +51,9 @@
     },
     "mac": {
       "hardenedRuntime": true,
-      "extendInfo": "klein-run"
+      "extendInfo": {
+        "LSUIElement": 1
+      }
     }
   },
   "devDependencies": {

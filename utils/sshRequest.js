@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const ssh2 = require('ssh2');
 
-const WebSocketInstance = require('../websocket/Instance');
+const WebSocketServer = require('./webSocketServer');
 const Preferences = require('./preferences');
 
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
@@ -27,30 +27,30 @@ const TYPE_VALUES = [
 const connections = {};
 let endExpiredConnectionsLastCalledTime = 0;
 
-const makeSSHConnection = () => {
+const makeSSHConnection = _ => {
   const client = new ssh2.Client();
   let lastSeenAt = Date.now();
 
   return {
-    getClient: () => {
+    getClient: _ => {
       return client;
     },
-    markAsSeen: () => {
+    markAsSeen: _ => {
       lastSeenAt = Date.now();
     },
-    isExpired: () => {
+    isExpired: _ => {
       return Date.now() - lastSeenAt > SSH_CONNECTION_EXPIRATION_TIME;
     },
-    isReady: () => {
+    isReady: _ => {
       return client._sock && !client._sock.destroyed;
     },
-    disconnect: () => {
+    disconnect: _ => {
       client.end();
     }
   };
 };
 
-const endExpiredConnections = () => {
+const endExpiredConnections = _ => {
   endExpiredConnectionsLastCalledTime = Date.now();
 
   if (!Object.keys(connections).length) {
@@ -63,7 +63,7 @@ const endExpiredConnections = () => {
       if (connections[host].isReady())
         connections[host].disconnect();
 
-      delete connections[host]; // TODO: optimize delete
+      delete connections[host]; // TODO: optimize delete null set et
     };
 
   setTimeout(endExpiredConnections, END_EXPIRED_CONNECTIONS_INTERVAL);
@@ -91,7 +91,7 @@ module.exports = (type, data, callback) => {
   if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
     return callback('bad_request');
 
-  const ws = WebSocketInstance.get();
+  const ws = WebSocketServer.get();
 
   if (Date.now() - endExpiredConnectionsLastCalledTime > END_EXPIRED_CONNECTIONS_EXPIRATION_TIME) {
     endExpiredConnectionsLastCalledTime = Date.now();
@@ -124,31 +124,33 @@ module.exports = (type, data, callback) => {
 
       data.filename = data.filename.trim().replace(/\.pub$/, '');
 
-      const privateKeyPath = path.join(Preferences.get('sshFolderPath'), data.filename);
+      Preferences.get('sshFolderPath', (err, sshFolderPath) => {
+        const privateKeyPath = path.join(sshFolderPath, data.filename);
 
-      if (!fs.existsSync(privateKeyPath))
-        return callback('document_not_found');
+        if (!fs.existsSync(privateKeyPath))
+          return callback('document_not_found');
 
-      const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+        const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
 
-      connectData.privateKey = privateKey;
+        connectData.privateKey = privateKey;
 
-      if (isSSHKeyEncrypted(privateKey)) {
-        if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
-          return callback('bad_request');
+        if (isSSHKeyEncrypted(privateKey)) {
+          if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
+            return callback('bad_request');
 
-        connectData.passphrase = data.passphrase;
-      };
+          connectData.passphrase = data.passphrase;
+        };
+      });
     };
 
     connections[data.host] = makeSSHConnection();
 
     try {
       connections[data.host].getClient()
-        .on('ready', () => {
+        .on('ready', _ => {
           return callback(null);
         })
-        .on('timeout', () => {
+        .on('timeout', _ => {
           delete connections[data.host];
 
           return callback('timed_out');
@@ -212,7 +214,7 @@ module.exports = (type, data, callback) => {
           .on('data', streamData => {
             stdout += streamData;
           })
-          .on('close', () => {
+          .on('close', _ => {
             connections[data.host].markAsSeen();
 
             if (stderr.includes(ERROR_MESSAGE_NO_FILE))
@@ -253,7 +255,7 @@ module.exports = (type, data, callback) => {
               data: streamData,
             }));
           })
-          .on('close', () => {
+          .on('close', _ => {
             connections[data.host].markAsSeen();
 
             return callback(null, stdout);

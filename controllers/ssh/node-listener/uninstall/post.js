@@ -1,11 +1,11 @@
 const sshRequest = require("../../../../utils/sshRequest");
 
-const uninstallNodeListenerCommand = require("../../../../commands/node-listener/install");
+const uninstallServerListenerCommand = require("../../../../commands/server-listener/install");
 
 module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
-    command: uninstallNodeListenerCommand()
+    command: uninstallServerListenerCommand()
   }, (err, data) => {
     if (err)
       return res.json({ err: err });

@@ -21,10 +21,10 @@ const showRemoteKeysPostController = require('../controllers/ssh/key/remote/show
 
 const checkNodePostController = require('../controllers/ssh/node/check/post');
 
-const checkNodeListenerPostController = require('../controllers/ssh/node-listener/check/post');
-const installNodeListenerPostController = require('../controllers/ssh/node-listener/install/post');
-const uninstallNodeListenerPostController = require('../controllers/ssh/node-listener/uninstall/post');
-const updateNodeListenerPostController = require('../controllers/ssh/node-listener/update/post');
+const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
+const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
+const uninstallServerListenerPostController = require('../controllers/ssh/server-listener/uninstall/post');
+const updateServerListenerPostController = require('../controllers/ssh/server-listener/update/post');
 
 const checkResourcePostController = require('../controllers/ssh/resource/check/post');
 
@@ -98,24 +98,24 @@ router.post(
 );
 
 router.post(
-  '/node-listener/check',
+  '/server-listener/check',
     isAuth,
-    checkNodeListenerPostController
+    checkServerListenerPostController
 );
 router.post(
-  '/node-listener/install',
+  '/server-listener/install',
     isAuth,
-    installNodeListenerPostController
+    installServerListenerPostController
 );
 router.post(
-  '/node-listener/uninstall',
+  '/server-listener/uninstall',
     isAuth,
-    uninstallNodeListenerPostController
+    uninstallServerListenerPostController
 );
 router.post(
-  '/node-listener/update',
+  '/server-listener/update',
     isAuth,
-    updateNodeListenerPostController
+    updateServerListenerPostController
 );
 
 router.post(

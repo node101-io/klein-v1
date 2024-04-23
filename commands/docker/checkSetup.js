@@ -1,3 +1,3 @@
-module.exports = _ => {
-  return 'systemctl is-active docker';
-};
+module.exports = _ => `
+  systemctl is-active docker
+`;

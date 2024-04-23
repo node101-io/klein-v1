@@ -9,15 +9,20 @@ module.exports = (req, res) => {
 
   req.body.filename = req.body.filename.trim().replace(/\.pub$/, '');
 
-  fs.unlink(path.join(Preferences.get('sshFolderPath'), `${req.body.filename}.pub`), err => {
-    if (err && err.code == 'ENOENT') return res.json({ err: 'document_not_found' });
-    if (err) return res.json({ err: err });
+  Preferences.get('sshFolderPath', (err, sshFolderPath) => {
+    if (err)
+      return res.json({ err: err });
 
-    fs.unlink(path.join(Preferences.get('sshFolderPath'), req.body.filename), err => {
+    fs.unlink(path.join(sshFolderPath, `${req.body.filename}.pub`), err => {
       if (err && err.code == 'ENOENT') return res.json({ err: 'document_not_found' });
       if (err) return res.json({ err: err });
 
-      return res.json({});
+      fs.unlink(path.join(sshFolderPath, req.body.filename), err => {
+        if (err && err.code == 'ENOENT') return res.json({ err: 'document_not_found' });
+        if (err) return res.json({ err: err });
+
+        return res.json({});
+      });
     });
   });
 };

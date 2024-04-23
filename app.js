@@ -21,23 +21,20 @@ dotenv.config();
 
 const AppKey = require('./utils/appKey');
 const Preferences = require('./utils/preferences');
-const WebSocketInstance = require('./websocket/Instance');
+const WebSocketServer = require('./utils/webSocketServer');
 
 const APP_PORT = process.env.APP_PORT || 10101;
 const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 10180;
 const DEEP_LINK_PROTOCOL = process.env.DEEP_LINK_PROTOCOL || 'klein-run';
-const TRAY_HOVER_TEXT = process.env.TRAY_HOVER_TEXT || 'Klein';
 
-const app = express();
-const localServer = http.createServer(app);
+const expressApp = express();
+const localServer = http.createServer(expressApp);
 
 const authRouteController = require('./routes/authRoute');
 const indexRouteController = require('./routes/indexRoute');
 const sshRouteController = require('./routes/sshRoute');
 const notificationRouteController = require('./routes/notificationRoute');
-
-Preferences.init();
-WebSocketInstance.create(WEBSOCKET_PORT);
+const preferenceRouteController = require('./routes/preferenceRoute');
 
 i18n.configure({
   locales: ['en', 'tr'],
@@ -46,91 +43,115 @@ i18n.configure({
   defaultLocale: 'en'
 });
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
+expressApp.set('view engine', 'pug');
+expressApp.set('views', path.join(__dirname, 'views'));
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'img/icons/favicon.ico')));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(i18n.init);
-app.use((req, res, next) => {
-  if (!req.query || typeof req.query != 'object')
-    req.query = {};
-  if (!req.body || typeof req.body != 'object')
-    req.body = {};
-
-  res.locals.WEBSOCKET_PORT = WEBSOCKET_PORT;
-
-  return next();
-});
-app.use(session({
-  secret: 'deneme', // TODO: change this
+expressApp.use(express.static(path.join(__dirname, 'public')));
+expressApp.use(favicon(path.join(__dirname, 'public', 'img/icons/favicon.ico')));
+expressApp.use(bodyParser.json());
+expressApp.use(bodyParser.urlencoded({ extended: true }));
+expressApp.use(i18n.init);
+expressApp.use(WebSocketServer.getPortHandler(WEBSOCKET_PORT));
+expressApp.use(session({
+  secret: 'node101', // TODO: change this data/ yoksa oluştur varsa al
   resave: false,
   saveUninitialized: true
 }));
-
-app.use('/', indexRouteController);
-app.use('/auth', authRouteController);
-app.use('/ssh', sshRouteController);
-app.use('/notification', notificationRouteController);
-app.use((req, res, next) => {
-  if (!req.route)
-    return res.redirect('/');
-
-  return next();
+expressApp.use('/', indexRouteController);
+expressApp.use('/auth', authRouteController);
+expressApp.use('/ssh', sshRouteController);
+expressApp.use('/notification', notificationRouteController);
+expressApp.use('/preference', preferenceRouteController);
+expressApp.all('*', (req, res) => {
+  res.redirect('/');
 });
 
-localServer.listen(APP_PORT, () => {
-  console.log(`Server is on port ${APP_PORT} and is running.`);
-}).on('error', (err) => {
-  if (err.code == 'EADDRINUSE')
-    dialog.showErrorBox('Port In Use', `Port ${APP_PORT} is already in use.`);
+const setupTrayMenu = _ => {
+  const image = nativeImage.createFromPath(path.join(__dirname, 'public/img/icons/favicon.ico'));
+  const tray = Tray(image.resize({ width: 16, height: 16 }));
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Launch',
+      click: _ => shell.openExternal(`http://localhost:${APP_PORT}/auth?app_key=${AppKey.get()}`)
+    },
+    {
+      label: 'About',
+      click: _ => dialog.showMessageBox({
+        type: 'info',
+        message: `node101 | ${electronApp.getVersion()}`,
+        icon: image
+      })
+    },
+    {
+      label: 'Copy Unique Key',
+      click: _ => clipboard.writeText(AppKey.get())
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Quit',
+      click: _ => electronApp.quit()
+    }
+  ]);
 
-  console.log(`Port ${APP_PORT} is already in use.`); // TODO: what to do?
-});
+  tray.setContextMenu(menu);
+};
+
+const setupDeepLink = _ => {
+  if (process.defaultApp) {
+    if (process.argv.length >= 2)
+      electronApp.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL, process.execPath, [path.resolve(process.argv[1])]);
+  } else {
+    electronApp.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL);
+  };
+};
 
 if (!electronApp.requestSingleInstanceLock())
   electronApp.quit();
 
-electronApp.dock.hide();
+autoUpdater.updateElectronApp();
 
 electronApp
-  .on('ready', () => {
-    AppKey.create();
+  .on('ready', _ => {
+    AppKey.create((err, data) => {
+      if (err) return console.log(`AppKey could not be created: ${err}`);
 
-    const image = nativeImage.createFromPath(path.join(__dirname, 'public/img/icons/favicon.ico'));
-    const tray = Tray(image.resize({ width: 16, height: 16 }));
-    const menu = Menu.buildFromTemplate([
-      {
-        label: 'Launch',
-        click: () => shell.openExternal(`http://localhost:${APP_PORT}`)
-      },
-      {
-        label: 'About',
-        click: () => dialog.showMessageBoxSync({
-          type: 'info',
-          message: `node101 | ${electronApp.getVersion()}`,
-          icon: image
-        })
-      },
-      {
-        label: 'Copy Unique Key',
-        click: () => clipboard.writeText(AppKey.get())
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Quit',
-        click: () => electronApp.quit()
-      }
-    ]);
+      console.log(`AppKey is ${data.encrypted ? 'encrypted' : 'not encrypted'} and is created.`);
+    });
 
-    tray.setContextMenu(menu);
-    tray.setToolTip(TRAY_HOVER_TEXT);
+    WebSocketServer.create(WEBSOCKET_PORT, err => {
+      if (err) return console.log(`WebSocketServer could not be started: ${err}`);
 
-    autoUpdater.updateElectronApp();
+      console.log(`WebSocketServer is on port ${WEBSOCKET_PORT} and is running.`);
+    });
+
+    Preferences.init((err, preferences) => {
+      if (err) return console.log(err);
+
+      console.log('Preferences are initialized.');
+    });
+
+    localServer.listen(APP_PORT, _ => {
+      console.log(`Server is on port ${APP_PORT} and is running.`);
+
+      setupTrayMenu();
+
+      setupDeepLink();
+    }).on('error', err => {
+      if (err.code == 'EADDRINUSE')
+        dialog.showMessageBoxSync({
+          type: 'warning',
+          message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`
+        });
+      else
+        dialog.showMessageBoxSync({
+          type: 'error',
+          message: `Server could not be started: ${err}`
+        });
+
+      electronApp.quit();
+    });
   })
   .on('open-url', (event, url) => {
     dialog.showErrorBox('Welcome Back', `You arrived from: ${url}`);
@@ -138,10 +159,3 @@ electronApp
   .on('second-instance', (event, commandLine, workingDirectory) => {
     dialog.showErrorBox('Welcome Back', `You arrived from: ${commandLine.pop()}`);
   });
-
-if (process.defaultApp) {
-  if (process.argv.length >= 2)
-    electronApp.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL, process.execPath, [path.resolve(process.argv[1])]);
-} else {
-  electronApp.setAsDefaultProtocolClient(DEEP_LINK_PROTOCOL);
-};

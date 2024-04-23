@@ -1,4 +1,4 @@
-const makeServerManager = () => {
+const makeServerManager = _ => {
   const _checkDocker = callback => {
     localhostRequest('/ssh/docker/check', 'POST', {
       host: window.host,
@@ -10,8 +10,8 @@ const makeServerManager = () => {
     });
   };
 
-  const _checkNodeListenerAndMatchVersion = callback => {
-    localhostRequest('/ssh/node-listener/check', 'POST', {
+  const _checkServerListenerAndMatchVersion = callback => {
+    localhostRequest('/ssh/server-listener/check', 'POST', {
       host: window.host,
     }, (err, res) => {
       if (err || res.err)
@@ -107,7 +107,7 @@ const makeServerManager = () => {
       _checkDocker(err => {
         if (err) return callback(err);
 
-        _checkNodeListenerAndMatchVersion(err => {
+        _checkServerListenerAndMatchVersion(err => {
           if (err) return callback(err);
 
           _checkRunningNodeInstance(err => {
@@ -122,8 +122,8 @@ const makeServerManager = () => {
         });
       });
     },
-    updateNodeListener: callback => {
-      localhostRequest('/ssh/node-listener/update', 'POST', {
+    updateServerListener: callback => {
+      localhostRequest('/ssh/server-listener/update', 'POST', {
         host: window.host
       }, (err, res) => {
         if (err || res.err)
@@ -132,8 +132,8 @@ const makeServerManager = () => {
         return callback(null);
       });
     },
-    installNodeListener: function (callback) {
-      localhostRequest('/ssh/node-listener/install', 'POST', {
+    installServerListener: function (callback) {
+      localhostRequest('/ssh/server-listener/install', 'POST', {
         host: window.host
       }, (err, res) => {
         if (err || res.err)
@@ -142,8 +142,8 @@ const makeServerManager = () => {
         return callback(null);
       });
     },
-    uninstallNodeListener: function (callback) {
-      localhostRequest('/ssh/node-listener/uninstall', 'POST', {
+    uninstallServerListener: function (callback) {
+      localhostRequest('/ssh/server-listener/uninstall', 'POST', {
         host: window.host
       }, (err, res) => {
         if (err || res.err)

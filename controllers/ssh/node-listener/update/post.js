@@ -1,13 +1,13 @@
 const sshRequest = require("../../../../utils/sshRequest");
 
-const updateNodeListenerCommand = require("../../../../commands/node-listener/update");
+const updateServerListenerCommand = require("../../../../commands/server-listener/update");
 
 const versions = require("../../../../versions");
 
 module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
-    command: updateNodeListenerCommand(versions.nodeListener)
+    command: updateServerListenerCommand(versions.serverListener)
   }, (err, data) => {
     if (err)
       return res.json({ err: err });

@@ -9,7 +9,7 @@ module.exports = (req, res) => {
   if (electron.clipboard.readText() == req.body.appKey)
     electron.clipboard.clear();
 
-  req.session.APPKEY = req.body.appKey;
+  req.session.APP_KEY = req.body.appKey;
 
   return res.json({ err: null });
 };

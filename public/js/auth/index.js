@@ -1,4 +1,4 @@
-window.addEventListener('load', () => {
+window.addEventListener('load', _ => {
   document.addEventListener('click', event => {
     if (event.target.closest('#appKey-auth-button')) {
       localhostRequest('/auth', 'POST', {

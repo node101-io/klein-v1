@@ -21,15 +21,19 @@ module.exports = (req, res) => {
     if (!req.body.filename || typeof req.body.filename != 'string' || !req.body.filename.trim().length)
       req.body.filename = `id_${SSH_KEY_TYPE_TO_GENERATE}_${Date.now()}`;
 
-    const keyPath = path.join(Preferences.get('sshFolderPath'), req.body.filename);
-
-    fs.writeFile(keyPath, keys.private, err => {
+    Preferences.get('sshFolderPath', (err, sshFolderPath) => {
       if (err) return res.json({ err: err });
 
-      fs.writeFile(`${keyPath}.pub`, keys.public, err => {
+      const keyPath = path.join(sshFolderPath, req.body.filename);
+
+      fs.writeFile(keyPath, keys.private, err => {
         if (err) return res.json({ err: err });
 
-        return callback(null, `${keyPath}.pub`);
+        fs.writeFile(`${keyPath}.pub`, keys.public, err => {
+          if (err) return res.json({ err: err });
+
+          return callback(null, `${keyPath}.pub`);
+        });
       });
     });
   });

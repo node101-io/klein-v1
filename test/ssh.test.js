@@ -4,16 +4,15 @@ const sshRequest = require('../utils/sshRequest');
 
 dotenv.config();
 
-jest.mock('../utils/preferences.js', () => {
+jest.mock('../utils/preferences.js', _ => {
   return {
     get: key => {
-      if (key == 'sshFolderPath')
-        return 'path/to/ssh/folder';
+      if (key == 'sshFolderPath') return 'path/to/ssh/folder';
     }
   };
 });
 
-describe('type checks', () => {
+describe('type checks', _ => {
   it('should call callback with "bad_request" if type is not provided', done => {
     sshRequest(null, {}, (err, res) => {
       expect(err).toBe('bad_request');
@@ -29,7 +28,7 @@ describe('type checks', () => {
   });
 });
 
-describe('connect', () => {
+describe('connect', _ => {
   it('should call callback with "bad_request" if type is "connect:password" and data.host is not provided', done => {
     sshRequest('connect:password', {}, (err, res) => {
       expect(err).toBe('bad_request');
@@ -99,7 +98,7 @@ describe('connect', () => {
   });
 });
 
-describe('exec', () => {
+describe('exec', _ => {
   it('should call callback with "bad_request" if type is "exec" and command is not provided', done => {
     sshRequest('exec', {}, (error, data) => {
       expect(error).toBe('bad_request');
@@ -117,7 +116,7 @@ describe('exec', () => {
   });
 });
 
-describe('exec:stream', () => {
+describe('exec:stream', _ => {
   it('should call callback with "bad_request" if type is "exec:stream" and command is not provided', done => {
     sshRequest('exec:stream', {}, (error, data) => {
       expect(error).toBe('bad_request');
@@ -135,7 +134,7 @@ describe('exec:stream', () => {
   });
 });
 
-describe('disconnect', () => {
+describe('disconnect', _ => {
   it('should call callback with "bad_request" if type is "disconnect" and host is not provided', done => {
     sshRequest('disconnect', {}, (error, data) => {
       expect(error).toBe('bad_request');
