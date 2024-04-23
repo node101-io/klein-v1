@@ -1,18 +1,21 @@
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const ssh2 = require('ssh2');
 
-const webSocketInstance = require('../websocket/Instance');
+const WebSocketServer = require('./webSocketServer');
+const Preferences = require('./preferences');
 
-const BAD_PASSPHRASE_MESSAGE = 'bad passphrase';
-const CONNECTION_EXPIRED_INTERVAL = 30 * 1000;
-const DEFAULT_PRIVATE_KEY_PATH = path.join(os.homedir(), '.ssh', 'id_rsa');
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
-const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
-const ONE_MINUTE_IN_MS = 60 * 1000;
-const SSH_CONNECT_TIMEOUT = 10 * 1000;
+const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
+const ERROR_MESSAGE_NO_FILE = 'No such file or directory';
+const ERROR_MESSAGE_NO_COMMAND = 'command not found';
+
+const END_EXPIRED_CONNECTIONS_EXPIRATION_TIME = 60 * 1000;
+const END_EXPIRED_CONNECTIONS_INTERVAL = 30 * 1000;
+const SSH_CONNECTION_EXPIRATION_TIME = 15 * 60 * 1000;
+const SSH_HANDSHAKE_TIMEOUT = 10 * 1000;
 const SSH_KEEP_ALIVE_INTERVAL = 1000;
+
 const TYPE_VALUES = [
   'connect:key',
   'connect:password',
@@ -24,14 +27,30 @@ const TYPE_VALUES = [
 const connections = {};
 let endExpiredConnectionsLastCalledTime = 0;
 
-class SSHConnection {
-  constructor() {
-    this.client = new ssh2.Client();
-    this.lastSeenAt = Date.now();
+const makeSSHConnection = _ => {
+  const client = new ssh2.Client();
+  let lastSeenAt = Date.now();
+
+  return {
+    getClient: _ => {
+      return client;
+    },
+    markAsSeen: _ => {
+      lastSeenAt = Date.now();
+    },
+    isExpired: _ => {
+      return Date.now() - lastSeenAt > SSH_CONNECTION_EXPIRATION_TIME;
+    },
+    isReady: _ => {
+      return client._sock && !client._sock.destroyed;
+    },
+    disconnect: _ => {
+      client.end();
+    }
   };
 };
 
-const endExpiredConnections = () => {
+const endExpiredConnections = _ => {
   endExpiredConnectionsLastCalledTime = Date.now();
 
   if (!Object.keys(connections).length) {
@@ -40,14 +59,14 @@ const endExpiredConnections = () => {
   };
 
   for (const host in connections)
-    if (Date.now() - connections[host].lastSeenAt > FIFTEEN_MINUTES_IN_MS) {
-      if (!connections[host].client._sock.destroyed)
-        connections[host].client.end();
+    if (connections[host].isExpired()) {
+      if (connections[host].isReady())
+        connections[host].disconnect();
 
-      delete connections[host]; // TODO: optimize delete
+      delete connections[host]; // TODO: optimize delete null set et
     };
 
-  setTimeout(endExpiredConnections, CONNECTION_EXPIRED_INTERVAL);
+  setTimeout(endExpiredConnections, END_EXPIRED_CONNECTIONS_INTERVAL);
 };
 
 const isSSHKeyEncrypted = privateKey => {
@@ -63,31 +82,31 @@ const isSSHKeyEncrypted = privateKey => {
 };
 
 module.exports = (type, data, callback) => {
-  const ws = webSocketInstance.get();
-
-  if (Date.now() - endExpiredConnectionsLastCalledTime > ONE_MINUTE_IN_MS) {
-    endExpiredConnectionsLastCalledTime = Date.now();
-
-    endExpiredConnections();
-  };
-
   if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
     return callback('bad_request');
 
   if (!data || typeof data != 'object')
     return callback('bad_request');
 
-  if (type == 'connect:password' || type == 'connect:key') {
-    if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
-      return callback('bad_request');
+  if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
+    return callback('bad_request');
 
+  const ws = WebSocketServer.get();
+
+  if (Date.now() - endExpiredConnectionsLastCalledTime > END_EXPIRED_CONNECTIONS_EXPIRATION_TIME) {
+    endExpiredConnectionsLastCalledTime = Date.now();
+
+    endExpiredConnections();
+  };
+
+  if (type == 'connect:password' || type == 'connect:key') {
     if (connections[data.host])
       return callback('action_already_done');
 
     const connectData = {
-      username: data.username && typeof data.username == 'string' && data.title.trim().length ? data.username.trim() : 'root',
+      username: data.username && typeof data.username == 'string' && data.username.trim().length ? data.username.trim() : 'root',
       host: data.host.trim(),
-      readyTimeout: SSH_CONNECT_TIMEOUT,
+      readyTimeout: SSH_HANDSHAKE_TIMEOUT,
       keepaliveInterval: SSH_KEEP_ALIVE_INTERVAL
     };
 
@@ -100,31 +119,38 @@ module.exports = (type, data, callback) => {
 
       connectData.password = data.password;
     } else if (type == 'connect:key') {
-      const privateKeyPath = data.privateKeyPath && typeof data.privateKeyPath == 'string' && data.privateKeyPath.trim().length ? data.privateKeyPath.trim() : DEFAULT_PRIVATE_KEY_PATH;
+      if (!data.filename || typeof data.filename != 'string' || !data.filename.trim().length)
+        return callback('bad_request');
 
-      if (!fs.existsSync(privateKeyPath))
-        return callback('document_not_found');
+      data.filename = data.filename.trim().replace(/\.pub$/, '');
 
-      const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+      Preferences.get('sshFolderPath', (err, sshFolderPath) => {
+        const privateKeyPath = path.join(sshFolderPath, data.filename);
 
-      connectData.privateKey = privateKey;
+        if (!fs.existsSync(privateKeyPath))
+          return callback('document_not_found');
 
-      if (isSSHKeyEncrypted(privateKey)) {
-        if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
-          return callback('bad_request');
+        const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
 
-        connectData.passphrase = data.passphrase;
-      };
+        connectData.privateKey = privateKey;
+
+        if (isSSHKeyEncrypted(privateKey)) {
+          if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
+            return callback('bad_request');
+
+          connectData.passphrase = data.passphrase;
+        };
+      });
     };
 
-    connections[data.host] = new SSHConnection();
+    connections[data.host] = makeSSHConnection();
 
     try {
-      connections[data.host].client
-        .on('ready', () => {
+      connections[data.host].getClient()
+        .on('ready', _ => {
           return callback(null);
         })
-        .on('timeout', () => {
+        .on('timeout', _ => {
           delete connections[data.host];
 
           return callback('timed_out');
@@ -139,7 +165,7 @@ module.exports = (type, data, callback) => {
             return callback('network_error');
 
           if (err && err.level == 'client-timeout')
-            return callback('timed_out');
+            return callback('timed_out'); // TODO: fix needed (maybe?)
 
           return callback('unknown_error');
         })
@@ -147,74 +173,94 @@ module.exports = (type, data, callback) => {
     } catch (err) {
       delete connections[data.host];
 
-      if (err.message.includes(BAD_PASSPHRASE_MESSAGE))
+      if (err.message.includes(ERROR_MESSAGE_BAD_PASSPHRASE))
         return callback('bad_passphrase');
 
+      console.error(err);
       return callback('unknown_error');
     };
   } else if (type == 'disconnect') {
-    if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
-      return callback('bad_request');
-
     if (!connections[data.host])
       return callback('bad_request');
 
-    if (connections[data.host].client._sock.destroyed)
+    if (!connections[data.host].isReady())
       return callback('network_error');
 
-    connections[data.host].client.end();
+    connections[data.host].disconnect();
 
     delete connections[data.host];
 
-    callback(null);
+    return callback(null);
   } else if (type == 'exec' || type == 'exec:stream') {
-    if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
-      return callback('bad_request');
-
     if (!data.command || typeof data.command != 'string' || !data.command.trim().length)
       return callback('bad_request');
 
     if (!connections[data.host])
       return callback('bad_request');
 
-    if (connections[data.host].client._sock.destroyed)
+    if (!connections[data.host].isReady())
       return callback('network_error');
 
+    data.command = `source $HOME/.bash_profile 2>/dev/null; ${data.command}`;
+
     if (type == 'exec') {
-      connections[data.host].client.exec(data.command, (err, stream) => {
+      connections[data.host].getClient().exec(data.command, (err, stream) => {
         if (err) return callback(err);
 
         let stdout = '';
+        let stderr = '';
 
         stream
-          .on('data', data => {
-            stdout += data;
+          .on('data', streamData => {
+            stdout += streamData;
           })
-          .on('close', () => {
-            connections[data.host].lastSeenAt = Date.now();
+          .on('close', _ => {
+            connections[data.host].markAsSeen();
 
-            callback(null, stdout);
+            if (stderr.includes(ERROR_MESSAGE_NO_FILE))
+              return callback('document_not_found');
+
+            if (stdout.includes(ERROR_MESSAGE_NO_COMMAND))
+              return callback('command_not_found');
+
+            return callback(stderr.trim() || null, stdout.trim() || null);
+          })
+          .stderr.on('data', data => {
+            stderr += data;
           });
       });
     } else if (type == 'exec:stream') {
-      if (data.id && typeof data.id != 'string' && data.id.trim().length)
+      if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
         return callback('bad_request');
 
       if (!ws || ws.readyState != ws.OPEN)
         return callback('websocket_error');
 
-      connections[data.host].client.exec(data.command, (err, stream) => {
+      connections[data.host].getClient().exec(data.command, (err, stream) => {
         if (err) return callback(err);
+
+        let stdout = '';
 
         stream
           .on('data', streamData => {
+            streamData = Buffer.from(streamData).toString('utf8');
+
+            stdout += streamData;
+
+            if (stdout.length > 1024 * 100)
+              stdout = stdout.slice(stdout.length / 2);
+
             ws.send(JSON.stringify({
               id: data.id,
-              data: Buffer.from(streamData).toString('utf8'),
+              data: streamData,
             }));
           })
-          .on('close', () => callback(null));
-        
+          .on('close', _ => {
+            connections[data.host].markAsSeen();
+
+            return callback(null, stdout);
+          });
+
         ws.on('message', message => {
           const parsedMessage = JSON.parse(message);
 

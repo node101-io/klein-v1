@@ -24,7 +24,7 @@ data = {
 */
 
 const path = require('path');
-const { Notification } = require('electron')
+const { Notification } = require('electron');
 
 module.exports = (data, callback) => {
   if (!data || typeof data != 'object')
@@ -75,7 +75,7 @@ module.exports = (data, callback) => {
         (action.text && typeof action.text == 'string') &&
         (action.onClick && typeof action.onClick == 'function')
       )
-      
+
       options.actions.push(action);
     };
 
@@ -91,15 +91,14 @@ module.exports = (data, callback) => {
 
   const notification = new Notification(options);
 
-  notification.on('click', (event) => {   
-    if (data.onClick) data.onClick();
-  });
-
-  notification.on('action', (event, index) => {
-    options.actions[index].onClick();
-  });
-
-  notification.show();
+  notification
+    .on('click', _ => {
+      if (data.onClick) data.onClick();
+    })
+    .on('action', (_, index) => {
+      options.actions[index].onClick();
+    })
+    .show();
 
   callback(null, data);
 };
