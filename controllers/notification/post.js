@@ -1,7 +1,10 @@
 const notificationRequest = require('../../utils/notificationRequest');
 
 module.exports = (req, res) => {
-  notificationRequest(req.body)
-    .catch(err => res.json({ err: err }))
-    .then(data => res.json({ data: data }));
+  notificationRequest(req.body, (err, data) => {
+    if (err)
+      return res.json({ err: err });
+
+    return res.json({ data: data });
+  });
 };

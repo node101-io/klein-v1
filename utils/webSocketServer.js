@@ -11,13 +11,15 @@ const WebSocketServer = {
       .on('connection', ws => {
         server = ws;
       })
+      .on('close', _ => {
+        server = null;
+      })
       .on('error', err => {
         if (err.code == 'EADDRINUSE')
           return callback('port_in_use');
 
         return callback(err);
       });
-    // TODO: disconnect eventi dinle
   },
   get: _ => server,
   getPortHandler: port => {

@@ -110,6 +110,8 @@ const setupDeepLink = _ => {
 if (!electronApp.requestSingleInstanceLock())
   electronApp.quit();
 
+electronApp.dock.hide();
+
 autoUpdater.updateElectronApp();
 
 electronApp
@@ -117,15 +119,13 @@ electronApp
     AppKey.create((err, data) => {
       if (err) return console.log(`AppKey could not be created: ${err}`);
 
-      console.log(`AppKey is ${data.encrypted ? 'encrypted' : 'not encrypted'} and is created.`);
+      console.log(`AppKey is ${data.encrypted ? '' : 'not'} encrypted and is created.`);
     });
-
     WebSocketServer.create(WEBSOCKET_PORT, err => {
       if (err) return console.log(`WebSocketServer could not be started: ${err}`);
 
       console.log(`WebSocketServer is on port ${WEBSOCKET_PORT} and is running.`);
     });
-
     Preferences.init((err, preferences) => {
       if (err) return console.log(err);
 
