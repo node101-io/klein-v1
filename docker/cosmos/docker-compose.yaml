@@ -22,27 +22,58 @@
 #     ports:
 #       - 3000:26657
 
+# services:
+#   celestia:
+#     build:
+#       context: .
+#       args:
+#         GO_VERSION: 1.22
+#         PROJECT_FOLDER: celestia-app
+#         DAEMON_NAME: celestia-appd
+#         DAEMON_HOME: /root/.celestia-app
+#         RPC_URL: https://celestia-testnet-rpc.polkachu.com
+#         CHAIN_ID: mocha-4
+#         VERSION: v1.9.0
+#         REPO: https://github.com/celestiaorg/celestia-app.git
+#         GENESIS_FILE: https://snapshots.polkachu.com/testnet-genesis/celestia/genesis.json
+#         ADDRBOOK: https://snapshots.polkachu.com/testnet-addrbook/cosmos/addrbook.json
+#         DENOM: utia
+#         MIN_GAS_PRICES: 0.002
+#         MONIKER: your_moniker
+#         PEERS: bf70b5aea48b82b04223a5c7302ff33580cdb543@23.105.164.129:26656,ac8e5137b24fbea04bba387a06713c9700fb4d1c@37.27.67.47:26656,8badeed7f48eefd5d43af7eb7662f2b578304a27@138.201.63.38:26686,45885f066225063106551d9bf1f31e6091a9d06c@65.108.13.154:34656,6a09e06bba9a34afd48471466a0ac39a4173bbab@5.2.128.186:26656
+#         SEEDS: ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@testnet-seeds.polkachu.com:11656
+#         SNAPSHOT: https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
+#     container_name: celestia-node
+#     restart: always
+#     ports:
+#       - 26657:3000
+
 services:
   celestia:
     build:
       context: .
       args:
         GO_VERSION: 1.22
-        PROJECT_FOLDER: celestia-app
-        DAEMON_NAME: celestia-appd
-        DAEMON_HOME: /root/.celestia-app
-        RPC_URL: https://celestia-testnet-rpc.polkachu.com
-        CHAIN_ID: mocha-4
-        VERSION: v1.9.0
-        REPO: https://github.com/celestiaorg/celestia-app.git
-        GENESIS_FILE: https://snapshots.polkachu.com/testnet-genesis/celestia/genesis.json
-        ADDRBOOK: https://snapshots.polkachu.com/testnet-addrbook/cosmos/addrbook.json
-        DENOM: utia
-        MIN_GAS_PRICES: 0.002
-        MONIKER: your_moniker
-        PEERS: bf70b5aea48b82b04223a5c7302ff33580cdb543@23.105.164.129:26656,ac8e5137b24fbea04bba387a06713c9700fb4d1c@37.27.67.47:26656,8badeed7f48eefd5d43af7eb7662f2b578304a27@138.201.63.38:26686,45885f066225063106551d9bf1f31e6091a9d06c@65.108.13.154:34656,6a09e06bba9a34afd48471466a0ac39a4173bbab@5.2.128.186:26656
-        SEEDS: ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@testnet-seeds.polkachu.com:11656
-        SNAPSHOT: https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
     container_name: celestia-node
+    restart: always
     ports:
       - 26657:3000
+    environment:
+      - RPC_URL=https://celestia-testnet-rpc.polkachu.com
+      - CHAIN_ID=mocha-4
+      - PROJECT_FOLDER=celestia-app
+      - VERSION=v1.9.0
+      - REPO=https://github.com/celestiaorg/celestia-app.git
+      - GENESIS_FILE=https://snapshots.polkachu.com/testnet-genesis/celestia/genesis.json
+      - ADDRBOOK=https://snapshots.polkachu.com/testnet-addrbook/cosmos/addrbook.json
+      - DENOM=utia
+      - MIN_GAS_PRICES=0.002
+      - MONIKER=your_moniker
+      - DAEMON_NAME=celestia-appd
+      - DAEMON_HOME=/root/.celestia-app
+      - PEERS=bf70b5aea48b82b04223a5c7302ff33580cdb543@23.105.164.129:26656,ac8e5137b24fbea04bba387a06713c9700fb4d1c@37.27.67.47:26656,8badeed7f48eefd5d43af7eb7662f2b578304a27@138.201.63.38:26686,45885f066225063106551d9bf1f31e6091a9d06c@65.108.13.154:34656,6a09e06bba9a34afd48471466a0ac39a4173bbab@5.2.128.186:26656
+      - SEEDS=ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@testnet-seeds.polkachu.com:11656
+      - SNAPSHOT=https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
+    volumes:
+      - ./data:/root/.celestia-app
+    entrypoint: [ "/bin/bash", "/root/node.sh" ]
