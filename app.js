@@ -116,41 +116,35 @@ autoUpdater.updateElectronApp();
 
 electronApp
   .on('ready', _ => {
-    AppKey.create((err, data) => {
-      if (err) return console.log(`AppKey could not be created: ${err}`);
+    AppKey.create();
 
-      console.log(`AppKey is ${data.encrypted ? '' : 'not'} encrypted and is created.`);
-    });
     WebSocketServer.create(WEBSOCKET_PORT, err => {
-      if (err) return console.log(`WebSocketServer could not be started: ${err}`);
-
-      console.log(`WebSocketServer is on port ${WEBSOCKET_PORT} and is running.`);
-    });
-    Preferences.init((err, preferences) => {
       if (err) return console.log(err);
 
-      console.log('Preferences are initialized.');
-    });
+      Preferences.init((err, preferences) => {
+        if (err) return console.log(err);
 
-    localServer.listen(APP_PORT, _ => {
-      console.log(`Server is on port ${APP_PORT} and is running.`);
+        localServer.listen(APP_PORT, _ => {
+          console.log(`Server is on port ${APP_PORT} and is running.`);
 
-      setupTrayMenu();
+          setupTrayMenu();
 
-      setupDeepLink();
-    }).on('error', err => {
-      if (err.code == 'EADDRINUSE')
-        dialog.showMessageBoxSync({
-          type: 'warning',
-          message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`
+          setupDeepLink();
+        }).on('error', err => {
+          if (err.code == 'EADDRINUSE')
+            dialog.showMessageBoxSync({
+              type: 'warning',
+              message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`
+            });
+          else
+            dialog.showMessageBoxSync({
+              type: 'error',
+              message: `Server could not be started: ${err}`
+            });
+
+          electronApp.quit();
         });
-      else
-        dialog.showMessageBoxSync({
-          type: 'error',
-          message: `Server could not be started: ${err}`
-        });
-
-      electronApp.quit();
+      });
     });
   })
   .on('open-url', (event, url) => {

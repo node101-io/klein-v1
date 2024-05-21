@@ -44,9 +44,12 @@ const makeServerManager = _ => {
   };
 
   return {
-    connectWithPassword: (data, callback) => {
+    connectWithPassword: (data, onData, callback) => {
+      const requestId = onStreamData(onData);
+
       localhostRequest('/ssh/connection/password', 'POST', {
         host: window.host,
+        id: requestId,
         ...data
       }, (err, res) => {
         if (err || res.err)
@@ -87,21 +90,30 @@ const makeServerManager = _ => {
       });
     },
     installDocker: (onData, callback) => {
-      const requestId = onStreamData(onData);
+      _checkDocker(err => {
+        if (err && err != 'docker_not_installed' && err != 'docker_not_running')
+          return callback(err);
 
-      localhostRequest('/ssh/docker/install', 'POST', {
-        host: window.host,
-        id: requestId
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+        if (err) {
+          const requestId = onStreamData(onData);
 
-        endStream(requestId);
+          localhostRequest('/ssh/docker/install', 'POST', {
+            host: window.host,
+            id: requestId
+          }, (err, res) => {
+            if (err || res.err)
+              return callback(err || res.err);
 
-        return callback(null, res.data);
+            endStream(requestId);
+
+            return callback(null);
+          });
+
+          return requestId;
+        };
+
+        return callback('docker_already_installed');
       });
-
-      return requestId;
     },
     checkAvailibilityForNodeInstallation: callback => {
       _checkDocker(err => {
@@ -132,27 +144,48 @@ const makeServerManager = _ => {
         return callback(null);
       });
     },
-    installServerListener: function (callback) {
-      localhostRequest('/ssh/server-listener/install', 'POST', {
-        host: window.host
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+    installServerListener: (onData, callback) => {
+      _checkServerListenerAndMatchVersion(err => {
+        if (err && err != 'server_listener_not_running')
+          return callback(err);
 
-        return callback(null);
+        if (err) {
+          const requestId = onStreamData(onData);
+
+          localhostRequest('/ssh/server-listener/install', 'POST', {
+            host: window.host,
+            id: requestId
+          }, (err, res) => {
+            if (err || res.err)
+              return callback(err || res.err);
+
+            endStream(requestId);
+
+            return callback(null);
+          });
+
+          return requestId;
+        };
+
+        return callback('server_listener_already_running');
       });
     },
-    uninstallServerListener: function (callback) {
-      localhostRequest('/ssh/server-listener/uninstall', 'POST', {
-        host: window.host
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+    uninstallServerListener: callback => {
+      _checkDocker(err => {
+        if (err)
+          return callback(err);
 
-        return callback(null);
+        localhostRequest('/ssh/server-listener/uninstall', 'POST', {
+          host: window.host
+        }, (err, res) => {
+          if (err || res.err)
+            return callback(err || res.err);
+
+          return callback(null);
+        });
       });
     },
-    removeRunningNodeInstance: function(callback) {
+    removeRunningNodeInstance: callback => {
       localhostRequest('/ssh/node/remove', 'POST', {
         host: window.host
       }, (err, res) => {

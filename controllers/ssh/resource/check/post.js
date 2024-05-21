@@ -1,4 +1,5 @@
 const sshRequest = require("../../../../utils/sshRequest");
+const jsonify = require("../../../../utils/jsonify");
 
 const checkCPUCommand = require("../../../../commands/resource/checkCPU");
 const checkMemoryCommand = require("../../../../commands/resource/checkMemory");

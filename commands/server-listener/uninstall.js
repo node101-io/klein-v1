@@ -1,7 +1,6 @@
 module.exports = _ => `
   cd server-listener
-  npm run docker:stop
-  npm run docker:remove
+  docker compose down --volumes --remove-orphans --rmi all
   cd ..
   rm -rf server-listener
 `;

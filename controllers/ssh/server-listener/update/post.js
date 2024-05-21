@@ -12,9 +12,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (!data || data != 'running')
-      return res.json({ err: 'node_listener_not_running' });
-
-    return res.json({});
+    return res.json({ data: data });
   });
 };

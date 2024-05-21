@@ -3,7 +3,7 @@ const ws = require('ws');
 let server = null;
 
 const WebSocketServer = {
-  create: (port, callback) => {
+  create: (port, callback) => { // TODO: callback fix here
     new ws.WebSocketServer({ port })
       .on('listening', _ => {
         return callback(null);

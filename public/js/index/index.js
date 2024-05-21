@@ -19,6 +19,17 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#login-button-password')) {
       serverManager.connectWithPassword({
         password: 'node101Bos',
+      }, data => {
+        // data.type:
+        //   connect
+        //   handshake
+        //   error
+        //   change password
+        //   ready
+        //   timeout
+        //   end
+        //   close
+        console.log(data.type);
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -42,6 +53,7 @@ window.addEventListener('load', _ => {
         host: window.host,
         command: 'echo deneme',
       }, (err, res) => {
+        console.log(err, res);
         if (err || res.err)
           return console.error(err || res.err);
 
@@ -154,6 +166,31 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#uninstall-docker-button')) {
       serverManager.uninstallDocker((err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#install-server-listener-button')) {
+      const requestId = serverManager.installServerListener(
+        data => {
+          console.log(data.data);
+        },
+        (err, res) => {
+          if (err)
+            return console.error(err);
+
+          return console.log(res);
+        }
+      );
+
+      console.log(requestId);
+    };
+
+    if (event.target.closest('#uninstall-server-listener-button')) {
+      serverManager.uninstallServerListener((err, res) => {
         if (err)
           return console.error(err);
 

@@ -10,11 +10,10 @@ function onStreamData(callback) {
   wsStreams[requestId] = callback;
 
   webSocket.addEventListener('message', message => {
-    const data = JSON.parse(message.data);
+    const data = jsonify(message.data);
 
-    if (data.id == requestId) {
+    if (data.id == requestId)
       return wsStreams[requestId](data);
-    };
   });
 
   return requestId;

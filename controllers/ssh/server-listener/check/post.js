@@ -1,7 +1,9 @@
 const sshRequest = require("../../../../utils/sshRequest");
 
+const jsonify = require("../../../../utils/jsonify");
+
 const checkServerListenerExistentCommand = require("../../../../commands/server-listener/checkExistent");
-const checkServerListenerVersionCommand = require("../../../../commands/server-listener/checkVersion");
+const getServerListenerVersionCommand = require("../../../../commands/server-listener/getVersion");
 
 const versions = require("../../../../versions");
 
@@ -13,18 +15,22 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (!data || data != 'running')
-      return res.json({ err: 'node_listener_not_running' });
+    data = jsonify(data);
+
+    if (!data || data.status != 'ok')
+      return res.json({ err: 'server_listener_not_running' });
 
     sshRequest('exec', {
       host: req.body.host,
-      command: checkServerListenerVersionCommand()
+      command: getServerListenerVersionCommand()
     }, (err, data) => {
       if (err)
         return res.json({ err: err });
 
-      if (!data || data != versions.serverListener)
-        return res.json({ err: 'node_listener_version_mismatch' });
+      data = jsonify(data);
+
+      if (!data || data.version != versions.serverListener)
+        return res.json({ err: 'server_listener_version_mismatch' });
 
       return res.json({ data: data });
     });

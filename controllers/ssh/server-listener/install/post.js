@@ -2,19 +2,17 @@ const sshRequest = require("../../../../utils/sshRequest");
 
 const installServerListenerCommand = require("../../../../commands/server-listener/install");
 
-const versions = require("../../../../versions");
+const versions = require("../../../../versions.json");
 
 module.exports = (req, res) => {
-  sshRequest('exec', {
+  sshRequest('exec:stream', {
     host: req.body.host,
+    id: req.body.id,
     command: installServerListenerCommand(versions.serverListener)
   }, (err, data) => {
     if (err)
       return res.json({ err: err });
 
-    if (!data || data != 'running')
-      return res.json({ err: 'node_listener_not_running' });
-
-    return res.json({});
+    return res.json({ data: data });
   });
 };
