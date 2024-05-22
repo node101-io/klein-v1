@@ -24,4 +24,6 @@ services:
     ports:
       - 26657:3000
     volumes:
-      - ./data:/root/.celestia-app
+      - celestia-node-volume:/root/.celestia-app
+volumes:
+  celestia-node-volume:
