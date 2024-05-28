@@ -1,11 +1,11 @@
 const sshRequest = require("../../../../utils/sshRequest");
 
-const removeNodeCommand = require("../../../../commands/node/remove");
+const uninstallNodeCommand = require("../../../../commands/node/uninstall");
 
 module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
-    command: removeNodeCommand()
+    command: uninstallNodeCommand()
   }, (err, data) => {
     if (err)
       return res.json({ err: err });

@@ -20,6 +20,8 @@ const removeRemoteKeysPostController = require('../controllers/ssh/key/remote/re
 const showRemoteKeysPostController = require('../controllers/ssh/key/remote/show/post');
 
 const checkNodePostController = require('../controllers/ssh/node/check/post');
+const installNodePostController = require('../controllers/ssh/node/install/post');
+const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
@@ -95,6 +97,16 @@ router.post(
   '/node/check',
     isAuth,
     checkNodePostController
+);
+router.post(
+  '/node/install',
+    isAuth,
+    installNodePostController
+);
+router.post(
+  '/node/uninstall',
+    isAuth,
+    uninstallNodePostController
 );
 
 router.post(

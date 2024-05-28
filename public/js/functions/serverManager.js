@@ -45,11 +45,11 @@ const makeServerManager = _ => {
 
   return {
     connectWithPassword: (data, onData, callback) => {
-      const requestId = onStreamData(onData);
+      const stream = makeStream(onData);
 
       localhostRequest('/ssh/connection/password', 'POST', {
         host: window.host,
-        id: requestId,
+        id: stream.id,
         ...data
       }, (err, res) => {
         if (err || res.err)
@@ -95,21 +95,21 @@ const makeServerManager = _ => {
           return callback(err);
 
         if (err) {
-          const requestId = onStreamData(onData);
+          const stream = makeStream(onData);
 
           localhostRequest('/ssh/docker/install', 'POST', {
             host: window.host,
-            id: requestId
+            id: stream.id
           }, (err, res) => {
             if (err || res.err)
               return callback(err || res.err);
 
-            endStream(requestId);
+            stream.end();
 
             return callback(null);
           });
 
-          return requestId;
+          return stream.id;
         };
 
         return callback('docker_already_installed');
@@ -150,21 +150,21 @@ const makeServerManager = _ => {
           return callback(err);
 
         if (err) {
-          const requestId = onStreamData(onData);
+          const stream = makeStream(onData);
 
           localhostRequest('/ssh/server-listener/install', 'POST', {
             host: window.host,
-            id: requestId
+            id: stream.id
           }, (err, res) => {
             if (err || res.err)
               return callback(err || res.err);
 
-            endStream(requestId);
+            stream.end();
 
             return callback(null);
           });
 
-          return requestId;
+          return stream.id;
         };
 
         return callback('server_listener_already_running');
@@ -185,8 +185,8 @@ const makeServerManager = _ => {
         });
       });
     },
-    removeRunningNodeInstance: callback => {
-      localhostRequest('/ssh/node/remove', 'POST', {
+    uninstallRunningNodeInstance: callback => {
+      localhostRequest('/ssh/node/uninstall', 'POST', {
         host: window.host
       }, (err, res) => {
         if (err || res.err)
@@ -194,7 +194,24 @@ const makeServerManager = _ => {
 
         return callback(null);
       });
-    }
+    },
+    installNode: (onData, callback) => {
+      const stream = makeStream(onData);
+
+      localhostRequest('/ssh/node/install', 'POST', {
+        host: window.host,
+        id: stream.id
+      }, (err, res) => {
+        if (err || res.err)
+          return callback(err || res.err);
+
+        stream.end();
+
+        return callback(null);
+      });
+
+      return stream.id;
+    },
   };
 };
 

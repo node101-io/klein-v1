@@ -197,5 +197,23 @@ window.addEventListener('load', _ => {
         return console.log(res);
       });
     };
+
+    if (event.target.closest('#install-node-button')) {
+
+
+      const requestId = serverManager.installNode(
+        data => {
+          console.log(data.data);
+        },
+        (err, res) => {
+          if (err)
+            return console.error(err);
+
+          return console.log(res);
+        }
+      );
+
+      console.log(requestId);
+    };
   });
 });
