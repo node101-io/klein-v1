@@ -1,141 +1,95 @@
-const fetch = require('node-fetch');
-
-const controller = new AbortController();
+const async = require('async');
 
 const FETCH_TIMEOUT_IN_MS = 5000;
-const RETURN_TIMEOUT_IN_MS = 1000;
 const RANDOM_PEER_COUNT = 5;
 const TYPE_VALUES = [
   'chain_info',
   'state_sync_info'
 ];
 
-const getRPCList = (data, callback) => {
-  if (typeof data.is_mainnet != 'boolean')
+const fetchWithTimeout = (url, callback) => {
+  if (!url || typeof url != 'string' || !url.trim().length)
+    return callback('bad_request');
+
+  fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_IN_MS)
+  })
+    .then(res => res.json())
+    .then(res => callback(null, res))
+    .catch(err => callback('network_error'));
+};
+
+const collectChainInfoFromRPCs = (data, callback) => {
+  if ('is_mainnet' in data && typeof data.is_mainnet != 'boolean')
     return callback('bad_request');
 
   if (!data.identifier || typeof data.identifier != 'string')
     return callback('bad_request');
 
-  fetchWithTimeout(`https://raw.githubusercontent.com/cosmos/chain-registry/master${data.is_mainnet ? '' : '/testnets'}/${data.identifier}/chain.json`, (err, res) => {
-    if (err) return;
+  fetchWithTimeout(`https://raw.githubusercontent.com/cosmos/chain-registry/master/${data.is_mainnet ? '' : 'testnets/'}${data.identifier}/chain.json`, (err, res) => {
+    if (err) return callback(err);
 
-    res.json()
-      .then(res => {
-        if (res.apis && res.apis.rpc) {
-          callback(null, res.apis.rpc.map(rpc => rpc.address));
-        };
-      })
-      .catch(err => callback('document_not_found'));
-  });
-};
+    if (!res.apis || !res.apis.rpc || !Array.isArray(res.apis.rpc) || !res.apis.rpc.length)
+      return callback('rpc_list_not_found');
 
-const fetchWithTimeout = (url, callback, timeout = FETCH_TIMEOUT_IN_MS) => {
-  const timeoutId = setTimeout(() => {
-    controller.abort();
-    callback('request_timeout');
-  }, timeout);
+    async.map(res.apis.rpc, (rpc, callback) => {
+      getChainInfoFromRPC(rpc.address, (err, chain_info) => {
+        if (err) return callback(null);
 
-  fetch(url, { signal: controller.signal })
-    .then(res => {
-      clearTimeout(timeoutId);
-      callback(null, res);
-    })
-    .catch(err => {
-      clearTimeout(timeoutId);
-      callback('request_error');
-    });
-};
-
-const getRPCInfo = (rpc, callback) => {
-  const chainInfo = {
-    rpc: rpc,
-    chainID: null,
-    version: null,
-    peers: null,
-    height: null
-  };
-
-  fetchWithTimeout(`${rpc}/status`, (err, res) => {
-    if (err) return;
-
-    res.json()
-      .then(res => {
-        if (res.result && res.result.node_info && res.result.node_info.network)
-          chainInfo.chainID = res.result.node_info.network;
-      })
-      .catch(err => null);
-  });
-
-  fetchWithTimeout(`${rpc}/abci_info`, (err, res) => {
-    if (err) return;
-
-    res.json()
-      .then(res => {
-        if (res.result && res.result.response && res.result.response.version)
-          chainInfo.version = res.result.response.version;
-      })
-      .catch(err => null);
-  });
-
-  fetchWithTimeout(`${rpc}/net_info`, (err, res) => {
-    if (err) return;
-
-    res.json()
-      .then(res => {
-        if (res.result && res.result.peers && res.result.peers.length > 0)
-          chainInfo.peers = res.result.peers.map(peer => {
-            const id = peer.node_info.id;
-            const remoteIp = peer.remote_ip;
-            const listenAddrParts = peer.node_info.listen_addr.split(':');
-            const lastPartOfListenAddr = listenAddrParts[listenAddrParts.length - 1];
-            return `${id}@${remoteIp}:${lastPartOfListenAddr}`;
-          }).slice(0, RANDOM_PEER_COUNT);
-      })
-      .catch(err => null);
-  });
-
-  fetchWithTimeout(`${rpc}/block`, (err, res) => {
-    if (err) return;
-
-    res.json()
-      .then(res => {
-        if (res.result && res.result.block && res.result.block.header && res.result.block.header.height)
-          chainInfo.height = res.result.block.header.height;
-      })
-      .catch(err => null);
-  });
-
-  setTimeout(() => {
-    if (!chainInfo.chainID && !chainInfo.version && !chainInfo.peers && !chainInfo.height)
-      return;
-
-    return callback(null, chainInfo);
-  }, FETCH_TIMEOUT_IN_MS + RETURN_TIMEOUT_IN_MS); // ????
-};
-
-const filterAndFormatTheRPCList = (rpcList, callback) => {
-  const rpcListWithChainInfo = [];
-
-  for (let i = 0; i < rpcList.length; i++)
-    getRPCInfo(rpcList[i], (err, rpcInfo) => {
+        return callback(null, chain_info);
+      });
+    }, (err, chains_info) => {
       if (err) return callback(err);
 
-      rpcListWithChainInfo.push(rpcInfo);
+      chains_info = chains_info.filter(info => info != null);
+
+      if (!chains_info.length)
+        return callback('no_response_from_any_rpc');
+
+      const maxBlockHeight = Math.max(...chains_info.map(info => info.height));
+      const activeChainsInfo = chains_info.filter(info => info.height >= maxBlockHeight - 20);
+
+      return callback(null, activeChainsInfo);
     });
-
-  setTimeout(() => {
-    if (!rpcListWithChainInfo.length)
-      return callback('no_response_from_any_rpc');
-
-    const maxHeight = Math.max(...rpcListWithChainInfo.map(info => info.height));
-    const filteredRPCList = rpcListWithChainInfo.filter(info => info.height >= maxHeight - 20);
-
-    return callback(null, filteredRPCList);
-  }, FETCH_TIMEOUT_IN_MS + RETURN_TIMEOUT_IN_MS); // ????
+  });
 };
 
-const findMostCommon = object => {
+const getChainInfoFromRPC = (rpc, callback) => {
+  async.parallel({
+    chain_id: callback => fetchWithTimeout(`${rpc}/status`, (err, res) => {
+      if (err) return callback(err);
+
+      return callback(null, res.result && res.result.node_info && res.result.node_info.network ? res.result.node_info.network : null);
+    }),
+    version: callback => fetchWithTimeout(`${rpc}/abci_info`, (err, res) => {
+      if (err) return callback(err);
+
+      return callback(null, res.result && res.result.response && res.result.response.version ? res.result.response.version : null);
+    }),
+    peers: callback => fetchWithTimeout(`${rpc}/net_info`, (err, res) => {
+      if (err) return callback(err);
+
+      return callback(null, res.result && res.result.peers && res.result.peers.length > 0 ? res.result.peers.map(peer => `${peer.node_info.id}@${peer.remote_ip}:${peer.node_info.listen_addr.split(':').pop()}`).slice(0, RANDOM_PEER_COUNT) : null);
+    }),
+    height: callback => fetchWithTimeout(`${rpc}/block`, (err, res) => {
+      if (err) return callback(err);
+
+      return callback(null, res.result && res.result.block && res.result.block.header && res.result.block.header.height ? res.result.block.header.height : null);
+    })
+  }, (err, results) => {
+    if (err) return callback(err);
+
+    return callback(null, {
+      rpc,
+      chain_id: results.chain_id,
+      version: results.version,
+      peers: results.peers,
+      height: results.height
+    });
+  });
+};
+
+const findMostCommonKeyInObject = object => {
   let mostCommon = null;
   let mostCommonCount = 0;
 
@@ -148,35 +102,35 @@ const findMostCommon = object => {
   return mostCommon;
 };
 
-const getChainInfo = (filteredRPCList, callback) => {
+const decideRelevantChainInfo = (chains_info, callback) => {
   const chainIDs = {};
   const versions = {};
   let allPeers = [];
 
-  filteredRPCList.forEach(({ chainID, version, peers }) => {
-    chainIDs[chainID] = (chainIDs[chainID] || 0) + 1;
+  chains_info.forEach(({ chain_id, version, peers }) => {
+    chainIDs[chain_id] = (chainIDs[chain_id] || 0) + 1;
     versions[version] = (versions[version] || 0) + 1;
-    allPeers = allPeers.concat(peers);
+    allPeers = [...allPeers, ...peers]
   });
 
   const filteredPeers = allPeers.filter(peer => peer !== null);
   const randomPeers = filteredPeers.length >= 5 ? filteredPeers.sort(() => Math.random() - 0.5).slice(0, RANDOM_PEER_COUNT) : filteredPeers;
 
-  callback(null, {
-    chainID: findMostCommon(chainIDs),
-    version: findMostCommon(versions),
+  return callback(null, {
+    chain_id: findMostCommonKeyInObject(chainIDs),
+    version: findMostCommonKeyInObject(versions),
     peers: randomPeers
   });
 };
 
-// const getStateSyncInfo = (filteredRPCList, callback, index = 0) => {
+// const getStateSyncInfo = (chains_info, callback, index = 0) => {
 //   const stateSyncInfo = {
 //     rpc: null,
 //     height: null,
 //     hash: null
 //   };
 
-//   const chainRPC = filteredRPCList[index];
+//   const chainRPC = chains_info[index];
 //   const trustHeight = chainRPC.height - 1000;
 
 //   fetchWithTimeout(`${chainRPC.rpc}/block?height=${trustHeight}`, (err, res) => {
@@ -191,7 +145,7 @@ const getChainInfo = (filteredRPCList, callback) => {
 //         };
 //       })
 //       .catch(err =>
-//         getStateSyncInfo(filteredRPCList, callback, index + 1)
+//         getStateSyncInfo(chains_info, callback, index + 1)
 //       );
 //   }, FETCH_TIMEOUT_IN_MS * 3);
 
@@ -211,17 +165,13 @@ module.exports = (type, data, callback) => {
     return callback('bad_request');
 
   if (type == 'chain_info') {
-    getRPCList(data, (err, rpcList) => {
+    collectChainInfoFromRPCs(data, (err, chains_info) => {
       if (err) return callback(err);
 
-      filterAndFormatTheRPCList(rpcList, (err, filteredRPCList) => {
+      decideRelevantChainInfo(chains_info, (err, chain_info) => {
         if (err) return callback(err);
 
-        getChainInfo(filteredRPCList, (err, chainInfo) => {
-          if (err) return callback(err);
-
-          callback(null, chainInfo);
-        });
+        return callback(null, chain_info);
       });
     });
   } else if (type == 'state_sync_info') {

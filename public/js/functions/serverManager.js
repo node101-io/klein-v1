@@ -211,7 +211,7 @@ const makeServerManager = _ => {
       });
 
       return stream.id;
-    },
+    }
   };
 };
 
