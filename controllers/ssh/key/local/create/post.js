@@ -32,7 +32,7 @@ module.exports = (req, res) => {
         fs.writeFile(`${keyPath}.pub`, keys.public, err => {
           if (err) return res.json({ err: err });
 
-          return callback(null, `${keyPath}.pub`);
+          return res.json(null, { data: `${keyPath}.pub` });
         });
       });
     });

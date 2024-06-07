@@ -53,11 +53,10 @@ window.addEventListener('load', _ => {
         host: window.host,
         command: 'echo deneme',
       }, (err, res) => {
-        console.log(err, res);
-        if (err || res.err)
-          return console.error(err || res.err);
+        if (err)
+          return console.error(err);
 
-        return console.log(res.data);
+        return console.log(res);
       });
     };
 
@@ -72,10 +71,10 @@ window.addEventListener('load', _ => {
         icon: 'img/icons/favicon.ico',
         sound: 'default',
       }, (err, res) => {
-        if (err || res.err)
-          return console.error(err || res.err);
+        if (err)
+          return console.error(err);
 
-        return console.log(res.data);
+        return console.log(res);
       });
     };
 
@@ -201,7 +200,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#install-node-button')) {
       nodeManager.getInstallationScriptByProject({
         network: 'cosmos',
-        project: 'celestia',
+        project: 'celestiatestnet3',
         is_mainnet: false,
       }, (err, res) => {
         if (err)
@@ -223,8 +222,13 @@ window.addEventListener('load', _ => {
       });
     };
 
-    if (event.target.closest('#get-installation-script-button')) {
+    if (event.target.closest('#uninstall-node-button')) {
+      nodeManager.uninstallRunningNodeInstance((err, res) => {
+        if (err)
+          return console.error(err);
 
+        return console.log(res);
+      });
     };
   });
 });

@@ -44,7 +44,7 @@ const collectChainInfoFromRPCs = (data, callback) => {
     if (!res.fees || !res.fees.fee_tokens || !Array.isArray(res.fees.fee_tokens) || !res.fees.fee_tokens.length || !res.fees.fee_tokens[0] || !res.fees.fee_tokens[0].denom || typeof res.fees.fee_tokens[0].denom != 'string')
       return callback('denom_not_found');
 
-    if (!res.fees.fee_tokens[0].fixed_min_gas_price || typeof res.fees.fee_tokens[0].fixed_min_gas_price != 'number')
+    if (!('fixed_min_gas_price' in res.fees.fee_tokens[0]) || typeof res.fees.fee_tokens[0].fixed_min_gas_price != 'number')
       return callback('min_gas_price_not_found');
 
     if (!res.peers || !res.peers.seeds || !Array.isArray(res.peers.seeds) || !res.peers.seeds.length)
@@ -170,9 +170,11 @@ const decideRelevantChainInfo = (chains_info, callback) => {
   const filteredPeers = allPeers.filter(peer => peer !== null);
   const randomPeers = filteredPeers.length >= 5 ? filteredPeers.sort(() => Math.random() - 0.5).slice(0, RANDOM_PEER_COUNT) : filteredPeers;
 
+  const version = findMostCommonKeyInObject(versions);
+
   return callback(null, {
     chain_id: findMostCommonKeyInObject(chainIDs),
-    version: findMostCommonKeyInObject(versions),
+    version: version.startsWith('v') ? version : `v${version}`,
     peers: randomPeers
   });
 };
