@@ -1,0 +1,6 @@
+extends ./partials/header
+block main
+  .index-each-outer-wrapper#index-each-outer-wrapper-home(style=(active_page != 'index/home' ? 'display: none' : ''))
+    include ./index/home
+  .index-each-outer-wrapper#index-each-outer-wrapper-search(style=(active_page != 'index/search' ? 'display: none' : ''))
+    include ./index/search
