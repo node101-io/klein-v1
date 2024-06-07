@@ -1,9 +1,8 @@
+const async = require('async');
 const fs = require('fs');
 const path = require('path');
 
 const sshRequest = require('../../../../../utils/sshRequest');
-
-const removeRemoteKeyCommand = require('../../../../../commands/key/remote/remove');
 
 const Preferences = require('../../../../../utils/preferences');
 
@@ -23,16 +22,38 @@ module.exports = (req, res) => {
     if (!fs.existsSync(pubkeyPath))
       return res.json({ err: 'document_not_found' });
 
-    const pubkey = fs.readFileSync(pubkeyPath, 'utf8');
+    fs.readFile(pubkeyPath, 'utf8', (err, pubkey) => {
 
-    sshRequest('exec', {
-      host: req.body.host,
-      command: removeRemoteKeyCommand(pubkey)
-    }, (err, data) => {
-      if (err)
-        return res.json({ err: err });
+      sshRequest('sftp:read_file', {
+        host: req.body.host,
+        path: '.ssh/authorized_keys'
+      }, (err, data) => {
+        if (err)
+          return res.json({ err: err });
 
-      return res.json({ data: data });
+        const authorizedKeys = data.split('\n');
+        const newAuthorizedKeys = [];
+
+        async.times(authorizedKeys.length, (i, next) => {
+          if (authorizedKeys[i].trim() != pubkey.trim())
+            newAuthorizedKeys.push(authorizedKeys[i]);
+          return next();
+        }, err => {
+          if (err)
+            return res.json({ err: err });
+
+          sshRequest('sftp:write_file', {
+            host: req.body.host,
+            path: '.ssh/authorized_keys',
+            content: newAuthorizedKeys
+          }, (err, data) => {
+            if (err)
+              return res.json({ err: err });
+
+            return res.json({ data: data });
+          });
+        });
+      });
     });
   });
 };

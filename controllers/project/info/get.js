@@ -1,6 +1,6 @@
 const async = require('async');
 
-const fetch = require('./fetch');
+const fetch = require('../../../utils/fetch');
 
 const FETCH_TIMEOUT_IN_MS = 5000;
 const RANDOM_PEER_COUNT = 5;
@@ -24,13 +24,16 @@ const findMostCommonKeyInObject = object => {
 };
 
 const collectChainInfoFromRPCs = (data, callback) => {
+  if (!data.network || typeof data.network != 'string') // TODO
+    return callback('bad_request');
+
   if (!('is_mainnet' in data) && typeof data.is_mainnet != 'boolean')
     return callback('bad_request');
 
-  if (!data.identifier || typeof data.identifier != 'string')
+  if (!data.project || typeof data.project != 'string')
     return callback('bad_request');
 
-  fetch(`https://raw.githubusercontent.com/cosmos/chain-registry/master/${data.is_mainnet ? '' : 'testnets/'}${data.identifier}/chain.json`, {
+  fetch(`https://raw.githubusercontent.com/cosmos/chain-registry/master/${data.is_mainnet ? '' : 'testnets/'}${data.project}/chain.json`, {
     timeout: FETCH_TIMEOUT_IN_MS
   }, (err, res) => {
     if (err) return callback(err);
@@ -208,22 +211,31 @@ const decideRelevantChainInfo = (chains_info, callback) => {
 //   }, FETCH_TIMEOUT_IN_MS * 3 + RETURN_TIMEOUT_IN_MS); // ????
 // };
 
-module.exports = (type, data, callback) => {
-  if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
-    return callback('bad_request');
+module.exports = (req, res) => {
+  if (!req.query.type || typeof req.query.type != 'string' || !TYPE_VALUES.includes(req.query.type))
+    return res.json({ err: 'bad_request' });
 
-  if (!data || typeof data != 'object')
-    return callback('bad_request');
+  if (!req.query.network || typeof req.query.network != 'string')
+    return res.json({ err: 'bad_request' });
 
-  if (type == 'chain_info')
-    collectChainInfoFromRPCs(data, (err, chain_info) => {
-      if (err) return callback(err);
+  if (!req.query.project || typeof req.query.project != 'string')
+    return res.json({ err: 'bad_request' });
 
-      console.log(chain_info);
-      return callback(null, chain_info);
+  if (!req.query.is_mainnet || typeof req.query.is_mainnet != 'string' || (req.query.is_mainnet != 'true' && req.query.is_mainnet != 'false'))
+    return res.json({ err: 'bad_request' });
+
+  if (req.query.type == 'chain_info')
+    collectChainInfoFromRPCs({
+      network: req.query.network,
+      project: req.query.project,
+      is_mainnet: JSON.parse(req.query.is_mainnet)
+    }, (err, chain_info) => {
+      if (err) return res.json({ err: err });
+
+      return res.json({ data: chain_info });
     });
-  else if (type == 'state_sync_info')
-    return callback('bad_request');
+  else if (req.query.type == 'state_sync_info')
+    return res.json({ err: 'bad_request' });
   else
-    return callback('not_possible_error');
+    return res.json({ err: 'not_possible_error' });
 };

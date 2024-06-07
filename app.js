@@ -35,6 +35,7 @@ const indexRouteController = require('./routes/indexRoute');
 const sshRouteController = require('./routes/sshRoute');
 const notificationRouteController = require('./routes/notificationRoute');
 const preferenceRouteController = require('./routes/preferenceRoute');
+const projectRouteController = require('./routes/projectRoute');
 
 i18n.configure({
   locales: ['en', 'tr'],
@@ -62,6 +63,7 @@ expressApp.use('/auth', authRouteController);
 expressApp.use('/ssh', sshRouteController);
 expressApp.use('/notification', notificationRouteController);
 expressApp.use('/preference', preferenceRouteController);
+expressApp.use('/project', projectRouteController);
 expressApp.all('*', (req, res) => {
   res.redirect('/');
 });

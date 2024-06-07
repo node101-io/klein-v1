@@ -4,7 +4,7 @@ module.exports = (req, res) => {
     title: 'Klein',
     includes: {
       css: ['page'],
-      js: ['page', 'localhostRequest', 'generateRandomHEX', 'webSocket', 'serverManager', 'keyManager', 'preferenceManager', 'jsonify']
+      js: ['page', 'localhostRequest', 'generateRandomHEX', 'webSocket', 'serverManager', 'nodeManager', 'keyManager', 'preferenceManager', 'jsonify']
     }
   });
 };
