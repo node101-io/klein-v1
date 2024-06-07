@@ -9,7 +9,7 @@ module.exports = (url, options, callback) => {
     signal: options.timeout && typeof options.timeout == 'number' && options.timeout > 0 ? AbortSignal.timeout(options.timeout) : null,
   })
     .then(res => {
-      if (!options.json)
+      if ('json' in options && !options.json)
         return res.text();
 
       return res.json();

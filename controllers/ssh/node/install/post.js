@@ -19,11 +19,11 @@ const installNode = (req, res) => {
       if (err)
         return res.json({ err: err });
 
-      sshRequest('exec', {
+      sshRequest('exec:stream', {
         host: req.body.host,
+        id: req.body.id,
         command: installNodeCommand()
       }, (err, data) => {
-        console.log(err, data);
         if (err)
           return res.json({ err: err });
 

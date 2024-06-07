@@ -7,8 +7,8 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: uninstallNodeCommand()
   }, (err, data) => {
-    if (err)
-      return res.json({ err: err });
+    if (!err || !err.includes('Stopped') || !err.includes('Removed'))
+      return res.json({ err: 'unknown_error' });
 
     return res.json({ data: data });
   });

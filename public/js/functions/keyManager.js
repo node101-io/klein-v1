@@ -3,42 +3,42 @@ const makeKeyManager = _ => {
     showKeysLocal: (data, callback) => {
       localhostRequest('/ssh/key/local/show', 'POST', {
         ...data
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+      }, (err, local_keys) => {
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null, local_keys);
       });
     },
     createKeyLocal: (data, callback) => {
       localhostRequest('/ssh/key/local/create', 'POST', {
         ...data
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+      }, (err, created_key_path) => {
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null, created_key_path);
       });
     },
     removeKeyLocal: (data, callback) => {
       localhostRequest('/ssh/key/local/remove', 'POST', {
         ...data
       }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null);
       });
     },
     showKeysRemote: (data, callback) => {
       localhostRequest('/ssh/key/remote/show', 'POST', {
         host: window.host,
         ...data
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+      }, (err, remote_keys) => {
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null, remote_keys);
       });
     },
     addKeyRemote: (data, callback) => {
@@ -46,10 +46,10 @@ const makeKeyManager = _ => {
         host: window.host,
         ...data
       }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null);
       });
     },
     removeKeyRemote: (data, callback) => {
@@ -57,10 +57,10 @@ const makeKeyManager = _ => {
         host: window.host,
         ...data
       }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null);
       });
     }
   };

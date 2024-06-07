@@ -1,11 +1,11 @@
 const makePreferenceManager = _ => {
   return {
     get: (key, callback) => {
-      localhostRequest(`/preference/get?key=${key}`, 'GET', {}, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+      localhostRequest(`/preference/get?key=${key}`, 'GET', {}, (err, value) => {
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null, value);
       });
     },
     set: (key, value, callback) => {
@@ -13,10 +13,10 @@ const makePreferenceManager = _ => {
         key: key,
         value: value
       }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
+        if (err)
+          return callback(err);
 
-        return callback(null, res.data);
+        return callback(null);
       });
     }
   };

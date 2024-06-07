@@ -20,8 +20,12 @@ function localhostRequest(url, method, data, callback) {
 
       if (req.responseText) {
         try {
-          const data = JSON.parse(req.responseText);
-          return callback(null, data);
+          const response = JSON.parse(req.responseText);
+
+          if (response.err)
+            return callback(response.err);
+
+          return callback(null, response.data);
         } catch (err) {
           console.log(err);
           return callback('network_error');

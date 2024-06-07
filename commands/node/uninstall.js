@@ -1,4 +1,6 @@
 module.exports = _ => `
-  docker stop $(docker ps -a -q --filter "name=klein-node-")
-  docker rm $(docker ps -a -q --filter "name=klein-node-")
+  cd klein-node &&
+  docker compose down --volumes --remove-orphans --rmi all &&
+  cd .. &&
+  rm -rf klein-node
 `;
