@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const sshRequest = require('../../../../../utils/sshRequest');
 
-const addRemoteKeyCommand = require('../../../../../commands/key/remote/add');
-
 const Preferences = require('../../../../../utils/preferences');
 
 module.exports = (req, res) => {
@@ -22,16 +20,20 @@ module.exports = (req, res) => {
     if (!fs.existsSync(pubkeyPath))
       return res.json({ err: 'document_not_found' });
 
-    const pubkey = fs.readFileSync(pubkeyPath, 'utf8');
-
-    sshRequest('exec', {
-      host: req.body.host,
-      command: addRemoteKeyCommand(pubkey)
-    }, (err, data) => {
+    fs.readFile(pubkeyPath, 'utf8', (err, pubkey) => {
       if (err)
-        return res.json({ err: err });
+        return res.json({ err: 'document_not_found' });
 
-      return res.json({ data: data });
+      sshRequest('sftp:append_file', {
+        host: req.body.host,
+        path: '.ssh/authorized_keys',
+        content: pubkey
+      }, (err, data) => {
+        if (err)
+          return res.json({ err: err });
+
+        return res.json({ data: data });
+      });
     });
   });
 };

@@ -101,10 +101,10 @@ const makeServerManager = _ => {
             host: window.host,
             id: stream.id
           }, (err, res) => {
+            stream.end();
+
             if (err || res.err)
               return callback(err || res.err);
-
-            stream.end();
 
             return callback(null);
           });
@@ -156,10 +156,10 @@ const makeServerManager = _ => {
             host: window.host,
             id: stream.id
           }, (err, res) => {
+            stream.end();
+
             if (err || res.err)
               return callback(err || res.err);
-
-            stream.end();
 
             return callback(null);
           });
@@ -185,33 +185,6 @@ const makeServerManager = _ => {
         });
       });
     },
-    uninstallRunningNodeInstance: callback => {
-      localhostRequest('/ssh/node/uninstall', 'POST', {
-        host: window.host
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
-
-        return callback(null);
-      });
-    },
-    installNode: (onData, callback) => {
-      const stream = makeStream(onData);
-
-      localhostRequest('/ssh/node/install', 'POST', {
-        host: window.host,
-        id: stream.id
-      }, (err, res) => {
-        if (err || res.err)
-          return callback(err || res.err);
-
-        stream.end();
-
-        return callback(null);
-      });
-
-      return stream.id;
-    }
   };
 };
 

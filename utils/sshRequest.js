@@ -7,6 +7,8 @@ const jsonify = require('./jsonify');
 const WebSocketServer = require('./webSocketServer');
 const Preferences = require('./preferences');
 
+const SFTP_STATUS_CODES = ssh2.utils.sftp.STATUS_CODE;
+
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
 const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
 const ERROR_MESSAGE_NO_FILE = 'No such file or directory';
@@ -23,10 +25,40 @@ const TYPE_VALUES = [
   'connect:password',
   'disconnect',
   'exec',
-  'exec:stream'
+  'exec:stream',
+  'sftp:read_file',
+  'sftp:write_file',
+  'sftp:append_file',
+  'sftp:readdir',
+  'sftp:mkdir',
+  'sftp:exists',
+  'sftp:rename',
+  'sftp:get_file',
+  'sftp:upload_file'
 ];
 
-let ws;
+const handleSFTPError = code => {
+  if (code == SFTP_STATUS_CODES.OK)
+    return null;
+  else if (code == SFTP_STATUS_CODES.EOF)
+    return 'eof_error';
+  else if (code == SFTP_STATUS_CODES.NO_SUCH_FILE)
+    return 'document_not_found';
+  else if (code == SFTP_STATUS_CODES.PERMISSION_DENIED)
+    return 'permission_denied';
+  else if (code == SFTP_STATUS_CODES.FAILURE)
+    return 'unknown_error';
+  else if (code == SFTP_STATUS_CODES.BAD_MESSAGE)
+    return 'bad_message';
+  else if (code == SFTP_STATUS_CODES.NO_CONNECTION)
+    return 'no_connection';
+  else if (code == SFTP_STATUS_CODES.CONNECTION_LOST)
+    return 'connection_lost';
+  else if (code == SFTP_STATUS_CODES.OP_UNSUPPORTED)
+    return 'unsupported_operation';
+  else
+    return 'unknown_error';
+};
 
 const isSSHKeyEncrypted = privateKey => {
   const parsedKey = ssh2.utils.parseKey(privateKey);
@@ -55,6 +87,8 @@ const makeConnections = _ => {
 
   return {
     create(id, host) {
+      const ws = WebSocketServer.get();
+
       let lastSeenAt = Date.now();
 
       const client = new ssh2.Client()
@@ -128,7 +162,7 @@ const makeConnections = _ => {
         });
 
       connections[host] = {
-        client,
+        client: client,
         markAsSeen: _ => lastSeenAt = Date.now(),
         isExpired: _ => Date.now() - lastSeenAt > SSH_CONNECTION_EXPIRATION_TIME,
         isReady: _ => client._sock && !client._sock.destroyed
@@ -174,7 +208,7 @@ module.exports = (type, data, callback) => {
   if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
     return callback('bad_request');
 
-  ws = WebSocketServer.get();
+  const ws = WebSocketServer.get();
 
   if (type == 'connect:password' || type == 'connect:key') {
     if (connections.getByHost(data.host))
@@ -337,6 +371,94 @@ module.exports = (type, data, callback) => {
         });
       });
     };
+  } else if (type == 'sftp:read_file' || type == 'sftp:write_file' || type == 'sftp:append_file' || type == 'sftp:readdir' || type == 'sftp:mkdir' || type == 'sftp:exists' || type == 'sftp:rename' || type == 'sftp:get_file' || type == 'sftp:upload_file') {
+    const connection = connections.getByHost(data.host);
+
+    if (!connection)
+      return callback('bad_request');
+
+    if (!connection.isReady())
+      return callback('network_error');
+
+    connection.client.sftp((err, sftp) => {
+      if (err) return callback(err);
+
+      if (!data.path || typeof data.path != 'string' || !data.path.trim().length)
+        return callback('bad_request');
+
+      if (type == 'sftp:read_file') {
+        sftp.readFile(data.path, 'utf8', (err, content) => {
+          if (err) return callback(handleSFTPError(err.code));
+
+          return callback(null, content);
+        });
+      } else if (type == 'sftp:readdir') {
+        sftp.readdir(data.path, (err, list) => {
+          if (err) return callback(handleSFTPError(err.code));
+
+          return callback(null, list);
+        });
+      } else if (type == 'sftp:mkdir') {
+        sftp.mkdir(data.path, {}, err => {
+          if (err) return callback(handleSFTPError(err.code));
+
+          return callback(null);
+        });
+      } else if (type == 'sftp:exists') {
+        sftp.stat(data.path, (err, stats) => {
+          if (err) return callback(handleSFTPError(err.code));
+
+          return callback(null, stats);
+        });
+      } else if (type == 'sftp:write_file' || type == 'sftp:append_file') {
+        if (!data.content || typeof data.content != 'string' || !data.content.length)
+          return callback('bad_request');
+
+        if (type == 'sftp:write_file')
+          sftp.writeFile(data.path, data.content, err => {
+            if (err) return callback(handleSFTPError(err.code));
+
+            return callback(null);
+          });
+        else if (type == 'sftp:append_file')
+          sftp.appendFile(data.path, data.content, err => {
+            if (err) return callback(handleSFTPError(err.code));
+
+            return callback(null);
+          });
+        else
+          return callback('not_possible_error');
+      } else if (type == 'sftp:rename') {
+        if (!data.newPath || typeof data.newPath != 'string' || !data.newPath.trim().length)
+          return callback('bad_request');
+
+        sftp.rename(data.path, data.newPath, err => {
+          if (err) return callback(handleSFTPError(err.code));
+
+          return callback(null);
+        });
+      } else if (type == 'sftp:get_file' || type == 'sftp:upload_file') {
+        if (!data.localPath || typeof data.localPath != 'string' || !data.localPath.trim().length)
+          return callback('bad_request');
+
+        if (type == 'sftp:get_file')
+          sftp.fastGet(data.path, data.localPath, err => {
+            if (err) return callback(handleSFTPError(err.code));
+
+            return callback(null);
+          });
+        else if (type == 'sftp:upload_file')
+          sftp.fastPut(data.localPath, data.path, err => {
+            if (err) return callback(handleSFTPError(err.code));
+
+            return callback(null);
+          });
+        else
+          return callback('not_possible_error');
+      } else {
+        return callback('not_possible_error');
+      };
+    });
   } else {
     return callback('not_possible_error');
   };

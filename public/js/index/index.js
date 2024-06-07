@@ -199,21 +199,32 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#install-node-button')) {
+      nodeManager.getInstallationScriptByProject({
+        network: 'cosmos',
+        project: 'celestia',
+        is_mainnet: false,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
 
-
-      const requestId = serverManager.installNode(
-        data => {
+        const requestId = nodeManager.installNode({
+          docker_compose_content: res.docker_compose_content,
+          dockerfile_content: res.dockerfile_content,
+        }, data => {
           console.log(data.data);
-        },
-        (err, res) => {
+        }, (err, res) => {
           if (err)
             return console.error(err);
 
           return console.log(res);
-        }
-      );
+        });
 
-      console.log(requestId);
+        return console.log(requestId);
+      });
+    };
+
+    if (event.target.closest('#get-installation-script-button')) {
+
     };
   });
 });

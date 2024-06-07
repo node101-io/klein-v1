@@ -3,7 +3,6 @@ const sshRequest = require("../../../../utils/sshRequest");
 const jsonify = require("../../../../utils/jsonify");
 
 const checkServerListenerExistentCommand = require("../../../../commands/server-listener/checkExistent");
-const getServerListenerVersionCommand = require("../../../../commands/server-listener/getVersion");
 
 const versions = require("../../../../versions");
 
@@ -20,9 +19,9 @@ module.exports = (req, res) => {
     if (!data || data.status != 'ok')
       return res.json({ err: 'server_listener_not_running' });
 
-    sshRequest('exec', {
+    sshRequest('sftp:read_file', {
       host: req.body.host,
-      command: getServerListenerVersionCommand()
+      path: 'server-listener/package.json'
     }, (err, data) => {
       if (err)
         return res.json({ err: err });

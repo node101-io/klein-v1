@@ -1,11 +1,9 @@
 const sshRequest = require('../../../../../utils/sshRequest');
 
-const showRemoteKeyCommand = require('../../../../../commands/key/remote/show');
-
 module.exports = (req, res) => {
-  sshRequest('exec', {
+  sshRequest('sftp:read_file', {
     host: req.body.host,
-    command: showRemoteKeyCommand()
+    path: '~/.ssh/authorized_keys'
   }, (err, data) => {
     if (err)
       return res.json({ err: err });
