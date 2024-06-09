@@ -341,6 +341,8 @@ module.exports = (type, data, callback) => {
       executeCommand(connection.client, data.command, (err, stream) => {
         if (err) return callback(err);
 
+        connection.markAsSeen();
+
         let stdout = '';
 
         stream

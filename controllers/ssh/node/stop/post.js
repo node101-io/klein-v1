@@ -1,17 +1,14 @@
 const sshRequest = require("../../../../utils/sshRequest");
 
-const checkNodeExistentCommand = require("../../../../commands/node/checkExistent");
+const stopNodeCommand = require("../../../../commands/node/stop");
 
 module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
-    command: checkNodeExistentCommand()
+    command: stopNodeCommand()
   }, (err, data) => {
     if (err)
       return res.json({ err: err });
-
-    if (data && data.includes('klein-node'))
-      return res.json({ err: 'another_node_instance' });
 
     return res.json({ data: data });
   });
