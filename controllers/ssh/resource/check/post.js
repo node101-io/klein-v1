@@ -7,6 +7,7 @@ const checkStorageCommand = require("../../../../commands/resource/checkStorage"
 
 const MAX_CPU_USAGE_PERCENTAGE = 50;
 const MAX_MEMORY_USAGE_PERCENTAGE = 80;
+const MAX_DISK_USAGE_PERCENTAGE = 60;
 
 module.exports = (req, res) => {
   sshRequest('exec', {
@@ -57,7 +58,7 @@ module.exports = (req, res) => {
         if (!disk || !disk.total || !disk.available)
           return res.json({ err: 'disk_usage_error' });
 
-        if (parseFloat(disk.available) / parseFloat(disk.total) * 100 < MAX_MEMORY_USAGE_PERCENTAGE)
+        if (parseFloat(disk.available) / parseFloat(disk.total) * 100 < 100 - MAX_DISK_USAGE_PERCENTAGE)
           return res.json({ err: 'disk_usage_high' });
 
         return res.json({});

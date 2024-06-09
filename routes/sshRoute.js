@@ -21,6 +21,12 @@ const showRemoteKeysPostController = require('../controllers/ssh/key/remote/show
 
 const checkNodePostController = require('../controllers/ssh/node/check/post');
 const installNodePostController = require('../controllers/ssh/node/install/post');
+const restartNodePostController = require('../controllers/ssh/node/restart/post');
+const startNodePostController = require('../controllers/ssh/node/start/post');
+const logsNodePostController = require('../controllers/ssh/node/logs/post');
+const setPeersPostController = require('../controllers/ssh/node/set-peers/post');
+const setSeedsPostController = require('../controllers/ssh/node/set-seeds/post');
+const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
@@ -102,6 +108,36 @@ router.post(
   '/node/install',
     isAuth,
     installNodePostController
+);
+router.post(
+  '/node/restart',
+    isAuth,
+    restartNodePostController
+);
+router.post(
+  '/node/start',
+    isAuth,
+    startNodePostController
+);
+router.post(
+  '/node/logs',
+    isAuth,
+    logsNodePostController
+);
+router.post(
+  '/node/set-peers',
+    isAuth,
+    setPeersPostController
+);
+router.post(
+  '/node/set-seeds',
+    isAuth,
+    setSeedsPostController
+);
+router.post(
+  '/node/stop',
+    isAuth,
+    stopNodePostController
 );
 router.post(
   '/node/uninstall',

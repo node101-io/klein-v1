@@ -132,7 +132,10 @@ const getChainInfoFromRPC = (rpc, callback) => {
         if (!peer.node_info || !peer.node_info.id || !peer.remote_ip || !peer.node_info.listen_addr || typeof peer.node_info.id != 'string' || typeof peer.remote_ip != 'string' || typeof peer.node_info.listen_addr != 'string')
           continue;
 
-        peers.push(`${peer.node_info.id}@${peer.remote_ip}:${peer.node_info.listen_addr.split(':').pop()}`);
+        if (peer.remote_ip.includes('0.0.0.0'))
+          continue;
+
+        peers.push(`${peer.node_info.id}@${peer.remote_ip.split(':').shift()}:${peer.node_info.listen_addr.split(':').pop()}`);
       };
 
       return callback(null, peers);

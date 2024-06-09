@@ -210,7 +210,8 @@ window.addEventListener('load', _ => {
           docker_compose_content: res.docker_compose_content,
           dockerfile_content: res.dockerfile_content,
         }, data => {
-          console.log(data.data);
+          if (data.data.startsWith('#'))
+            console.log(`Progress: ${parseInt(data.data.replace('#', '')) * 100 / res.steps_count}%`, data.data);
         }, (err, res) => {
           if (err)
             return console.error(err);
@@ -223,12 +224,56 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#uninstall-node-button')) {
-      nodeManager.uninstallRunningNodeInstance((err, res) => {
+      nodeManager.uninstallRunningNode((err, res) => {
         if (err)
           return console.error(err);
 
         return console.log(res);
       });
+    };
+
+    if (event.target.closest('#restart-node-button')) {
+      nodeManager.restartNode({
+        network: 'cosmos',
+        project: 'celestiatestnet3',
+        is_mainnet: false,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#start-node-button')) {
+      nodeManager.startNode((err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#stop-node-button')) {
+      nodeManager.stopNode((err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#node-logs')) {
+      const requestId = nodeManager.checkLogs(data => {
+        console.log(data.data);
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+
+      return console.log(requestId);
     };
   });
 });
