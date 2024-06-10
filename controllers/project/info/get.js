@@ -125,7 +125,8 @@ const getChainInfoFromRPC = (rpc, callback) => {
       const peers = [];
 
       for (let i = 0; i < res.result.peers.length; i++) {
-        if (peers.length >= RANDOM_PEER_COUNT) break;
+        if (peers.length >= RANDOM_PEER_COUNT)
+          break;
 
         const peer = res.result.peers[i];
 

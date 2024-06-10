@@ -21,6 +21,12 @@ const showRemoteKeysPostController = require('../controllers/ssh/key/remote/show
 
 const checkNodePostController = require('../controllers/ssh/node/check/post');
 const installNodePostController = require('../controllers/ssh/node/install/post');
+const createKeyPostController = require('../controllers/ssh/node/key/create/post');
+const deleteKeyPostController = require('../controllers/ssh/node/key/delete/post');
+const getPubKeyPostController = require('../controllers/ssh/node/key/get-pub-key/post');
+const listKeysPostController = require('../controllers/ssh/node/key/list/post');
+const recoverKeyPostController = require('../controllers/ssh/node/key/recover/post');
+const renameKeyPostController = require('../controllers/ssh/node/key/rename/post');
 const restartNodePostController = require('../controllers/ssh/node/restart/post');
 const startNodePostController = require('../controllers/ssh/node/start/post');
 const logsNodePostController = require('../controllers/ssh/node/logs/post');
@@ -108,6 +114,36 @@ router.post(
   '/node/install',
     isAuth,
     installNodePostController
+);
+router.post(
+  '/node/key/create',
+    isAuth,
+    createKeyPostController
+);
+router.post(
+  '/node/key/delete',
+    isAuth,
+    deleteKeyPostController
+);
+router.post(
+  '/node/key/get-pub-key',
+    isAuth,
+    getPubKeyPostController
+);
+router.post(
+  '/node/key/list',
+    isAuth,
+    listKeysPostController
+);
+router.post(
+  '/node/key/recover',
+    isAuth,
+    recoverKeyPostController
+);
+router.post(
+  '/node/key/rename',
+    isAuth,
+    renameKeyPostController
 );
 router.post(
   '/node/restart',
