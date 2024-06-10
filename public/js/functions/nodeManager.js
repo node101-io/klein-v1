@@ -1,25 +1,17 @@
 const makeNodeManager = _ => {
+  const DOCKERFILE_STEPS_COUNT_MULTIPLIER = 1.5;
   const DOCKERFILE_STEPS_KEYWORDS = [
     'FROM',
     'RUN',
     'CMD',
-    'LABEL',
-    'MAINTAINER',
     'EXPOSE',
-    'ENV',
     'ADD',
     'COPY',
     'ENTRYPOINT',
     'VOLUME',
     'USER',
-    'WORKDIR',
-    'ARG',
-    'ONBUILD',
-    'STOPSIGNAL',
-    'HEALTHCHECK',
-    'SHELL'
+    'WORKDIR'
   ];
-  const DOCKERFILE_STEPS_COUNT_MULTIPLIER = 1.5;
 
   const _getInstallationStepsCount = dockerfile_content => {
     if (!dockerfile_content || typeof dockerfile_content != 'string')
@@ -48,8 +40,7 @@ const makeNodeManager = _ => {
       .replace(/REPO_PLACEHOLDER/g, chain_info.repo)
       .replace(/VERSION_PLACEHOLDER/g, chain_info.version)
       .replace(/CHAIN_ID_PLACEHOLDER/g, chain_info.chain_id)
-      .replace(/GENESIS_FILE_PLACEHOLDER/g, 'https://raw.githubusercontent.com/celestiaorg/networks/master/mocha-4/genesis.json')
-      // .replace(/GENESIS_FILE_PLACEHOLDER/g, chain_info.genesis_file)
+      .replace(/GENESIS_FILE_PLACEHOLDER/g, chain_info.genesis_file)
       .replace(/PEERS_PLACEHOLDER/g, chain_info.peers.join(','))
       .replace(/SEEDS_PLACEHOLDER/g, chain_info.seeds.join(','))
       .replace(/MIN_GAS_PRICES_PLACEHOLDER/g, chain_info.min_gas_price)

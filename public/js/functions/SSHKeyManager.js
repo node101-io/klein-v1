@@ -1,4 +1,4 @@
-const makeKeyManager = _ => {
+const makeSSHKeyManager = _ => {
   return {
     showKeysLocal: (data, callback) => {
       localhostRequest('/ssh/key/local/show', 'POST', {
@@ -66,4 +66,4 @@ const makeKeyManager = _ => {
   };
 };
 
-const keyManager = makeKeyManager();
+const SSHKeyManager = makeSSHKeyManager();

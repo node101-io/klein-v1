@@ -79,7 +79,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#create-local-key-button')) {
-      keyManager.createKeyLocal({}, (err, res) => {
+      SSHKeyManager.createKeyLocal({}, (err, res) => {
         if (err)
           return console.error(err);
 
@@ -88,7 +88,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#remove-local-key-button')) {
-      keyManager.removeKeyLocal({
+      SSHKeyManager.removeKeyLocal({
         filename: document.getElementById('local-key-value').value,
       }, (err, res) => {
         if (err)
@@ -99,7 +99,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#show-local-keys-button')) {
-      keyManager.showKeysLocal({}, (err, res) => {
+      SSHKeyManager.showKeysLocal({}, (err, res) => {
         if (err)
           return console.error(err);
 
@@ -108,7 +108,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#add-remote-key-button')) {
-      keyManager.addKeyRemote({
+      SSHKeyManager.addKeyRemote({
         filename: document.getElementById('remote-key-value').value,
       }, (err, res) => {
         if (err)
@@ -119,7 +119,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#remove-remote-key-button')) {
-      keyManager.removeKeyRemote({
+      SSHKeyManager.removeKeyRemote({
         filename: document.getElementById('remote-key-value').value,
       }, (err, res) => {
         if (err)
@@ -130,7 +130,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#show-remote-keys-button')) {
-      keyManager.showKeysRemote({}, (err, res) => {
+      SSHKeyManager.showKeysRemote({}, (err, res) => {
         if (err)
           return console.error(err);
 
@@ -274,6 +274,72 @@ window.addEventListener('load', _ => {
       });
 
       return console.log(requestId);
+    };
+
+    if (event.target.closest('#create-wallet-button')) {
+      walletManager.createWallet({
+        wallet_name: document.getElementById('wallet-name-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#delete-wallet-button')) {
+      walletManager.deleteWallet({
+        wallet_name: document.getElementById('wallet-name-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#get-pub-key-button')) {
+      walletManager.getPublicKey({
+        wallet_name: document.getElementById('wallet-name-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#list-wallets-button')) {
+      walletManager.listWallets((err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#recover-wallet-button')) {
+      walletManager.recoverWallet({
+        wallet_name: document.getElementById('wallet-name-value').value,
+        mnemonic: document.getElementById('mnemonic-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#rename-wallet-button')) {
+      walletManager.renameWallet({
+        wallet_name: document.getElementById('wallet-name-value').value,
+        new_wallet_name: document.getElementById('new-wallet-name-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
     };
   });
 });

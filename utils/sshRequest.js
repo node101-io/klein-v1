@@ -117,6 +117,7 @@ const makeConnections = _ => {
               type: 'network_error'
             }));
 
+          console.error(err);
           if (err && err.level == 'client-timeout')
             return ws.send(JSON.stringify({
               id: id,
@@ -313,23 +314,44 @@ module.exports = (type, data, callback) => {
         let stderr = '';
 
         stream
-          .on('data', streamData => {
-            stdout += streamData;
+          .on('data', stdout_data => {
+            stdout += stdout_data;
           })
-          .on('close', _ => {
+          .on('close', (code, signal) => {
             connection.markAsSeen();
 
-            if (stderr.includes(ERROR_MESSAGE_NO_FILE))
-              return callback('document_not_found');
+            console.log('code:', code);
+            console.log('stderr:', stderr);
+            console.log('stdout:', stdout);
+            if (code == 0)
+              return callback(null, stderr.trim() || stdout.trim() || null);
 
-            if (stdout.includes(ERROR_MESSAGE_NO_COMMAND))
-              return callback('command_not_found');
+            if (code == 1)
+              return callback(stderr.trim() || stdout.trim() || null, null);
+
+            if (code == 2)
+              return callback('shell_syntax_error', stderr.trim() || stdout.trim() || null);
+
+            if (code == 126)
+              return callback('command_cannot_execute', stderr.trim() || stdout.trim() || null);
+
+            if (code == 127)
+              return callback('command_not_found', stderr.trim() || stdout.trim() || null);
+
+            if (code == 128)
+              return callback('invalid_exit_argument', stderr.trim() || stdout.trim() || null);
+
+            if (code == 130)
+              return callback('user_interruption', stderr.trim() || stdout.trim() || null);
+
+            if (code == 255)
+              return callback('unknown_error', stderr.trim() || stdout.trim() || null);
 
             return callback(stderr.trim() || null, stdout.trim() || null);
           })
-          .stderr.on('data', data => {
-            stderr += data;
-          });
+          .stderr.on('data', stderr_data => {
+            stderr += stderr_data;
+          })
       });
     } else if (type == 'exec:stream') {
       if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
