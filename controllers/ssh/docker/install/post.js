@@ -7,10 +7,10 @@ module.exports = (req, res) => {
     host: req.body.host,
     id: req.body.id,
     command: installDockerCommand()
-  }, (err, data) => {
+  }, (err, output) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({ data: output });
   });
 };

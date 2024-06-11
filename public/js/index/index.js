@@ -276,6 +276,17 @@ window.addEventListener('load', _ => {
       return console.log(requestId);
     };
 
+    if (event.target.closest('#install-snapshot-button')) {
+      nodeManager.installSnapshot(data => {
+        console.log(data.data);
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
     if (event.target.closest('#create-wallet-button')) {
       walletManager.createWallet({
         wallet_name: document.getElementById('wallet-name-value').value,

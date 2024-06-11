@@ -11,8 +11,6 @@ const SFTP_STATUS_CODES = ssh2.utils.sftp.STATUS_CODE;
 
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
 const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
-const ERROR_MESSAGE_NO_FILE = 'No such file or directory';
-const ERROR_MESSAGE_NO_COMMAND = 'command not found';
 
 const END_EXPIRED_CONNECTIONS_EXPIRATION_TIME = 60 * 1000;
 const END_EXPIRED_CONNECTIONS_INTERVAL = 30 * 1000;
@@ -61,7 +59,7 @@ const handleSFTPError = code => {
 };
 
 const isSSHKeyEncrypted = privateKey => {
-  const parsedKey = ssh2.utils.parseKey(privateKey);
+  const parsedKey = ssh2.utils.parseKey(privateKey); // TODO: try-catch
 
   if (Array.isArray(parsedKey))
     return parsedKey.some(key => key instanceof Error && key.message.includes(ENCRYPTED_KEY_MESSAGE));
@@ -308,7 +306,8 @@ module.exports = (type, data, callback) => {
 
     if (type == 'exec') {
       executeCommand(connection.client, data.command, (err, stream) => {
-        if (err) return callback(err);
+        if (err)
+          return callback(err);
 
         let stdout = '';
         let stderr = '';
@@ -361,7 +360,8 @@ module.exports = (type, data, callback) => {
         return callback('websocket_error');
 
       executeCommand(connection.client, data.command, (err, stream) => {
-        if (err) return callback(err);
+        if (err)
+          return callback(err);
 
         connection.markAsSeen();
 
@@ -405,32 +405,37 @@ module.exports = (type, data, callback) => {
       return callback('network_error');
 
     connection.client.sftp((err, sftp) => {
-      if (err) return callback(err);
+      if (err)
+        return callback(err);
 
       if (!data.path || typeof data.path != 'string' || !data.path.trim().length)
         return callback('bad_request');
 
       if (type == 'sftp:read_file') {
         sftp.readFile(data.path, 'utf8', (err, content) => {
-          if (err) return callback(handleSFTPError(err.code));
+          if (err)
+            return callback(handleSFTPError(err.code));
 
           return callback(null, content);
         });
       } else if (type == 'sftp:readdir') {
         sftp.readdir(data.path, (err, list) => {
-          if (err) return callback(handleSFTPError(err.code));
+          if (err)
+            return callback(handleSFTPError(err.code));
 
           return callback(null, list);
         });
       } else if (type == 'sftp:mkdir') {
         sftp.mkdir(data.path, {}, err => {
-          if (err) return callback(handleSFTPError(err.code));
+          if (err)
+            return callback(handleSFTPError(err.code));
 
           return callback(null);
         });
       } else if (type == 'sftp:exists') {
         sftp.stat(data.path, (err, stats) => {
-          if (err) return callback(handleSFTPError(err.code));
+          if (err)
+            return callback(handleSFTPError(err.code));
 
           return callback(null, stats);
         });
@@ -440,13 +445,15 @@ module.exports = (type, data, callback) => {
 
         if (type == 'sftp:write_file')
           sftp.writeFile(data.path, data.content, err => {
-            if (err) return callback(handleSFTPError(err.code));
+            if (err)
+              return callback(handleSFTPError(err.code));
 
             return callback(null);
           });
         else if (type == 'sftp:append_file')
           sftp.appendFile(data.path, data.content, err => {
-            if (err) return callback(handleSFTPError(err.code));
+            if (err)
+              return callback(handleSFTPError(err.code));
 
             return callback(null);
           });
@@ -457,7 +464,8 @@ module.exports = (type, data, callback) => {
           return callback('bad_request');
 
         sftp.rename(data.path, data.newPath, err => {
-          if (err) return callback(handleSFTPError(err.code));
+          if (err)
+            return callback(handleSFTPError(err.code));
 
           return callback(null);
         });
@@ -467,13 +475,15 @@ module.exports = (type, data, callback) => {
 
         if (type == 'sftp:get_file')
           sftp.fastGet(data.path, data.localPath, err => {
-            if (err) return callback(handleSFTPError(err.code));
+            if (err)
+              return callback(handleSFTPError(err.code));
 
             return callback(null);
           });
         else if (type == 'sftp:upload_file')
           sftp.fastPut(data.localPath, data.path, err => {
-            if (err) return callback(handleSFTPError(err.code));
+            if (err)
+              return callback(handleSFTPError(err.code));
 
             return callback(null);
           });

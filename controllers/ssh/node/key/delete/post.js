@@ -1,6 +1,6 @@
-const sshRequest = require("../../../../../utils/sshRequest");
+const sshRequest = require('../../../../../utils/sshRequest');
 
-const deleteKeyInNodeCommand = require("../../../../../commands/node/key/delete");
+const deleteKeyInNodeCommand = require('../../../../../commands/node/key/delete');
 
 const KEY_NOT_FOUND_ERROR_MESSAGE = 'key not found';
 

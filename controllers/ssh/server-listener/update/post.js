@@ -1,8 +1,8 @@
-const sshRequest = require("../../../../utils/sshRequest");
+const sshRequest = require('../../../../utils/sshRequest');
 
-const updateServerListenerCommand = require("../../../../commands/server-listener/update");
+const updateServerListenerCommand = require('../../../../commands/server-listener/update');
 
-const versions = require("../../../../versions");
+const versions = require('../../../../versions');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
@@ -12,6 +12,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({});
   });
 };

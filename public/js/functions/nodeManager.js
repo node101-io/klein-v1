@@ -133,14 +133,14 @@ const makeNodeManager = _ => {
         if (err)
           return callback(err);
 
-        localhostRequest('/ssh/node/set-peers', 'POST', {
+        localhostRequest('/ssh/node/sync/set-peers', 'POST', {
           host: window.host,
           peers: chain_info.peers
         }, (err, res) => {
           if (err)
             return callback(err);
 
-          localhostRequest('/ssh/node/set-seeds', 'POST', {
+          localhostRequest('/ssh/node/sync/set-seeds', 'POST', {
             host: window.host,
             seeds: chain_info.seeds
           }, (err, res) => {
@@ -166,6 +166,23 @@ const makeNodeManager = _ => {
       const stream = makeStream(onData);
 
       localhostRequest('/ssh/node/logs', 'POST', {
+        host: window.host,
+        id: stream.id
+      }, (err, res) => {
+        stream.end();
+
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+
+      return stream.id;
+    },
+    installSnapshot: (onData, callback) => {
+      const stream = makeStream(onData);
+
+      localhostRequest('/ssh/node/sync/install-snapshot', 'POST', {
         host: window.host,
         id: stream.id
       }, (err, res) => {
