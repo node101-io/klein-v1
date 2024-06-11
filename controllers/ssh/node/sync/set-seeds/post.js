@@ -1,6 +1,6 @@
-const sshRequest = require("../../../../utils/sshRequest");
+const sshRequest = require('../../../../../utils/sshRequest');
 
-const setNodeConfigVariableCommand = require("../../../../commands/node/setConfigVariable");
+const setNodeConfigVariableCommand = require('../../../../../commands/node/setConfigVariable');
 
 module.exports = (req, res) => {
   if (!req.body.seeds || !Array.isArray(req.body.seeds))
@@ -13,6 +13,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({});
   });
 };

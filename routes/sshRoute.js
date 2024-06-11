@@ -30,8 +30,9 @@ const renameKeyPostController = require('../controllers/ssh/node/key/rename/post
 const restartNodePostController = require('../controllers/ssh/node/restart/post');
 const startNodePostController = require('../controllers/ssh/node/start/post');
 const logsNodePostController = require('../controllers/ssh/node/logs/post');
-const setPeersPostController = require('../controllers/ssh/node/set-peers/post');
-const setSeedsPostController = require('../controllers/ssh/node/set-seeds/post');
+const setPeersPostController = require('../controllers/ssh/node/sync/set-peers/post');
+const setSeedsPostController = require('../controllers/ssh/node/sync/set-seeds/post');
+const installSnapshotPostController = require('../controllers/ssh/node/sync/install-snapshot/post');
 const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
@@ -161,14 +162,19 @@ router.post(
     logsNodePostController
 );
 router.post(
-  '/node/set-peers',
+  '/node/sync/set-peers',
     isAuth,
     setPeersPostController
 );
 router.post(
-  '/node/set-seeds',
+  '/node/sync/set-seeds',
     isAuth,
     setSeedsPostController
+);
+router.post(
+  '/node/sync/install-snaphot',
+    isAuth,
+    installSnapshotPostController
 );
 router.post(
   '/node/stop',

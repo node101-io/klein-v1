@@ -1,4 +1,4 @@
-const Preferences = require("../../utils/preferences");
+const Preferences = require('../../utils/preferences');
 
 module.exports = (req, res) => {
   if (!req.body || !req.body.key || typeof req.body.key != "string" || !req.body.key.trim())

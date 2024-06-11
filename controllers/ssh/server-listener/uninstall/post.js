@@ -1,6 +1,6 @@
-const sshRequest = require("../../../../utils/sshRequest");
+const sshRequest = require('../../../../utils/sshRequest');
 
-const uninstallServerListenerCommand = require("../../../../commands/server-listener/uninstall");
+const uninstallServerListenerCommand = require('../../../../commands/server-listener/uninstall');
 
 module.exports = (req, res) => {
   sshRequest('exec', {

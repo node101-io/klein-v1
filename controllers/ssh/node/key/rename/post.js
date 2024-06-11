@@ -1,6 +1,6 @@
-const sshRequest = require("../../../../../utils/sshRequest");
+const sshRequest = require('../../../../../utils/sshRequest');
 
-const renameKeyInNodeCommand = require("../../../../../commands/node/key/rename");
+const renameKeyInNodeCommand = require('../../../../../commands/node/key/rename');
 
 const KEY_NOT_FOUND_ERROR_MESSAGE = 'key not found';
 
@@ -21,6 +21,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({});
   });
 };

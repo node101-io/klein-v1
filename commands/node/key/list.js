@@ -1,5 +1,5 @@
-const daemonNameCommand = require("../daemonName")();
+const getDaemonNameCommand = require('../getEnvVariable')('DAEMON_NAME');
 
 module.exports = _ => `
-  docker exec --interactive klein-node ${daemonNameCommand} keys list --keyring-backend test --output json
+  docker exec --interactive klein-node ${getDaemonNameCommand} keys list --keyring-backend test --output json
 `;

@@ -5,6 +5,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({});
   });
 };

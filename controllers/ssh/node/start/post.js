@@ -1,6 +1,6 @@
-const sshRequest = require("../../../../utils/sshRequest");
+const sshRequest = require('../../../../utils/sshRequest');
 
-const startNodeCommand = require("../../../../commands/node/start");
+const startNodeCommand = require('../../../../commands/node/start');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
@@ -10,6 +10,6 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: data });
+    return res.json({});
   });
 };

@@ -1,39 +1,45 @@
-const sshRequest = require("../../../../utils/sshRequest");
+const sshRequest = require('../../../../utils/sshRequest');
 
-const installNodeCommand = require("../../../../commands/node/install");
+const installNodeCommand = require('../../../../commands/node/install');
 
-const installNode = (req, res) => {
+const installNode = (data, callback) => {
   sshRequest('sftp:write_file', {
-    host: req.body.host,
+    host: data.host,
     path: 'klein-node/docker-compose.yaml',
-    content: req.body.docker_compose_content
+    content: data.docker_compose_content
   }, (err, data) => {
     if (err)
-      return res.json({ err: err });
+      return callback(err);
 
     sshRequest('sftp:write_file', {
-      host: req.body.host,
+      host: data.host,
       path: 'klein-node/Dockerfile',
-      content: req.body.dockerfile_content
+      content: data.dockerfile_content
     }, (err, data) => {
       if (err)
-        return res.json({ err: err });
+        return callback(err);
 
       sshRequest('exec:stream', {
-        host: req.body.host,
-        id: req.body.id,
+        host: data.host,
+        id: data.id,
         command: installNodeCommand()
-      }, (err, data) => {
+      }, (err, output) => {
         if (err)
-          return res.json({ err: err });
+          return callback(err);
 
-        return res.json({ data: data });
+        return callback(null, output);
       });
     });
   });
 };
 
 module.exports = (req, res) => {
+  if (!req.body.docker_compose_content || typeof req.body.docker_compose_content != 'string')
+    return res.json({ err: 'bad_request' });
+
+  if (!req.body.dockerfile_content || typeof req.body.dockerfile_content != 'string')
+    return res.json({ err: 'bad_request' });
+
   sshRequest('sftp:exists', {
     host: req.body.host,
     path: 'klein-node'
@@ -49,9 +55,19 @@ module.exports = (req, res) => {
         if (err)
           return res.json({ err: err });
 
-        installNode(req, res);
+        installNode(req.body, (err, output) => {
+          if (err)
+            return res.json({ err: err });
+
+          return res.json({ data: output });
+        });
       });
     else
-      installNode(req, res);
+      installNode(req.body, (err, output) => {
+        if (err)
+          return res.json({ err: err });
+
+        return res.json({ data: output });
+      });
   });
 };

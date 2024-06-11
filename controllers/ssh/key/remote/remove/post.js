@@ -27,11 +27,11 @@ module.exports = (req, res) => {
       sshRequest('sftp:read_file', {
         host: req.body.host,
         path: '.ssh/authorized_keys'
-      }, (err, data) => {
+      }, (err, authorized_keys) => {
         if (err)
           return res.json({ err: err });
 
-        const authorizedKeys = data.split('\n');
+        const authorizedKeys = authorized_keys.split('\n');
         const newAuthorizedKeys = [];
 
         async.times(authorizedKeys.length, (i, next) => {

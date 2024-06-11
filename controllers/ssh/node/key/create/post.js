@@ -1,7 +1,7 @@
-const sshRequest = require("../../../../../utils/sshRequest");
-const jsonify = require("../../../../../utils/jsonify");
+const sshRequest = require('../../../../../utils/sshRequest');
+const jsonify = require('../../../../../utils/jsonify');
 
-const createKeyInNodeCommand = require("../../../../../commands/node/key/create");
+const createKeyInNodeCommand = require('../../../../../commands/node/key/create');
 
 module.exports = (req, res) => {
   if (!req.body.key_name)
@@ -10,15 +10,15 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: createKeyInNodeCommand(req.body.key_name)
-  }, (err, data) => {
+  }, (err, key) => {
     if (err)
       return res.json({ err: err });
 
-    data = jsonify(data);
+    key = jsonify(key);
 
     return res.json({ data: {
-      address: data.address,
-      mnemonic: data.mnemonic
+      address: key.address,
+      mnemonic: key.mnemonic
     }});
   });
 };
