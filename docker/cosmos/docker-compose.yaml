@@ -3,27 +3,28 @@ services:
     build:
       context: .
       args:
-        GO_VERSION: 1.22
-        PROJECT_FOLDER: celestia-app
-        DAEMON_NAME: celestia-appd
-        DAEMON_HOME: /root/.celestia-app
-        RPC_URL: https://celestia-testnet-rpc.polkachu.com
-        CHAIN_ID: mocha-4
-        VERSION: v1.9.0
-        REPO: https://github.com/celestiaorg/celestia-app.git
-        GENESIS_FILE: https://snapshots.polkachu.com/testnet-genesis/celestia/genesis.json
-        ADDRBOOK: https://snapshots.polkachu.com/testnet-addrbook/cosmos/addrbook.json
-        DENOM: utia
-        MIN_GAS_PRICES: 0.002
+        GO_VERSION: 1.19
+        PROJECT_FOLDER: lava
+        DAEMON_NAME: lavad
+        DAEMON_HOME: /root/.lavad
+        DAEMON_ALLOW_DOWNLOAD_BINARIES: true
+        RPC_URL: https://lava-testnet-rpc.polkachu.com
+        CHAIN_ID: lava-testnet-2
+        VERSION: v0.21.0
+        REPO: https://github.com/lavanet/lava.git
+        GENESIS_FILE: https://snapshots.polkachu.com/testnet-genesis/lava/genesis.json
+        ADDRBOOK: https://snapshots.polkachu.com/testnet-addrbook/lava/addrbook.json
+        DENOM: ulava
+        MIN_GAS_PRICES: 0
         MONIKER: your_moniker
-        PEERS: bf70b5aea48b82b04223a5c7302ff33580cdb543@23.105.164.129:26656,ac8e5137b24fbea04bba387a06713c9700fb4d1c@37.27.67.47:26656,8badeed7f48eefd5d43af7eb7662f2b578304a27@138.201.63.38:26686,45885f066225063106551d9bf1f31e6091a9d06c@65.108.13.154:34656,6a09e06bba9a34afd48471466a0ac39a4173bbab@5.2.128.186:26656
-        SEEDS: ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@testnet-seeds.polkachu.com:11656
-        SNAPSHOT: https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
-    container_name: celestia-node
+        PEERS: 67f214e3aac9aa30e1ded487033c3e67a7060edd@65.108.72.233:16656,6d4e96c5e653f0ed7f905b1d53ef8d373af55ecf@116.202.217.20:30656,2e4b3f6738d303695c8160b7e7cefa348cb0fa08@65.21.96.69:26956,b374b26e09e5a300e82a31024d15e5235d321c6b@95.6.28.8:55656,69e6b1a274623355d91c4ab9dee4b2aaa9d59af8@207.180.215.4:33656
+        SEEDS: ade4d8bc8cbe014af6ebdf3cb7b1e9ad36f412c0@testnet-seeds.polkachu.com:19956
+        # SNAPSHOT: https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
+    container_name: lava-node
     restart: always
     ports:
       - 26657:3000
     volumes:
-      - celestia-node-volume:/root/.celestia-app
+      - lava-node-volume:/root/.lavad
 volumes:
-  celestia-node-volume:
+  lava-node-volume:
