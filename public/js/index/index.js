@@ -211,7 +211,7 @@ window.addEventListener('load', _ => {
           dockerfile_content: res.dockerfile_content,
         }, data => {
           if (data.data.startsWith('#'))
-            console.log(`Progress: ${parseInt(data.data.replace('#', '')) * 100 / res.steps_count}%`, data.data);
+            console.log(`Progress: ${Math.floor(parseInt(data.data.replace('#', '')) * 100 / res.steps_count)}%`, data.data);
         }, (err, res) => {
           if (err)
             return console.error(err);
@@ -342,9 +342,21 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#rename-wallet-button')) {
-      walletManager.renameWallet({
-        wallet_name: document.getElementById('wallet-name-value').value,
-        new_wallet_name: document.getElementById('new-wallet-name-value').value,
+      // walletManager.renameWallet({
+      //   wallet_name: document.getElementById('wallet-name-value').value,
+      //   new_wallet_name: document.getElementById('new-wallet-name-value').value,
+      // }, (err, res) => {
+      //   if (err)
+      //     return console.error(err);
+
+      //   return console.log(res);
+      // });
+
+      localhostRequest('/ssh/node/tx/send-token', 'POST', {
+        host: window.host,
+        from_key_name: 'klein',
+        to_address: 'address1',
+        amount: '100',
       }, (err, res) => {
         if (err)
           return console.error(err);

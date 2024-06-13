@@ -70,15 +70,6 @@ const isSSHKeyEncrypted = privateKey => {
   return false;
 };
 
-const executeCommand = (client, command, callback) => {
-  try {
-    client.exec(command, callback);
-  } catch (err) {
-    console.error(err);
-    return callback('timed_out');
-  };
-};
-
 const makeConnections = _ => {
   const connections = {};
   let endExpiredConnectionsLastCalledTime = 0;
@@ -152,7 +143,7 @@ const makeConnections = _ => {
           }));
         })
         .on('close', _ => {
-          this.removeByHost(host);
+          this.removeByHost(host); // TODO: check usage of this
 
           return ws.send(JSON.stringify({
             id: id,
@@ -188,14 +179,40 @@ const makeConnections = _ => {
         if (connections[host].isExpired())
           connections[host].client.end();
 
-      return setTimeout(this.endExpiredConnections, END_EXPIRED_CONNECTIONS_INTERVAL);
+      return setTimeout(this.endExpiredConnections, END_EXPIRED_CONNECTIONS_INTERVAL); // TODO: check usage of this
     }
+  };
+};
+
+const performPreExecActions = (data, callback) => {
+  if ('in_container' in data && typeof data.in_container == 'boolean' && data.in_container) {
+    const scriptName = `klein_script_${Date.now()}.sh`;
+
+    const scriptPathHost = `/var/lib/docker/volumes/klein-node_klein-scripts-volume/_data/${scriptName}`;
+    const scriptPathContainer = `/root/klein-scripts/${scriptName}`;
+
+    sshRequest('sftp:write_file', {
+      host: data.host,
+      path: scriptPathHost,
+      content: data.command
+    }, err => {
+      if (err)
+        return callback(err);
+
+      data.command = `chmod +x ${scriptPathHost} && docker exec --interactive klein-node bash ${scriptPathContainer}; rm -f ${scriptPathHost}`;
+
+      return callback(null, data);
+    });
+  } else {
+    data.command = `source $HOME/.bash_profile 2>/dev/null; ${data.command}`;
+
+    return callback(null, data);
   };
 };
 
 const connections = makeConnections();
 
-module.exports = (type, data, callback) => {
+const sshRequest = (type, data, callback) => {
   connections.endExpiredConnections();
 
   if (!type || typeof type != 'string' || !TYPE_VALUES.includes(type))
@@ -302,99 +319,112 @@ module.exports = (type, data, callback) => {
     if (!connection.isReady())
       return callback('network_error');
 
-    data.command = `source $HOME/.bash_profile 2>/dev/null; ${data.command}`;
+    performPreExecActions(data, (err, data) => {
+      if (err)
+        return callback(err);
 
-    if (type == 'exec') {
-      executeCommand(connection.client, data.command, (err, stream) => {
-        if (err)
-          return callback(err);
+      if (type == 'exec') {
+        try {
+          connection.client.exec(data.command, (err, stream) => {
+            if (err)
+              return callback(err);
 
-        let stdout = '';
-        let stderr = '';
+            let stdout = '';
+            let stderr = '';
 
-        stream
-          .on('data', stdout_data => {
-            stdout += stdout_data;
-          })
-          .on('close', (code, signal) => {
-            connection.markAsSeen();
+            stream
+              .on('data', stdout_data => {
+                stdout += stdout_data;
+              })
+              .on('close', (code, signal) => {
+                connection.markAsSeen();
 
-            console.log('code:', code);
-            console.log('stderr:', stderr);
-            console.log('stdout:', stdout);
-            if (code == 0)
-              return callback(null, stderr.trim() || stdout.trim() || null);
+                console.log('code:', code);
+                console.log('stderr:', stderr);
+                console.log('stdout:', stdout);
+                if (code == 0)
+                  return callback(null, stderr.trim() || stdout.trim() || null);
 
-            if (code == 1)
-              return callback(stderr.trim() || stdout.trim() || null, null);
+                if (code == 1)
+                  return callback(stderr.trim() || stdout.trim() || null, null);
 
-            if (code == 2)
-              return callback('shell_syntax_error', stderr.trim() || stdout.trim() || null);
+                if (code == 2)
+                  return callback('shell_syntax_error', stderr.trim() || stdout.trim() || null);
 
-            if (code == 126)
-              return callback('command_cannot_execute', stderr.trim() || stdout.trim() || null);
+                if (code == 126)
+                  return callback('command_cannot_execute', stderr.trim() || stdout.trim() || null);
 
-            if (code == 127)
-              return callback('command_not_found', stderr.trim() || stdout.trim() || null);
+                if (code == 127)
+                  return callback('command_not_found', stderr.trim() || stdout.trim() || null);
 
-            if (code == 128)
-              return callback('invalid_exit_argument', stderr.trim() || stdout.trim() || null);
+                if (code == 128)
+                  return callback('invalid_exit_argument', stderr.trim() || stdout.trim() || null);
 
-            if (code == 130)
-              return callback('user_interruption', stderr.trim() || stdout.trim() || null);
+                if (code == 130)
+                  return callback('user_interruption', stderr.trim() || stdout.trim() || null);
 
-            if (code == 255)
-              return callback('unknown_error', stderr.trim() || stdout.trim() || null);
+                if (code == 255)
+                  return callback('unknown_error', stderr.trim() || stdout.trim() || null);
 
-            return callback(stderr.trim() || null, stdout.trim() || null);
-          })
-          .stderr.on('data', stderr_data => {
-            stderr += stderr_data;
-          })
-      });
-    } else if (type == 'exec:stream') {
-      if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
-        return callback('bad_request');
-
-      if (!ws || ws.readyState != ws.OPEN)
-        return callback('websocket_error');
-
-      executeCommand(connection.client, data.command, (err, stream) => {
-        if (err)
-          return callback(err);
-
-        connection.markAsSeen();
-
-        let stdout = '';
-
-        stream
-          .on('data', streamData => {
-            streamData = Buffer.from(streamData).toString('utf8');
-
-            stdout += streamData;
-
-            if (stdout.length > 1024 * 100)
-              stdout = stdout.slice(stdout.length / 2);
-
-            ws.send(JSON.stringify({
-              id: data.id,
-              data: streamData,
-            }));
-          })
-          .on('close', _ => {
-            connection.markAsSeen();
-
-            return callback(null, stdout);
+                return callback(stderr.trim() || null, stdout.trim() || null);
+              })
+              .stderr.on('data', stderr_data => {
+                stderr += stderr_data;
+              })
           });
+        } catch (err) {
+          console.error(err);
+          return callback('timed_out');
+        };
+      } else if (type == 'exec:stream') {
+        if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
+          return callback('bad_request');
 
-        ws.on('message', message => {
-          const parsedMessage = jsonify(message);
+        if (!ws || ws.readyState != ws.OPEN)
+          return callback('websocket_error');
 
-          if (parsedMessage.id == data.id && parsedMessage.type == 'end')
-            stream.close();
-        });
-      });
-    };
+        try {
+          connection.client.exec(data.command, (err, stream) => {
+            if (err)
+              return callback(err);
+
+            connection.markAsSeen();
+
+            let stdout = '';
+
+            stream
+              .on('data', streamData => {
+                streamData = Buffer.from(streamData).toString('utf8');
+
+                stdout += streamData;
+
+                if (stdout.length > 1024 * 100)
+                  stdout = stdout.slice(stdout.length / 2);
+
+                ws.send(JSON.stringify({
+                  id: data.id,
+                  data: streamData,
+                }));
+              })
+              .on('close', _ => {
+                connection.markAsSeen();
+
+                return callback(null, stdout);
+              });
+
+            ws.on('message', message => {
+              const parsedMessage = jsonify(message);
+
+              if (parsedMessage.id == data.id && parsedMessage.type == 'end')
+                stream.close();
+            });
+          });
+        } catch (err) {
+          console.error(err);
+          return callback('timed_out');
+        };
+      };
+    });
   } else if (type == 'sftp:read_file' || type == 'sftp:write_file' || type == 'sftp:append_file' || type == 'sftp:readdir' || type == 'sftp:mkdir' || type == 'sftp:exists' || type == 'sftp:rename' || type == 'sftp:get_file' || type == 'sftp:upload_file') {
     const connection = connections.getByHost(data.host);
 
@@ -497,3 +527,5 @@ module.exports = (type, data, callback) => {
     return callback('not_possible_error');
   };
 };
+
+module.exports = sshRequest;

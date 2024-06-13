@@ -7,7 +7,7 @@ const installNode = (data, callback) => {
     host: data.host,
     path: 'klein-node/docker-compose.yaml',
     content: data.docker_compose_content
-  }, (err, data) => {
+  }, (err, output) => {
     if (err)
       return callback(err);
 
@@ -15,7 +15,7 @@ const installNode = (data, callback) => {
       host: data.host,
       path: 'klein-node/Dockerfile',
       content: data.dockerfile_content
-    }, (err, data) => {
+    }, (err, output) => {
       if (err)
         return callback(err);
 

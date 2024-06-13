@@ -36,6 +36,8 @@ const installSnapshotPostController = require('../controllers/ssh/node/sync/inst
 const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
+const sendTokenPostController = require('../controllers/ssh/node/tx/send-token/post');
+
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
 const uninstallServerListenerPostController = require('../controllers/ssh/server-listener/uninstall/post');
@@ -185,6 +187,12 @@ router.post(
   '/node/uninstall',
     isAuth,
     uninstallNodePostController
+);
+
+router.post(
+  '/node/tx/send-token',
+    isAuth,
+    sendTokenPostController
 );
 
 router.post(

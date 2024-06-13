@@ -10,7 +10,8 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: getPubKeyOfKeyInNodeCommand(req.body.key_name)
+    command: getPubKeyOfKeyInNodeCommand(req.body.key_name),
+    in_container: true
   }, (err, pubkey) => {
     if (err && err.includes(INVALID_NAME_ERROR_MESSAGE))
       return res.json({ err: 'document_not_found' });

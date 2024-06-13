@@ -32,7 +32,8 @@ module.exports = (req, res) => {
         sshRequest('exec:stream', {
           host: req.body.host,
           id: req.body.id,
-          command: installSnapshotCommand()
+          command: installSnapshotCommand(),
+          in_container: true
         }, (err, output) => {
           if (err)
             return res.json({ err: err });
