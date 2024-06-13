@@ -16,7 +16,8 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: listKeysInNodeCommand()
+    command: listKeysInNodeCommand(),
+    in_container: true
   }, (err, key_list) => {
     if (err)
       return res.json({ err: err });
@@ -29,7 +30,8 @@ module.exports = (req, res) => {
 
     sshRequest('exec', {
       host: req.body.host,
-      command: recoverKeyInNodeCommand(req.body.key_name, req.body.mnemonic)
+      command: recoverKeyInNodeCommand(req.body.key_name, req.body.mnemonic),
+      in_container: true
     }, (err, data) => {
       if (err && err.includes(DUPLICATED_ADDRESS_ERROR_MESSAGE))
         return res.json({ err: 'document_already_exists' });

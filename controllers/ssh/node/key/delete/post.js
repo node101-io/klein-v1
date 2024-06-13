@@ -10,7 +10,8 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: deleteKeyInNodeCommand(req.body.key_name)
+    command: deleteKeyInNodeCommand(req.body.key_name),
+    in_container: true
   }, (err, data) => {
     if (err && err.includes(KEY_NOT_FOUND_ERROR_MESSAGE))
       return res.json({ err: 'document_not_found' });

@@ -9,7 +9,8 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: createKeyInNodeCommand(req.body.key_name)
+    command: createKeyInNodeCommand(req.body.key_name),
+    in_container: true
   }, (err, key) => {
     if (err)
       return res.json({ err: err });

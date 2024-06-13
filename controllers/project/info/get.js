@@ -171,7 +171,7 @@ const decideRelevantChainInfo = (chains_info, callback) => {
     allPeers = [...allPeers, ...peers]
   });
 
-  const filteredPeers = allPeers.filter(peer => peer !== null);
+  const filteredPeers = allPeers.filter(peer => peer != null);
   const randomPeers = filteredPeers.length >= 5 ? filteredPeers.sort(() => Math.random() - 0.5).slice(0, RANDOM_PEER_COUNT) : filteredPeers;
 
   const version = findMostCommonKeyInObject(versions);

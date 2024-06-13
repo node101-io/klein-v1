@@ -6,7 +6,8 @@ const listKeysInNodeCommand = require('../../../../../commands/node/key/list');
 module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
-    command: listKeysInNodeCommand()
+    command: listKeysInNodeCommand(),
+    in_container: true
   }, (err, key_list) => {
     if (err)
       return res.json({ err: err });
