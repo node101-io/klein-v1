@@ -22,10 +22,11 @@ const makeWalletManager = _ => {
         return callback(null);
       });
     },
-    getPublicKey: (data, callback) => {
-      localhostRequest('/ssh/node/key/get-pub-key', 'POST', {
+    showWallet: (data, callback) => {
+      localhostRequest('/ssh/node/key/show', 'POST', {
         host: window.host,
-        key_name: data.wallet_name
+        key_name: data.wallet_name,
+        type: data.type
       }, (err, pubkey) => {
         if (err)
           return callback(err);

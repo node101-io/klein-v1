@@ -23,7 +23,7 @@ const checkNodePostController = require('../controllers/ssh/node/check/post');
 const installNodePostController = require('../controllers/ssh/node/install/post');
 const createKeyPostController = require('../controllers/ssh/node/key/create/post');
 const deleteKeyPostController = require('../controllers/ssh/node/key/delete/post');
-const getPubKeyPostController = require('../controllers/ssh/node/key/get-pub-key/post');
+const showKeyPostController = require('../controllers/ssh/node/key/show/post');
 const listKeysPostController = require('../controllers/ssh/node/key/list/post');
 const recoverKeyPostController = require('../controllers/ssh/node/key/recover/post');
 const renameKeyPostController = require('../controllers/ssh/node/key/rename/post');
@@ -37,6 +37,11 @@ const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
 const sendTokenPostController = require('../controllers/ssh/node/tx/send-token/post');
+const delegateTokenPostController = require('../controllers/ssh/node/tx/delegate-token/post');
+const redelegateTokenPostController = require('../controllers/ssh/node/tx/redelegate-token/post');
+const withdrawRewardsPostController = require('../controllers/ssh/node/tx/withdraw-rewards/post');
+const voteProposalPostController = require('../controllers/ssh/node/tx/vote-proposal/post');
+const unjailValidatorPostController = require('../controllers/ssh/node/tx/unjail-validator/post');
 
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
@@ -129,9 +134,9 @@ router.post(
     deleteKeyPostController
 );
 router.post(
-  '/node/key/get-pub-key',
+  '/node/key/show',
     isAuth,
-    getPubKeyPostController
+    showKeyPostController
 );
 router.post(
   '/node/key/list',
@@ -193,6 +198,31 @@ router.post(
   '/node/tx/send-token',
     isAuth,
     sendTokenPostController
+);
+router.post(
+  '/node/tx/delegate-token',
+    isAuth,
+    delegateTokenPostController
+);
+router.post(
+  '/node/tx/redelegate-token',
+    isAuth,
+    redelegateTokenPostController
+);
+router.post(
+  '/node/tx/withdraw-rewards',
+    isAuth,
+    withdrawRewardsPostController
+);
+router.post(
+  '/node/tx/vote-proposal',
+    isAuth,
+    voteProposalPostController
+);
+router.post(
+  '/node/tx/unjail-validator',
+    isAuth,
+    unjailValidatorPostController
 );
 
 router.post(
