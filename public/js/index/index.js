@@ -309,9 +309,10 @@ window.addEventListener('load', _ => {
       });
     };
 
-    if (event.target.closest('#get-pub-key-button')) {
-      walletManager.getPublicKey({
+    if (event.target.closest('#show-button')) {
+      walletManager.showWallet({
         wallet_name: document.getElementById('wallet-name-value').value,
+        type: 'account'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -342,21 +343,9 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#rename-wallet-button')) {
-      // walletManager.renameWallet({
-      //   wallet_name: document.getElementById('wallet-name-value').value,
-      //   new_wallet_name: document.getElementById('new-wallet-name-value').value,
-      // }, (err, res) => {
-      //   if (err)
-      //     return console.error(err);
-
-      //   return console.log(res);
-      // });
-
-      localhostRequest('/ssh/node/tx/send-token', 'POST', {
-        host: window.host,
-        from_key_name: 'klein',
-        to_address: 'address1',
-        amount: '100',
+      walletManager.renameWallet({
+        wallet_name: document.getElementById('wallet-name-value').value,
+        new_wallet_name: document.getElementById('new-wallet-name-value').value,
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -364,5 +353,7 @@ window.addEventListener('load', _ => {
         return console.log(res);
       });
     };
+
+
   });
 });

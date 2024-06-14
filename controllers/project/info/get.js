@@ -47,6 +47,9 @@ const collectChainInfoFromRPCs = (data, callback) => {
     if (!('fixed_min_gas_price' in res.fees.fee_tokens[0]) || typeof res.fees.fee_tokens[0].fixed_min_gas_price != 'number')
       return callback('min_gas_price_not_found');
 
+    if (!('average_gas_price' in res.fees.fee_tokens[0]) || typeof res.fees.fee_tokens[0].average_gas_price != 'number')
+      return callback('min_gas_price_not_found');
+
     if (!res.peers || !res.peers.seeds || !Array.isArray(res.peers.seeds) || !res.peers.seeds.length)
       return callback('seeds_not_found');
 
@@ -83,6 +86,7 @@ const collectChainInfoFromRPCs = (data, callback) => {
           ...chain_info,
           denom: res.fees.fee_tokens[0].denom,
           min_gas_price: res.fees.fee_tokens[0].fixed_min_gas_price,
+          average_gas_price: res.fees.fee_tokens[0].average_gas_price,
           seeds: res.peers.seeds.map(seed => `${seed.id}@${seed.address}`).slice(0, RANDOM_SEED_COUNT),
           genesis_file: res.codebase.genesis.genesis_url,
           repo: res.codebase.git_repo

@@ -1,12 +1,12 @@
 const sshRequest = require('../../../../../utils/sshRequest');
 
-const sendTokenCommand = require('../../../../../commands/node/tx/sendToken');
+const delegateTokenCommand = require('../../../../../commands/node/tx/delegateToken');
 
 module.exports = (req, res) => {
   if (!req.body.from_key_name || typeof req.body.from_key_name != 'string')
     return res.json({ err: 'bad_request' });
 
-  if (!req.body.to_address || typeof req.body.to_address != 'string')
+  if (!req.body.to_validator_valoper || typeof req.body.to_validator_valoper != 'string')
     return res.json({ err: 'bad_request' });
 
   if (!req.body.amount || typeof req.body.amount != 'string')
@@ -14,7 +14,7 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: sendTokenCommand(req.body.from_key_name, req.body.to_address, req.body.amount, req.body.fees),
+    command: delegateTokenCommand(req.body.from_key_name, req.body.to_validator_valoper, req.body.amount, req.body.fees),
     in_container: true
   }, (err, response) => {
     if (err)

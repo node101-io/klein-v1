@@ -106,7 +106,6 @@ const makeConnections = _ => {
               type: 'network_error'
             }));
 
-          console.error(err);
           if (err && err.level == 'client-timeout')
             return ws.send(JSON.stringify({
               id: id,
@@ -240,7 +239,8 @@ const sshRequest = (type, data, callback) => {
       username: data.username && typeof data.username == 'string' && data.username.trim().length ? data.username.trim() : 'root',
       host: data.host.trim(),
       readyTimeout: SSH_HANDSHAKE_TIMEOUT,
-      keepaliveInterval: SSH_KEEP_ALIVE_INTERVAL
+      keepaliveInterval: SSH_KEEP_ALIVE_INTERVAL,
+      keepaliveCountMax: 3
     };
 
     if (data.port && typeof data.port == 'number' && 0 < data.port)

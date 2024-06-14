@@ -19,14 +19,14 @@ module.exports = (req, res) => {
     timeout: FETCH_TIMEOUT_IN_MS
   }, (err, docker_compose_content) => {
     if (err)
-      return res.json({ err });
+      return res.json({ err: err });
 
     fetch(`${url}/Dockerfile`, {
       json: false,
       timeout: FETCH_TIMEOUT_IN_MS
     }, (err, dockerfile_content) => {
       if (err)
-        return res.json({ err });
+        return res.json({ err: err });
 
       return res.json({ data: { docker_compose_content, dockerfile_content } });
     });
