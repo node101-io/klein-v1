@@ -2,7 +2,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 
 const showKeyInNodeCommand = require('../../../../../commands/node/key/show');
 
-const INVALID_NAME_ERROR_MESSAGE = 'is not a valid name or address';
+const INVALID_NAME_ERROR_MESSAGE_REGEX = /Error: (.*?) is not a valid name or address/;
 const KEY_TYPE_VALUES = [
   'account',
   'validator',
@@ -21,11 +21,11 @@ module.exports = (req, res) => {
     command: showKeyInNodeCommand(req.body.key_name, req.body.type),
     in_container: true
   }, (err, pubkey) => {
-    if (err && err.includes(INVALID_NAME_ERROR_MESSAGE))
-      return res.json({ err: 'document_not_found' });
-
     if (err)
       return res.json({ err: err });
+
+    if (INVALID_NAME_ERROR_MESSAGE_REGEX.test(pubkey))
+      return res.json({ err: 'key_not_found' });
 
     return res.json({ data: pubkey });
   });

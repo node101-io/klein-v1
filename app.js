@@ -22,6 +22,7 @@ dotenv.config();
 const AppKey = require('./utils/appKey');
 const Preferences = require('./utils/preferences');
 const WebSocketServer = require('./utils/webSocketServer');
+const Notifications = require('./utils/notifications');
 
 const APP_PORT = process.env.APP_PORT || 10101;
 const WEBSOCKET_PORT = process.env.WEBSOCKET_PORT || 10180;
@@ -126,25 +127,28 @@ electronApp
       Preferences.init((err, preferences) => {
         if (err) return console.log(err);
 
-        localServer.listen(APP_PORT, _ => {
-          console.log(`Server is on port ${APP_PORT} and is running.`);
+        Notifications.init((err, notifications) => {
+          if (err) return console.log(err);
 
-          setupTrayMenu();
+          localServer.listen(APP_PORT, _ => {
+            console.log(`Server is on port ${APP_PORT} and is running.`);
 
-          setupDeepLink();
-        }).on('error', err => {
-          if (err.code == 'EADDRINUSE')
-            dialog.showMessageBoxSync({
-              type: 'warning',
-              message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`
-            });
-          else
-            dialog.showMessageBoxSync({
-              type: 'error',
-              message: `Server could not be started: ${err}`
-            });
+            setupTrayMenu();
+            setupDeepLink();
+          }).on('error', err => {
+            if (err.code == 'EADDRINUSE')
+              dialog.showMessageBoxSync({
+                type: 'warning',
+                message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`
+              });
+            else
+              dialog.showMessageBoxSync({
+                type: 'error',
+                message: `Server could not be started: ${err}`
+              });
 
-          electronApp.quit();
+            electronApp.quit();
+          });
         });
       });
     });

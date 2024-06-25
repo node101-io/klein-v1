@@ -1,7 +1,7 @@
 const BECH_TYPES = {
   account: 'acc',
   validator: 'val',
-  concensus: 'cons'
+  consensus: 'cons'
 };
 
 module.exports = (key_name, type) => `

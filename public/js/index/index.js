@@ -354,6 +354,18 @@ window.addEventListener('load', _ => {
       });
     };
 
+    if (event.target.closest('#send-token-button')) {
+      txManager.sendToken({
+        from_key_name: document.getElementById('wallet-name-value').value,
+        to_address: 'celestia1npyfa4z2txthvrhxm7jml5ujhw3hfrnsmhna85',
+        amount: 1,
+        fees: 500,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
 
+        return console.log(res);
+      });
+    };
   });
 });
