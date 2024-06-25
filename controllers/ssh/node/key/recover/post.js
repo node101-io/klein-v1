@@ -4,8 +4,9 @@ const jsonify = require('../../../../../utils/jsonify');
 const listKeysInNodeCommand = require('../../../../../commands/node/key/list');
 const recoverKeyInNodeCommand = require('../../../../../commands/node/key/recover');
 
-const DUPLICATED_ADDRESS_ERROR_MESSAGE = 'duplicated address created';
-const INVALID_MNEMONIC_ERROR_MESSAGE = 'invalid mnemonic';
+const DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX = /Error: duplicated address created/;
+const INVALID_MNEMONIC_ERROR_MESSAGE_REGEX = /Error: invalid mnemonic/;
+const ABORTED_ERROR_MESSAGE_REGEX = /Error: aborted/;
 
 module.exports = (req, res) => {
   if (!req.body.key_name || typeof req.body.key_name != 'string')
@@ -26,20 +27,31 @@ module.exports = (req, res) => {
 
     for (const key of key_list)
       if (key.name == req.body.key_name)
-        return res.json({ err: 'document_already_exists' });
+        return res.json({ err: 'key_name_already_exists' });
 
     sshRequest('exec', {
       host: req.body.host,
       command: recoverKeyInNodeCommand(req.body.key_name, req.body.mnemonic),
       in_container: true
-    }, (err, data) => {
-      if (err && err.includes(DUPLICATED_ADDRESS_ERROR_MESSAGE))
-        return res.json({ err: 'document_already_exists' });
+    }, (err, key) => {
+      if (err)
+        return res.json({ err: err });
 
-      if (err && err.includes(INVALID_MNEMONIC_ERROR_MESSAGE))
+      if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(key))
         return res.json({ err: 'invalid_mnemonic' });
 
-      return res.json({});
+      if (DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX.test(key))
+        return res.json({ err: 'key_already_exists' });
+
+      if (ABORTED_ERROR_MESSAGE_REGEX.test(key))
+        return res.json({ err: 'unknown_error' });
+
+      key = jsonify(key);
+
+      return res.json({ data: {
+        address: key.address,
+        mnemonic: key.mnemonic
+      }});
     });
   });
 };

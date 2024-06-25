@@ -6,8 +6,11 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: uninstallNodeCommand()
-  }, (err, data) => {
-    if (!err || !err.includes('Stopped') || !err.includes('Removed')) // TODO: fix
+  }, (err, output) => {
+    if (err)
+      return res.json({ err: err });
+
+    if (!output || !output.includes('Stopped') || !output.includes('Removed'))
       return res.json({ err: 'unknown_error' });
 
     return res.json({});

@@ -2,6 +2,29 @@ const sshRequest = require('../../../../utils/sshRequest');
 
 const installNodeCommand = require('../../../../commands/node/install');
 
+const createNodeFolder = (host, callback) => {
+  sshRequest('sftp:exists', {
+    host: host,
+    path: 'klein-node'
+  }, (err, data) => {
+    if (err && err != 'document_not_found')
+      return callback(err);
+
+    if (err)
+      sshRequest('sftp:mkdir', {
+        host: host,
+        path: 'klein-node'
+      }, (err, data) => {
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+    else
+      return callback(null);
+  });
+};
+
 const installNode = (data, callback) => {
   sshRequest('sftp:write_file', {
     host: data.host,
@@ -40,34 +63,20 @@ module.exports = (req, res) => {
   if (!req.body.dockerfile_content || typeof req.body.dockerfile_content != 'string')
     return res.json({ err: 'bad_request' });
 
-  sshRequest('sftp:exists', {
-    host: req.body.host,
-    path: 'klein-node'
-  }, (err, data) => {
-    if (err && err != 'document_not_found')
+  createNodeFolder(req.body.host, err => {
+    if (err)
       return res.json({ err: err });
 
-    if (err)
-      sshRequest('sftp:mkdir', {
-        host: req.body.host,
-        path: 'klein-node'
-      }, (err, data) => {
-        if (err)
-          return res.json({ err: err });
+    installNode({
+      host: req.body.host,
+      id: req.body.id,
+      docker_compose_content: req.body.docker_compose_content,
+      dockerfile_content: req.body.dockerfile_content
+    }, (err, output) => {
+      if (err)
+        return res.json({ err: err });
 
-        installNode(req.body, (err, output) => {
-          if (err)
-            return res.json({ err: err });
-
-          return res.json({ data: output });
-        });
-      });
-    else
-      installNode(req.body, (err, output) => {
-        if (err)
-          return res.json({ err: err });
-
-        return res.json({ data: output });
-      });
+      return res.json({ data: output });
+    });
   });
 };

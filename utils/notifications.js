@@ -44,10 +44,10 @@ const getNotificationsFromAPI = callback => {
   fetch('https://admin.klein.run/api/notifications', {}, (err, res) => {
     if (err) return callback(err);
 
-    if (!res.data || !res.data.notifications || !Array.isArray(res.data.notifications))
+    if (!res.success || !res.notifications || !Array.isArray(res.notifications))
       return callback('unknown_error');
 
-    return callback(null, res.data.notifications);
+    return callback(null, res.notifications);
   });
 };
 
@@ -56,17 +56,23 @@ const Notifications = {
     getLocalNotifications((err, notifications) => {
       if (err) return callback(err);
 
-      Cron.schedule(`*/${CHECK_NOTIFICATIONS_INTERVAL_IN_MINUTES} * * * *`, () => {
+      Cron(`*/${CHECK_NOTIFICATIONS_INTERVAL_IN_MINUTES} * * * *`, () => {
         getNotificationsFromAPI((err, notifications) => {
           if (err) return console.log(err);
 
-          Notifications.new(notifications);
+          Notifications.new(notifications, err => {
+            if (err) return console.log(err);
+
+            console.log('New notifications are fetched and saved.');
+          });
         });
       });
+
+      return callback(null, notifications);
     });
   },
   set: (notifications, callback) => {
-    fs.writeFile(notificationsPath, JSON.stringify(notifications), err => {
+    fs.writeFile(notificationsPath, JSON.stringify(notifications, null, 2), err => {
       if (err)
         return callback(err);
 
@@ -99,3 +105,5 @@ const Notifications = {
     });
   }
 };
+
+module.exports = Notifications;

@@ -5,7 +5,8 @@ const makeTxManager = _ => {
         host: window.host,
         from_key_name: data.from_key_name,
         to_address: data.to_address,
-        amount: data.amount
+        amount: data.amount,
+        fees: data.fees
       }, (err, res) => {
         if (err)
           return callback(err);
@@ -18,7 +19,8 @@ const makeTxManager = _ => {
         host: window.host,
         from_key_name: data.from_key_name,
         to_validator_valoper: data.to_validator_valoper,
-        amount: data.amount
+        amount: data.amount,
+        fees: data.fees
       }, (err, res) => {
         if (err)
           return callback(err);
@@ -32,7 +34,8 @@ const makeTxManager = _ => {
         from_key_name: data.from_key_name,
         from_validator_valoper: data.from_validator_valoper,
         to_validator_valoper: data.to_validator_valoper,
-        amount: data.amount
+        amount: data.amount,
+        fees: data.fees
       }, (err, res) => {
         if (err)
           return callback(err);
