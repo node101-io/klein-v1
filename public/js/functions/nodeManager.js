@@ -67,7 +67,8 @@ const makeNodeManager = _ => {
             return callback(null, {
               docker_compose_content: new_docker_compose_content,
               dockerfile_content: scripts.dockerfile_content,
-              steps_count: _getInstallationStepsCount(scripts.dockerfile_content)
+              steps_count: _getInstallationStepsCount(scripts.dockerfile_content),
+              project_route: `${data.network}/${JSON.parse(data.is_mainnet) ? 'mainnet' : 'testnet'}/${data.project}`
             });
           });
         });
@@ -82,11 +83,15 @@ const makeNodeManager = _ => {
       if (!data.dockerfile_content || typeof data.dockerfile_content != 'string')
         return callback('bad_request');
 
+      if (!data.project_route || typeof data.project_route != 'string')
+        return callback('bad_request');
+
       localhostRequest('/ssh/node/install', 'POST', {
         host: window.host,
         id: stream.id,
         docker_compose_content: data.docker_compose_content,
-        dockerfile_content: data.dockerfile_content
+        dockerfile_content: data.dockerfile_content,
+        project_route: data.project_route
       }, (err, res) => {
         stream.end();
 
