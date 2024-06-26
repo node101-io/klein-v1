@@ -50,7 +50,16 @@ const installNode = (data, callback) => {
         if (err)
           return callback(err);
 
-        return callback(null, output);
+        sshRequest('sftp:write_file', {
+          host: data.host,
+          path: 'server-listener/data/project-route.txt',
+          content: data.project_route
+        }, (err, output) => {
+          if (err)
+            return callback(err);
+
+          return callback(null);
+        });
       });
     });
   });
@@ -63,6 +72,9 @@ module.exports = (req, res) => {
   if (!req.body.dockerfile_content || typeof req.body.dockerfile_content != 'string')
     return res.json({ err: 'bad_request' });
 
+  if (!req.body.project_route || typeof req.body.project_route != 'string')
+    return res.json({ err: 'bad_request' });
+
   createNodeFolder(req.body.host, err => {
     if (err)
       return res.json({ err: err });
@@ -71,7 +83,8 @@ module.exports = (req, res) => {
       host: req.body.host,
       id: req.body.id,
       docker_compose_content: req.body.docker_compose_content,
-      dockerfile_content: req.body.dockerfile_content
+      dockerfile_content: req.body.dockerfile_content,
+      project_route: req.body.project_route
     }, (err, output) => {
       if (err)
         return res.json({ err: err });
