@@ -1,7 +1,6 @@
 module.exports = data => {
   try {
-    if (!data)
-      return {};
+    if (!data) return {};
 
     return JSON.parse(data);
   } catch (err) {
