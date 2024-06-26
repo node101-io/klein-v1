@@ -31,7 +31,7 @@ module.exports = (req, res) => {
 
     evaluateTxRepsonseError(tx_response, err => {
       if (err)
-        return res.json({ err: err });
+        return res.json({ err: err, data: tx_response });
 
       return res.json({ data: tx_response });
     });
