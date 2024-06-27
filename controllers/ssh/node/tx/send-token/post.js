@@ -4,21 +4,27 @@ const jsonify = require('../../../../../utils/jsonify');
 
 const sendTokenCommand = require('../../../../../commands/node/tx/sendToken');
 
+const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
-  if (!req.body.from_key_name || typeof req.body.from_key_name != 'string')
+  if (!req.body.amount || isNaN(req.body.amount) || Number(req.body.amount) < 0)
     return res.json({ err: 'bad_request' });
 
-  if (!req.body.to_address || typeof req.body.to_address != 'string')
+  if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
-  if (!req.body.amount || isNaN(req.body.amount))
+  if (!req.body.to_address || typeof req.body.to_address != 'string' || !req.body.to_address.trim().length || req.body.to_address.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
     host: req.body.host,
-    command: sendTokenCommand(req.body.from_key_name, req.body.to_address, req.body.amount, req.body.fees),
+    command: sendTokenCommand({
+      amount: req.body.amount,
+      fees: req.body.fees,
+      from_key_name: req.body.from_key_name,
+      to_address: req.body.to_address
+    }),
     in_container: true
   }, (err, tx_response) => {
     if (err)
