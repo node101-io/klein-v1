@@ -1,12 +1,12 @@
 const createGasFeeFlags = require('./functions/createGasFeeFlags');
 
-module.exports = (from_key_name, from_validator_valoper, withdraw_commission, fees) => `
-  $DAEMON_NAME tx distribution withdraw-rewards ${from_validator_valoper} \\
+module.exports = data => `
+  $DAEMON_NAME tx distribution withdraw-rewards ${data.from_validator_valoper} \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\
     --output json \\
-    ${createGasFeeFlags(fees)} \\
-    --from ${from_key_name} \\
-    ${withdraw_commission ? '--commission' : ''}
+    ${createGasFeeFlags(data.fees)} \\
+    --from ${data.from_key_name} \\
+    ${data.withdraw_commission ? '--commission' : ''}
 `;
