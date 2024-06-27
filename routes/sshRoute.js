@@ -30,6 +30,8 @@ const renameKeyPostController = require('../controllers/ssh/node/key/rename/post
 const restartNodePostController = require('../controllers/ssh/node/restart/post');
 const startNodePostController = require('../controllers/ssh/node/start/post');
 const logsNodePostController = require('../controllers/ssh/node/logs/post');
+const getNodeUpgradePlanPostController = require('../controllers/ssh/node/get-upgrade-plan/post');
+const getNodeVersionPostController = require('../controllers/ssh/node/get-version/post');
 const setPeersPostController = require('../controllers/ssh/node/sync/set-peers/post');
 const setSeedsPostController = require('../controllers/ssh/node/sync/set-seeds/post');
 const installSnapshotPostController = require('../controllers/ssh/node/sync/install-snapshot/post');
@@ -46,7 +48,6 @@ const unjailValidatorPostController = require('../controllers/ssh/node/tx/unjail
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
 const uninstallServerListenerPostController = require('../controllers/ssh/server-listener/uninstall/post');
-const updateServerListenerPostController = require('../controllers/ssh/server-listener/update/post');
 
 const checkResourcePostController = require('../controllers/ssh/resource/check/post');
 
@@ -169,6 +170,16 @@ router.post(
     logsNodePostController
 );
 router.post(
+  '/node/get-upgrade-plan',
+    isAuth,
+    getNodeUpgradePlanPostController
+);
+router.post(
+  '/node/get-version',
+    isAuth,
+    getNodeVersionPostController
+);
+router.post(
   '/node/sync/set-peers',
     isAuth,
     setPeersPostController
@@ -239,11 +250,6 @@ router.post(
   '/server-listener/uninstall',
     isAuth,
     uninstallServerListenerPostController
-);
-router.post(
-  '/server-listener/update',
-    isAuth,
-    updateServerListenerPostController
 );
 
 router.post(

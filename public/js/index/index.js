@@ -197,11 +197,22 @@ window.addEventListener('load', _ => {
       });
     };
 
+    if (event.target.closest('#update-server-listener-button')) {
+      serverManager.updateServerListener(data => {
+        console.log(data.data);
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
     if (event.target.closest('#install-node-button')) {
       nodeManager.getInstallationScriptByProject({
         network: 'cosmos',
         project: 'celestiatestnet3',
-        is_mainnet: false,
+        is_mainnet: false
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -209,6 +220,7 @@ window.addEventListener('load', _ => {
         const requestId = nodeManager.installNode({
           docker_compose_content: res.docker_compose_content,
           dockerfile_content: res.dockerfile_content,
+          project_route: res.project_route
         }, data => {
           if (data.data.startsWith('#'))
             console.log(`Progress: ${Math.floor(parseInt(data.data.replace('#', '')) * 100 / res.steps_count)}%`, data.data);
