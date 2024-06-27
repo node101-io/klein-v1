@@ -43,6 +43,49 @@ const makeServerManager = _ => {
     });
   };
 
+  const _installServerListener = (onData, callback) => {
+    _checkServerListenerAndMatchVersion(err => {
+      if (err && err != 'server_listener_not_running')
+        return callback(err);
+
+      if (err) {
+        const stream = makeStream(onData);
+
+        localhostRequest('/ssh/server-listener/install', 'POST', {
+          host: window.host,
+          id: stream.id
+        }, (err, res) => {
+          stream.end();
+
+          if (err)
+            return callback(err);
+
+          return callback(null);
+        });
+
+        return stream.id;
+      };
+
+      return callback('server_listener_already_running');
+    });
+  };
+
+  const _uninstallServerListener = callback => {
+    _checkDocker(err => {
+      if (err)
+        return callback(err);
+
+      localhostRequest('/ssh/server-listener/uninstall', 'POST', {
+        host: window.host
+      }, (err, res) => {
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+    });
+  };
+
   return {
     connectWithPassword: (data, onData, callback) => {
       const stream = makeStream(onData);
@@ -133,57 +176,16 @@ const makeServerManager = _ => {
         });
       });
     },
-    updateServerListener: callback => {
-      localhostRequest('/ssh/server-listener/update', 'POST', {
-        host: window.host
-      }, (err, res) => {
+    installServerListener: _installServerListener,
+    uninstallServerListener: _uninstallServerListener,
+    updateServerListener: (onData, callback) => {
+      _uninstallServerListener(err => {
         if (err)
           return callback(err);
 
-        return callback(null);
+        return _installServerListener(onData, callback);
       });
-    },
-    installServerListener: (onData, callback) => {
-      _checkServerListenerAndMatchVersion(err => {
-        if (err && err != 'server_listener_not_running')
-          return callback(err);
-
-        if (err) {
-          const stream = makeStream(onData);
-
-          localhostRequest('/ssh/server-listener/install', 'POST', {
-            host: window.host,
-            id: stream.id
-          }, (err, res) => {
-            stream.end();
-
-            if (err)
-              return callback(err);
-
-            return callback(null);
-          });
-
-          return stream.id;
-        };
-
-        return callback('server_listener_already_running');
-      });
-    },
-    uninstallServerListener: callback => {
-      _checkDocker(err => {
-        if (err)
-          return callback(err);
-
-        localhostRequest('/ssh/server-listener/uninstall', 'POST', {
-          host: window.host
-        }, (err, res) => {
-          if (err)
-            return callback(err);
-
-          return callback(null);
-        });
-      });
-    },
+    }
   };
 };
 

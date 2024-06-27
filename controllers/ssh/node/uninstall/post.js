@@ -10,7 +10,7 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (!output || !output.includes('Stopped') || !output.includes('Removed'))
+    if (!output || !output.includes('Removed'))
       return res.json({ err: 'unknown_error' });
 
     return res.json({});
