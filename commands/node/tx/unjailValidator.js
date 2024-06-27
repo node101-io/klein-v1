@@ -7,5 +7,5 @@ module.exports = data => `
     --yes \\
     --output json \\
     ${createGasFeeFlags(data.fees)} \\
-    --from ${data.from_key_name}
+    --from ${data.from_key_name.trim()}
 `;

@@ -10,10 +10,10 @@ module.exports = data => `
     --from ${data.from_key_name.trim()} \\
     --pubkey $($DAEMON_NAME tendermint show-validator) \\
     --min-self-delegation 1 \\
-    --amount ${data.amount.trim()}$DENOM \\
-    --commission-max-change-rate ${data.commission_max_change_rate.trim()} \\
-    --commission-max-rate ${data.commission_max_rate.trim()} \\
-    --commission-rate ${data.comission_rate.trim()} \\
+    --amount ${data.amount}$DENOM \\
+    --commission-max-change-rate ${data.commission_max_change_rate} \\
+    --commission-max-rate ${data.commission_max_rate} \\
+    --commission-rate ${data.comission_rate} \\
     --moniker ${data.moniker.trim()} \\
     ${data.details.trim() ? `--details ${data.details.trim()}` : ''} \\
     ${data.identity.trim() ? `--identity ${data.identity.trim()}` : ''} \\

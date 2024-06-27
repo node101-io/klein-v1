@@ -14,7 +14,7 @@ module.exports = (req, res) => {
   if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
-  if (!req.body.to_validator_valoper || typeof req.body.to_validator_valoper != 'string')
+  if (!req.body.to_validator_valoper || typeof req.body.to_validator_valoper != 'string' || !req.body.to_validator_valoper.trim().length || req.body.to_validator_valoper.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {

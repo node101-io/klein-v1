@@ -8,7 +8,7 @@ module.exports = data => `
     --output json \\
     ${createGasFeeFlags(data.fees)} \\
     --from ${data.from_key_name.trim()} \\
-    ${data.commission_rate.trim() ? `--commission-rate ${data.commission_rate.trim()}` : ''} \\
+    ${data.commission_rate ? `--commission-rate ${data.commission_rate}` : ''} \\
     ${data.identity.trim() ? `--new-identity ${data.identity.trim()}` : ''} \\
     ${data.moniker.trim() ? `--new-moniker ${data.moniker.trim()}` : ''} \\
     ${data.security_contact.trim() ? `--security-contact ${data.security_contact.trim()}` : ''} \\
