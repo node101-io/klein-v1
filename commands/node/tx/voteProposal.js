@@ -1,11 +1,11 @@
 const createGasFeeFlags = require('./functions/createGasFeeFlags');
 
-module.exports = (from_key_name, proposal_id, option, fees) => `
-  $DAEMON_NAME tx gov vote ${proposal_id} ${option} \\
+module.exports = data => `
+  $DAEMON_NAME tx gov vote ${data.proposal_id.trim()} ${data.option} \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\
     --output json \\
-    ${createGasFeeFlags(fees)} \\
-    --from ${from_key_name}
+    ${createGasFeeFlags(data.fees)} \\
+    --from ${data.from_key_name.trim()}
 `;

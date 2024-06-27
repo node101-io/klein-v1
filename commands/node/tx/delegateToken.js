@@ -1,11 +1,11 @@
 const createGasFeeFlags = require('./functions/createGasFeeFlags');
 
-module.exports = (from_key_name, to_validator_valoper, amount, fees) => `
-  $DAEMON_NAME tx staking delegate ${to_validator_valoper} ${amount}$DENOM \\
+module.exports = data => `
+  $DAEMON_NAME tx staking delegate ${data.to_validator_valoper.trim()} ${data.amount}$DENOM \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\
     --output json \\
-    ${createGasFeeFlags(fees)} \\
-    --from ${from_key_name}
+    ${createGasFeeFlags(data.fees)} \\
+    --from ${data.from_key_name.trim()}
 `;
