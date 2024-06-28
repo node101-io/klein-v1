@@ -1,15 +1,8 @@
 const makeNodeManager = _ => {
-  const DOCKERFILE_STEPS_COUNT_MULTIPLIER = 1.5;
+  const DOCKERFILE_STEPS_COUNT_OFFSET = 12;
   const DOCKERFILE_STEPS_KEYWORDS = [
     'FROM',
     'RUN',
-    'CMD',
-    'EXPOSE',
-    'ADD',
-    'COPY',
-    'ENTRYPOINT',
-    'VOLUME',
-    'USER',
     'WORKDIR'
   ];
 
@@ -26,7 +19,7 @@ const makeNodeManager = _ => {
         return acc + 1;
       }, 0);
 
-    return steps_count * DOCKERFILE_STEPS_COUNT_MULTIPLIER;
+    return steps_count + DOCKERFILE_STEPS_COUNT_OFFSET;
   };
 
   const _replaceScriptPlaceholdersWithChainInfo = (docker_compose_content, chain_info, callback) => {
