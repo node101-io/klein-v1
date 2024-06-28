@@ -59,7 +59,7 @@ const handleSFTPError = code => {
 };
 
 const isSSHKeyEncrypted = privateKey => {
-  const parsedKey = ssh2.utils.parseKey(privateKey); // TODO: try-catch
+  const parsedKey = ssh2.utils.parseKey(privateKey);
 
   if (Array.isArray(parsedKey))
     return parsedKey.some(key => key instanceof Error && key.message.includes(ENCRYPTED_KEY_MESSAGE));
@@ -388,7 +388,7 @@ const sshRequest = (type, data, callback) => {
             if (err)
               return callback(err);
 
-            connection.markAsSeen();
+            connection.markAsSeen(); // TODO: stream sırasında da markAsSeen çağrılmalı
 
             let stdout = '';
 

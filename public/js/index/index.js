@@ -217,13 +217,19 @@ window.addEventListener('load', _ => {
         if (err)
           return console.error(err);
 
+        let completedStepCount = 0;
+
         const requestId = nodeManager.installNode({
           docker_compose_content: res.docker_compose_content,
           dockerfile_content: res.dockerfile_content,
           project_route: res.project_route
         }, data => {
-          if (data.data.startsWith('#'))
-            console.log(`Progress: ${Math.floor(parseInt(data.data.replace('#', '')) * 100 / res.steps_count)}%`, data.data);
+          const eachBuildLog = jsonify(data.data);
+
+          if (eachBuildLog && eachBuildLog.vertexes && Array.isArray(eachBuildLog.vertexes) && eachBuildLog.vertexes.length > 0 && eachBuildLog.vertexes.find(vertex => vertex.completed))
+            completedStepCount++;
+
+          console.log(`Progress: ${Math.floor(completedStepCount * 100 / res.steps_count)}%`, eachBuildLog);
         }, (err, res) => {
           if (err)
             return console.error(err);
