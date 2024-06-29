@@ -89,10 +89,6 @@ module.exports = (req, res) => {
   return res.render('index', {
     page: 'index/home',
     title: 'Home',
-    includes: {
-      css: ['page'],
-      js: ['page', 'localhostRequest', 'generateRandomHEX', 'webSocket', 'serverManager', 'keyManager', 'preferenceManager', 'jsonify']
-    },
     projects: PROJECTS
   });
 };

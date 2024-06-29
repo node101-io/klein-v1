@@ -1,3 +1,23 @@
 {
-	"Klein": "Klein"
+	"Klein": "Klein",
+	"partials-header-subtitle-main": "MAIN",
+	"partials-header-each-button-text-home": "Home",
+	"partials-header-each-button-text-search": "Search",
+	"partials-header-subtitle-nodes": "NODES",
+	"partials-header-each-button-text-new-node": "Add a New Node",
+	"partials-header-subtitle-settings": "SETTINGS",
+	"partials-header-each-button-text-settings": "Settings",
+	"partials-header-help-text": "Help",
+	"index-home-header-each-button-testnet": "Testnet",
+	"index-home-header-each-button-mainnet": "Mainnet",
+	"index-home-each-project-image-alt": "Klein Project Logo",
+	"index-home-each-project-install-button-text": "Install",
+	"index-search-category-each-button-all": "index-search-category-each-button-all",
+	"index-search-category-each-button-testnet": "index-search-category-each-button-testnet",
+	"index-search-category-each-button-mainnet": "index-search-category-each-button-mainnet",
+	"index-search-category-selected-title-all": "index-search-category-selected-title-all",
+	"index-search-category-selected-title-testnet": "index-search-category-selected-title-testnet",
+	"index-search-category-selected-title-mainnet": "index-search-category-selected-title-mainnet",
+	"index-search-each-project-image-alt": "index-search-each-project-image-alt",
+	"index-search-each-project-install-button-text": "index-search-each-project-install-button-text"
 }

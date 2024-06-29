@@ -1,6 +1,6 @@
 extends ./partials/header
 block main
-  .index-wrapper
+  .index-wrapper(style='display: none')
     .index-home-wrapper(style=setFrontDisplayStyle(page, 'index/home'))
       .index-home-header-wrapper
         .index-home-header-each-button.index-home-header-each-button-active#index-home-header-each-button-testnet= __('index-home-header-each-button-testnet')

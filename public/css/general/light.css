@@ -1,0 +1,16 @@
+:root {
+  --background-all-color: rgba(254, 254, 254, 1);
+  --background-box-color: rgba(244, 246, 248, 1);
+  --background-highlight-color: rgba(222, 222, 222, 1);
+  --background-shadow-color: rgba(70, 73, 98, 0.32);
+  --button-background-color: rgba(89, 100, 250, 1);
+  --button-text-color: rgba(254, 254, 254, 1);
+  --input-title-color: rgba(36, 34, 32, 1);
+  --input-text-color: rgba(82, 82, 82, 1);
+  --input-placeholder-color: rgba(168, 168, 168, 1);
+  --main-color: rgba(89, 100, 250, 1);
+  --text-title-color: rgba(36, 34, 32, 1);
+  --text-subtitle-color: rgba(117, 117, 117);
+  --text-description-color: rgba(166, 166, 166, 1);
+  --warning-color: rgba(255, 32, 32, 1);
+}

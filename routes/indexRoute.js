@@ -5,7 +5,7 @@ const router = express.Router();
 const isAuth = require('../middleware/isAuth');
 const setRenderFrontData = require('../middleware/setRenderFrontData');
 
-const homeGetController = require('../controllers/home/get');
+const homeGetController = require('../controllers/index/home/get');
 const indexGetController = require('../controllers/index/index/get');
 
 router.get(
