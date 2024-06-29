@@ -13,10 +13,10 @@ module.exports = data => `
     --amount ${data.amount}$DENOM \\
     --commission-max-change-rate ${data.commission_max_change_rate} \\
     --commission-max-rate ${data.commission_max_rate} \\
-    --commission-rate ${data.comission_rate} \\
-    --moniker ${data.moniker.trim()} \\
-    ${data.details.trim() ? `--details ${data.details.trim()}` : ''} \\
-    ${data.identity.trim() ? `--identity ${data.identity.trim()}` : ''} \\
-    ${data.security_contact.trim() ? `--security-contact ${data.security_contact.trim()}` : ''} \\
-    ${data.website.trim() ? `--website ${data.website.trim()}` : ''}
+    --commission-rate ${data.commission_rate} \\
+    --moniker '${data.moniker.trim()}' \\
+    ${data.details ? `--details '${data.details.trim()}'` : ''} \\
+    ${data.identity ? `--identity '${data.identity.trim()}'` : ''} \\
+    ${data.security_contact ? `--security-contact '${data.security_contact.trim()}'` : ''} \\
+    ${data.website ? `--website '${data.website.trim()}'` : ''}
 `;
