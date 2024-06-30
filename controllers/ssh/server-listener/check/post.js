@@ -21,7 +21,7 @@ module.exports = (req, res) => {
 
     sshRequest('sftp:read_file', {
       host: req.body.host,
-      path: 'server-listener/package.json'
+      path: 'server-listener/package.json' // TODO: instead of looking at package.json, we should fetch the tag
     }, (err, package_json) => {
       if (err)
         return res.json({ err: err });

@@ -187,8 +187,8 @@ const performPreExecActions = (data, callback) => {
   if ('in_container' in data && typeof data.in_container == 'boolean' && data.in_container) {
     const scriptName = `klein_script_${Date.now()}.sh`;
 
-    const scriptPathHost = `/var/lib/docker/volumes/klein-node_klein-scripts-volume/_data/${scriptName}`;
-    const scriptPathContainer = `/root/klein-scripts/${scriptName}`;
+    const scriptPathHost = `$HOME/klein-scripts-volume/${scriptName}`;
+    const scriptPathContainer = `$HOME/klein-scripts/${scriptName}`;
 
     sshRequest('sftp:write_file', {
       host: data.host,
@@ -326,7 +326,7 @@ const sshRequest = (type, data, callback) => {
       if (type == 'exec') {
         try {
           connection.client.exec(data.command, (err, stream) => {
-            if (err)
+            if (err && err.reason) // TODO:
               return callback(err);
 
             let stdout = '';
