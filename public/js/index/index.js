@@ -1,5 +1,6 @@
 // window.host = 'localhost';
 window.host = '164.68.108.76';
+window.host = '164.90.186.117';
 // window.host = '144.91.93.154';
 
 window.addEventListener('load', _ => {
@@ -18,7 +19,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#login-button-password')) {
       serverManager.connectWithPassword({
-        password: 'node101jcb',
+        password: 'node101Bos',
       }, data => {
         // data.type:
         //   connect
