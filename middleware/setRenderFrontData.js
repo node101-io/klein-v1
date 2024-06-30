@@ -3,8 +3,14 @@ const setFrontDisplayStyle = require('../utils/setFrontDisplayStyle');
 const ALLOWED_COLOR_THEME_LIST = ['dark', 'light'];
 const DEFAULT_COLOR_THEME = 'light';
 const INCLUDES = {
-  css: ['general', 'header', 'page'],
-  js: ['page', 'localhostRequest', 'generateRandomHEX', 'webSocket', 'serverManager', 'keyManager', 'preferenceManager', 'jsonify']
+  css: [
+    'general/general',
+    'index/general', 'index/home',
+    'partials/header'
+  ],
+  js: [
+    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/keyManager', 'functions/preferenceManager', 'functions/jsonify'
+  ]
 };
 
 module.exports = (req, res, next) => {

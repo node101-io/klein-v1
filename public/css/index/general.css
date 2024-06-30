@@ -1,0 +1,211 @@
+:root {
+  --index-content-padding: 40px;
+  --index-content-inner-padding: 8px;
+  --index-content-inner-gap: 20px;
+
+  --index-font-size-big: 16px;
+  --index-font-size-medium: 15px;
+  --index-font-size-small: 11px;
+
+  --index-content-wrapper-curvature: 12px;
+
+  --index-general-each-project-height: 128px;
+  --index-general-each-project-curvature: 12px;
+  --index-general-each-project-image-curvature: 20px;
+  --index-general-each-project-help-content-height: 35px;
+  --index-general-each-project-help-content-width: 250px;
+  --index-general-each-project-help-content-curvature: 6px;
+  --index-general-each-project-help-content-horizontal-padding: 15px;
+  --index-general-each-project-help-arrow-size: 10px;
+  --index-general-each-project-help-icon-size: 12px;
+  --index-general-each-project-link-icon-size: 18px;
+  --index-general-each-project-install-button-height: 26px;
+  --index-general-each-project-install-button-curvature: 4px;
+}
+
+.index-wrapper {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  overflow: hidden;
+}
+
+.index-general-projects-wrapper {
+  height: fit-content;
+  min-height: fit-content;
+  width: 100%;
+  min-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: var(--index-content-inner-gap);
+  padding: 0 var(--index-content-padding);
+  padding-top: calc(2 * var(--index-content-inner-gap));
+  margin-bottom: auto;
+}
+
+.index-general-each-project-wrapper {
+  height: var(--index-general-project-height);
+  min-height: var(--index-general-project-height);
+  width: auto;
+  min-width: auto;
+  flex-direction: column;
+  padding: var(--index-content-inner-padding);
+  border-radius: var(--index-general-each-project-curvature);
+  background-color: var(--background-all-color);
+  overflow: visible;
+}
+
+.index-general-each-project-inner-wrapper {
+  height: calc(var(--index-general-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-height: calc(var(--index-general-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  width: 100%;
+  min-width: 100%;
+  padding-bottom: var(--index-content-inner-padding);
+}
+
+.index-general-each-project-image {
+  height: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-height: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  width: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-width: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  margin-right: var(--index-content-inner-padding);
+  border-radius: var(--index-general-project-image-curvature);
+}
+
+.index-general-each-project-content-wrapper {
+  height: 100%;
+  min-height: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.index-general-each-project-content-header-wrapper {
+  height: fit-content;
+  min-height: fit-content;
+  width: 100%;
+  min-width: 100%;
+  align-items: center;
+}
+.index-general-each-project-name {
+  font-weight: 500;
+  font-family: var(--font-family-anek-bangla);
+  font-size: var(--index-font-size-big);
+  color: var(--text-title-color);
+}
+
+.index-general-each-project-help-wrapper {
+  position: relative;
+  height: var(--index-general-each-project-help-icon-size);
+  min-height: var(--index-general-each-project-help-icon-size);
+  width: var(--index-general-each-project-help-icon-size);
+  min-width: var(--index-general-each-project-help-icon-size);
+  flex-direction: column;
+  align-items: center;
+  margin-left: var(--index-content-inner-padding);
+  cursor: default;
+}
+.index-general-each-project-help-wrapper:hover .index-general-each-project-help-text-wrapper {
+  display: flex;
+}
+.index-general-each-project-help-text-wrapper {
+  position: absolute;
+  top: calc(-1 * var(--index-general-each-project-help-content-height) - 1 * var(--index-general-each-project-help-arrow-size) - 2px);
+  height: var(--index-general-each-project-help-content-height);
+  min-height: var(--index-general-each-project-help-content-height);
+  width: var(--index-general-each-project-help-content-width);
+  min-width: var(--index-general-each-project-help-content-width);
+  display: none;
+  align-items: center;
+  padding: 0 var(--index-general-each-project-help-content-horizontal-padding);
+  border-radius: var(--index-general-each-project-help-content-curvature);
+  background-color: var(--background-highlight-color);
+  overflow: visible;
+}
+.index-general-each-project-help-text-wrapper::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--index-general-each-project-help-content-width) / 2 - var(--index-general-each-project-help-arrow-size));
+  bottom: calc(-2 * var(--index-general-each-project-help-arrow-size));
+  height: 0;
+  min-height: 0;
+  width: 0;
+  min-width: 0;
+  border: var(--index-general-each-project-help-arrow-size) solid transparent;
+  border-top-color: var(--background-highlight-color);
+  z-index: 2;
+}
+.index-general-each-project-help-text {
+  flex: 1;
+  display: unset;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 300;
+  font-family: var(--font-family-anek-bangla);
+  color: var(--help-button-text-color);
+  font-size: var(--index-font-size-medium);
+}
+.index-general-each-project-help-link {
+  width: fit-content;
+  min-width: fit-content;
+  font-weight: 300;
+  font-family: var(--font-family-anek-bangla);
+  color: var(--help-button-text-color);
+  font-size: var(--index-font-size-medium);
+  text-decoration: underline;
+}
+.index-general-each-project-help-icon {
+  height: var(--index-general-each-project-help-icon-size);
+  min-height: var(--index-general-each-project-help-icon-size);
+  width: var(--index-general-each-project-help-icon-size);
+  min-width: var(--index-general-each-project-help-icon-size);
+  fill: var(--help-button-icon-color);
+}
+
+.index-general-each-project-link {
+  width: fit-content;
+  min-width: fit-content;
+  height: fit-content;
+  min-height: fit-content;
+  margin-left: auto;
+  cursor: pointer;
+}
+.index-general-each-project-link-icon {
+  height: var(--index-general-each-project-link-icon-size);
+  min-height: var(--index-general-each-project-link-icon-size);
+  width: auto;
+  min-width: auto;
+  fill: var(--main-color);
+}
+
+.index-general-each-project-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 300;
+  font-family: var(--font-family-anek-bangla);
+  color: var(--text-description-color);
+  font-size: var(--index-font-size-medium);
+}
+
+.index-general-each-project-install-button {
+  height: var(--index-general-each-project-install-button-height);
+  min-height: var(--index-general-each-project-install-button-height);
+  width: 100%;
+  min-width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--button-background-color);
+  border-radius: var(--index-general-each-project-install-button-curvature);
+}
+.index-general-each-project-install-button-text {
+  font-weight: 400;
+  font-family: var(--font-family-anek-bangla);
+  color: var(--button-text-color);
+  font-size: var(--index-font-size-medium);
+  cursor: pointer;
+}

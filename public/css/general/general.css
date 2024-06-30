@@ -55,6 +55,9 @@ input[type=number] {
 :root {
   --page-horizontal-padding: 40px;
   --page-vertical-padding: 20px;
+
+  --font-family-anek-bangla: 'Anek Bangla', Arial, Helvetica, sans-serif;
+  --font-family-inter: 'Inter', Arial, Helvetica, sans-serif;
 }
 
 .display-none {

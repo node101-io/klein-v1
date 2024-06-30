@@ -17,7 +17,7 @@
   --partials-header-each-button-height: 40px;
   --partials-header-each-button-curvature: 8px;
   --partials-header-each-button-icon-height: 15px;
-  --partials-header-each-button-text-font-size: 16px;
+  --partials-header-each-button-text-font-size: 15px;
   --partials-header-each-button-shortcut-font-size: 12px;
 
   --partials-header-content-wrapper-margin-left: 20px;
@@ -88,7 +88,7 @@
   height: fit-content;
   min-height: fit-content;
   font-weight: 500;
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-inter);
   font-size: var(--partials-header-each-subtitle-font-size);
   color: var(--text-subtitle-color);
   margin-bottom: var(--partials-header-navbar-spacing);
@@ -131,7 +131,7 @@
 }
 .partials-header-each-button-text {
   font-weight: 400;
-  font-family: 'Anek Bangla', Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-anek-bangla);
   font-size: var(--partials-header-each-button-text-font-size);
   color: var(--text-subtitle-color);
   margin-right: auto;
@@ -139,7 +139,7 @@
 .partials-header-each-button-shortcut {
   display: none;
   font-weight: 200;
-  font-family: 'Anek Bangla', Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-anek-bangla);
   font-size: var(--partials-header-each-button-shortcut-font-size);
   color: var(--text-subtitle-color);
 }
@@ -167,7 +167,7 @@
 }
 .partials-header-help-text {
   font-weight: 400;
-  font-family: 'Anek Bangla', Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-anek-bangla);
   font-size: var(--partials-header-each-button-text-font-size);
   color: var(--text-subtitle-color);
   margin-right: auto;
