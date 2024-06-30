@@ -4,9 +4,10 @@ const jsonify = require('../../../../../utils/jsonify');
 const listKeysInNodeCommand = require('../../../../../commands/node/key/list');
 const recoverKeyInNodeCommand = require('../../../../../commands/node/key/recover');
 
+const ABORTED_ERROR_MESSAGE_REGEX = /Error: aborted/;
 const DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX = /Error: duplicated address created/;
 const INVALID_MNEMONIC_ERROR_MESSAGE_REGEX = /Error: invalid mnemonic/;
-const ABORTED_ERROR_MESSAGE_REGEX = /Error: aborted/;
+const NO_RECORDS_FOUND_MESSAGE_REGEX = /No records were found in keyring/
 
 module.exports = (req, res) => {
   if (!req.body.key_name || typeof req.body.key_name != 'string')
@@ -23,7 +24,7 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    key_list = jsonify(key_list);
+    key_list = NO_RECORDS_FOUND_MESSAGE_REGEX.test(key_list) ? [] : jsonify(key_list);
 
     for (const key of key_list)
       if (key.name == req.body.key_name)
@@ -37,14 +38,14 @@ module.exports = (req, res) => {
       if (err)
         return res.json({ err: err });
 
-      if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(key))
-        return res.json({ err: 'invalid_mnemonic' });
+      if (ABORTED_ERROR_MESSAGE_REGEX.test(key))
+        return res.json({ err: 'unknown_error' });
 
       if (DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX.test(key))
         return res.json({ err: 'key_already_exists' });
 
-      if (ABORTED_ERROR_MESSAGE_REGEX.test(key))
-        return res.json({ err: 'unknown_error' });
+      if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(key))
+        return res.json({ err: 'invalid_mnemonic' });
 
       key = jsonify(key);
 
