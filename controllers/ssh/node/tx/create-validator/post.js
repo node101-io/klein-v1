@@ -1,5 +1,5 @@
 const sshRequest = require('../../../../../utils/sshRequest');
-const evaluateTxRepsonseError = require('../../../../../utils/evaluateTxRepsonseError');
+const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
 const createValidatorCommand = require('../../../../../commands/node/tx/createValidator');
@@ -46,12 +46,12 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (tx_response.match(KEY_NOT_FOUND_ERROR_MESSAGE_REGEX))
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(tx_response))
       return res.json({ err: 'key_not_found' });
 
     tx_response = jsonify(tx_response);
 
-    evaluateTxRepsonseError(tx_response, err => {
+    evaluateTxResponseError(tx_response, err => {
       if (err)
         return res.json({ err: err, data: tx_response });
 

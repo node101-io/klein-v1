@@ -38,6 +38,7 @@ const installSnapshotPostController = require('../controllers/ssh/node/sync/inst
 const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
+const checkTxResultPostController = require('../controllers/ssh/node/tx/check-tx-result/post');
 const createValidatorPostController = require('../controllers/ssh/node/tx/create-validator/post');
 const delegateTokenPostController = require('../controllers/ssh/node/tx/delegate-token/post');
 const editValidatorPostController = require('../controllers/ssh/node/tx/edit-validator/post');
@@ -206,6 +207,11 @@ router.post(
     uninstallNodePostController
 );
 
+router.post(
+  '/node/tx/check-tx-result',
+    isAuth,
+    checkTxResultPostController
+);
 router.post(
   '/node/tx/create-validator',
     isAuth,

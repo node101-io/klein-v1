@@ -1,5 +1,5 @@
 const sshRequest = require('../../../../../utils/sshRequest');
-const evaluateTxRepsonseError = require('../../../../../utils/evaluateTxRepsonseError');
+const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
 const withdrawRewardsCommand = require('../../../../../commands/node/tx/withdrawRewards');
@@ -26,20 +26,20 @@ module.exports = (req, res) => {
       withdraw_commission: req.body.withdraw_commission
     }),
     in_container: true
-  }, (err, data) => {
+  }, (err, tx_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (data.match(KEY_NOT_FOUND_ERROR_MESSAGE_REGEX))
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(tx_response))
       return res.json({ err: 'key_not_found' });
 
-    data = jsonify(data);
+    tx_response = jsonify(tx_response);
 
-    evaluateTxRepsonseError(data, err => {
+    evaluateTxResponseError(tx_response, err => {
       if (err)
-        return res.json({ err: err, data: data });
+        return res.json({ err: err, data: tx_response });
 
-      return res.json({ data: data });
+      return res.json({ data: tx_response });
     });
   });
 };

@@ -1,6 +1,6 @@
 // window.host = 'localhost';
 window.host = '164.68.108.76';
-window.host = '164.90.186.117';
+// window.host = '164.90.186.117';
 // window.host = '144.91.93.154';
 
 window.addEventListener('load', _ => {
@@ -19,7 +19,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#login-button-password')) {
       serverManager.connectWithPassword({
-        password: 'node101Bos',
+        password: 'node101jcb',
       }, data => {
         // data.type:
         //   connect
@@ -365,6 +365,17 @@ window.addEventListener('load', _ => {
       walletManager.renameWallet({
         wallet_name: document.getElementById('wallet-name-value').value,
         new_wallet_name: document.getElementById('new-wallet-name-value').value,
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#check-tx-result-button')) {
+      txManager.checkTxResult({
+        tx_hash: 'BED97703277B3CF45681013D15606FABE7A769725993D8CC3CE9E261E0CA058F',
       }, (err, res) => {
         if (err)
           return console.error(err);
