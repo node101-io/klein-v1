@@ -354,30 +354,30 @@ const sshRequest = (type, data, callback) => {
                 console.log('stderr:', stderr);
                 console.log('stdout:', stdout);
                 if (code == 0)
-                  return callback(null, stderr.trim() || stdout.trim() || null);
+                  return callback(null, stdout.trim() || null);
 
                 if (code == 1)
-                  return callback(stderr.trim() || stdout.trim() || null, null);
+                  return callback(stdout.trim() || null, null);
 
                 if (code == 2)
-                  return callback('shell_syntax_error', stderr.trim() || stdout.trim() || null);
+                  return callback('shell_syntax_error', stdout.trim() || null);
 
                 if (code == 126)
-                  return callback('command_cannot_execute', stderr.trim() || stdout.trim() || null);
+                  return callback('command_cannot_execute', stdout.trim() || null);
 
                 if (code == 127)
-                  return callback('command_not_found', stderr.trim() || stdout.trim() || null);
+                  return callback('command_not_found', stdout.trim() || null);
 
                 if (code == 128)
-                  return callback('invalid_exit_argument', stderr.trim() || stdout.trim() || null);
+                  return callback('invalid_exit_argument', stdout.trim() || null);
 
                 if (code == 130)
-                  return callback('user_interruption', stderr.trim() || stdout.trim() || null);
+                  return callback('user_interruption', stdout.trim() || null);
 
                 if (code == 255)
-                  return callback('unknown_error', stderr.trim() || stdout.trim() || null);
+                  return callback('unknown_error', stdout.trim() || null);
 
-                return callback(stderr.trim() || null, stdout.trim() || null);
+                return callback(null, stdout.trim() || null);
               })
               .stderr.on('data', stderr_data => {
                 stderr += stderr_data;
