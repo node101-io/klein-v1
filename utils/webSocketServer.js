@@ -3,9 +3,15 @@ const ws = require('ws');
 let server = null;
 
 const WebSocketServer = {
-  create: (port, callback) => { // TODO: callback fix here
+  create: (port, callback) => {
+    let is_callback_called = false;
+
     new ws.WebSocketServer({ port })
       .on('listening', _ => {
+        if (is_callback_called) return;
+
+        is_callback_called = true;
+
         return callback(null);
       })
       .on('connection', ws => {
@@ -15,6 +21,10 @@ const WebSocketServer = {
         server = null;
       })
       .on('error', err => {
+        if (is_callback_called) return;
+
+        is_callback_called = true;
+
         if (err.code == 'EADDRINUSE')
           return callback('port_in_use');
 

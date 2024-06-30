@@ -33,7 +33,7 @@ const makeServerManager = _ => {
   };
 
   const _checkAvailableResources = callback => {
-    localhostRequest('/ssh/resource/check', 'POST', {
+    localhostRequest('/ssh/server-listener/stats', 'POST', {
       host: window.host,
     }, (err, res) => {
       if (err)
