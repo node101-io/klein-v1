@@ -35,6 +35,17 @@ const TYPE_VALUES = [
   'sftp:upload_file'
 ];
 
+const handleExecError = code => {
+  if (code == 1)
+    return 'not_authenticated_request';
+  else if (code == 2)
+    return 'connect_failed';
+  else if (code == 4)
+    return 'resource_usage_high';
+  else
+    return 'unknown_error';
+};
+
 const handleSFTPError = code => {
   if (code == SFTP_STATUS_CODES.OK)
     return null;
@@ -187,8 +198,8 @@ const performPreExecActions = (data, callback) => {
   if ('in_container' in data && typeof data.in_container == 'boolean' && data.in_container) {
     const scriptName = `klein_script_${Date.now()}.sh`;
 
-    const scriptPathHost = `$HOME/klein-scripts-volume/${scriptName}`;
-    const scriptPathContainer = `$HOME/klein-scripts/${scriptName}`;
+    const scriptPathHost = `klein-scripts-volume/${scriptName}`;
+    const scriptPathContainer = `klein-scripts/${scriptName}`;
 
     sshRequest('sftp:write_file', {
       host: data.host,
@@ -326,8 +337,8 @@ const sshRequest = (type, data, callback) => {
       if (type == 'exec') {
         try {
           connection.client.exec(data.command, (err, stream) => {
-            if (err && err.reason) // TODO:
-              return callback(err);
+            if (err)
+              return callback(handleExecError(err.reason));
 
             let stdout = '';
             let stderr = '';
@@ -386,24 +397,26 @@ const sshRequest = (type, data, callback) => {
         try {
           connection.client.exec(data.command, (err, stream) => {
             if (err)
-              return callback(err);
+              return callback(handleExecError(err.reason));
 
-            connection.markAsSeen(); // TODO: stream sırasında da markAsSeen çağrılmalı
+            connection.markAsSeen();
 
             let stdout = '';
 
             stream
-              .on('data', streamData => {
-                streamData = Buffer.from(streamData).toString('utf8');
+              .on('data', stream_data => {
+                connection.markAsSeen();
 
-                stdout += streamData;
+                stream_data = Buffer.from(stream_data).toString('utf8');
+
+                stdout += stream_data;
 
                 if (stdout.length > 1024 * 100)
                   stdout = stdout.slice(stdout.length / 2);
 
                 ws.send(JSON.stringify({
                   id: data.id,
-                  data: streamData,
+                  data: stream_data,
                 }));
               })
               .on('close', _ => {
