@@ -25,7 +25,7 @@ module.exports = (req, res) => {
       from_validator_valoper: req.body.from_validator_valoper,
       withdraw_commission: req.body.withdraw_commission
     }),
-    is_container: true
+    in_container: true
   }, (err, data) => {
     if (err)
       return res.json({ err: err });

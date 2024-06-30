@@ -38,12 +38,14 @@ const installSnapshotPostController = require('../controllers/ssh/node/sync/inst
 const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
 
-const sendTokenPostController = require('../controllers/ssh/node/tx/send-token/post');
+const createValidatorPostController = require('../controllers/ssh/node/tx/create-validator/post');
 const delegateTokenPostController = require('../controllers/ssh/node/tx/delegate-token/post');
+const editValidatorPostController = require('../controllers/ssh/node/tx/edit-validator/post');
 const redelegateTokenPostController = require('../controllers/ssh/node/tx/redelegate-token/post');
-const withdrawRewardsPostController = require('../controllers/ssh/node/tx/withdraw-rewards/post');
-const voteProposalPostController = require('../controllers/ssh/node/tx/vote-proposal/post');
+const sendTokenPostController = require('../controllers/ssh/node/tx/send-token/post');
 const unjailValidatorPostController = require('../controllers/ssh/node/tx/unjail-validator/post');
+const voteProposalPostController = require('../controllers/ssh/node/tx/vote-proposal/post');
+const withdrawRewardsPostController = require('../controllers/ssh/node/tx/withdraw-rewards/post');
 
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
@@ -206,9 +208,9 @@ router.post(
 );
 
 router.post(
-  '/node/tx/send-token',
+  '/node/tx/create-validator',
     isAuth,
-    sendTokenPostController
+    createValidatorPostController
 );
 router.post(
   '/node/tx/delegate-token',
@@ -216,9 +218,19 @@ router.post(
     delegateTokenPostController
 );
 router.post(
+  '/node/tx/edit-validator',
+    isAuth,
+    editValidatorPostController
+);
+router.post(
   '/node/tx/redelegate-token',
     isAuth,
     redelegateTokenPostController
+);
+router.post(
+  '/node/tx/send-token',
+    isAuth,
+    sendTokenPostController
 );
 router.post(
   '/node/tx/withdraw-rewards',

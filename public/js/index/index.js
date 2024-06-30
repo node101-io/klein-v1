@@ -1,5 +1,5 @@
 // window.host = 'localhost';
-window.host = '164.90.186.117';
+window.host = '164.68.108.76';
 // window.host = '144.91.93.154';
 
 window.addEventListener('load', _ => {
@@ -18,7 +18,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#login-button-password')) {
       serverManager.connectWithPassword({
-        password: 'node101Bos',
+        password: 'node101jcb',
       }, data => {
         // data.type:
         //   connect
@@ -211,7 +211,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#install-node-button')) {
       nodeManager.getInstallationScriptByProject({
         network: 'cosmos',
-        project: 'celestiatestnet3',
+        project: 'lavatestnet',
         is_mainnet: false
       }, (err, res) => {
         if (err)
@@ -253,7 +253,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#restart-node-button')) {
       nodeManager.restartNode({
         network: 'cosmos',
-        project: 'celestiatestnet3',
+        project: 'lavatestnet',
         is_mainnet: false,
       }, (err, res) => {
         if (err)
@@ -372,12 +372,104 @@ window.addEventListener('load', _ => {
       });
     };
 
+    if (event.target.closest('#create-validator-button')) {
+      txManager.createValidator({
+        amount: 500000,
+        commission_max_change_rate: 0.01,
+        commission_max_rate: 0.20,
+        commission_rate: 0.05,
+        from_key_name: 'klein101',
+        moniker: 'klein'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#delegate-token-button')) {
+      txManager.delegateToken({
+        amount: 2000000,
+        from_key_name: 'klein101',
+        to_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#edit-validator-button')) {
+      txManager.editValidator({
+        from_key_name: 'klein101',
+        moniker: 'Klein v1: Forrest',
+        website: 'https://klein.run'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#redelegate-token-button')) {
+      txManager.redelegateToken({
+        amount: 2000000,
+        from_key_name: 'klein101',
+        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz',
+        to_validator_valoper: 'lava@valoper1z06tqx7ge2w56auf94e7ql3zafl4m2xm4emuc7'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
     if (event.target.closest('#send-token-button')) {
       txManager.sendToken({
-        from_key_name: document.getElementById('wallet-name-value').value,
-        to_address: 'celestia1npyfa4z2txthvrhxm7jml5ujhw3hfrnsmhna85',
-        amount: 1,
-        fees: 500,
+        from_key_name: 'klein101',
+        to_address: 'lava@1z06tqx7ge2w56auf94e7ql3zafl4m2xmpsqm2f',
+        amount: 500000
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#unjail-validator-button')) {
+      txManager.unjailValidator({
+        from_key_name: 'klein101',
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#vote-proposal-button')) {
+      txManager.voteProposal({
+        from_key_name: 'klein101',
+        option: 'yes',
+        proposal_id: '1'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
+    if (event.target.closest('#withdraw-rewards-button')) {
+      txManager.withdrawRewards({
+        from_key_name: 'klein101',
+        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz',
+        withdraw_commission: false
       }, (err, res) => {
         if (err)
           return console.error(err);

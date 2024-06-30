@@ -85,8 +85,8 @@ const collectChainInfoFromRPCs = (data, callback) => {
         return callback(null, {
           ...chain_info,
           denom: res.fees.fee_tokens[0].denom,
-          min_gas_price: res.fees.fee_tokens[0].fixed_min_gas_price,
-          average_gas_price: res.fees.fee_tokens[0].average_gas_price,
+          min_gas_price: String(res.fees.fee_tokens[0].fixed_min_gas_price),
+          average_gas_price: String(res.fees.fee_tokens[0].average_gas_price),
           seeds: res.peers.seeds.map(seed => `${seed.id}@${seed.address}`).slice(0, RANDOM_SEED_COUNT),
           genesis_file: res.codebase.genesis.genesis_url,
           repo: res.codebase.git_repo
