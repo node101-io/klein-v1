@@ -4,7 +4,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 const installSnapshotCommand = require('../../../../../commands/node/installSnaphot');
 const removeDataFolderCommand = require('../../../../../commands/node/removeDataFolder');
 
-const DATA_FOLDER_PATH = '/var/lib/docker/volumes/klein-node_klein-node-volume/_data/data';
+const DATA_FOLDER_PATH = '$HOME/klein-node-volume/data';
 
 module.exports = (req, res) => {
   sshRequest('sftp:read_file', {

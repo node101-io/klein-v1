@@ -2,10 +2,10 @@ const sshRequest = require('../../../../utils/sshRequest');
 
 const installNodeCommand = require('../../../../commands/node/install');
 
-const createNodeFolder = (host, callback) => {
+const createFolderIfNotExists = (host, path, callback) => {
   sshRequest('sftp:exists', {
     host: host,
-    path: 'klein-node'
+    path: path
   }, (err, data) => {
     if (err && err != 'document_not_found')
       return callback(err);
@@ -13,7 +13,7 @@ const createNodeFolder = (host, callback) => {
     if (err)
       sshRequest('sftp:mkdir', {
         host: host,
-        path: 'klein-node'
+        path: path
       }, (err, data) => {
         if (err)
           return callback(err);
@@ -22,6 +22,25 @@ const createNodeFolder = (host, callback) => {
       });
     else
       return callback(null);
+  });
+};
+
+const createNecessaryNodeFolders = (host, callback) => {
+  createFolderIfNotExists(host, 'klein-node', err => {
+    if (err)
+      return callback(err);
+
+    createFolderIfNotExists(host, 'klein-node-volume', err => {
+      if (err)
+        return callback(err);
+
+      createFolderIfNotExists(host, 'klein-scripts-volume', err => {
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+    });
   });
 };
 
@@ -52,13 +71,13 @@ const installNode = (data, callback) => {
 
         sshRequest('sftp:write_file', {
           host: data.host,
-          path: 'server-listener/data/project-route.txt',
+          path: 'klein-node-volume/klein-node-route.txt',
           content: data.project_route
         }, (err, output) => {
           if (err)
             return callback(err);
 
-          return callback(null);
+          return callback(null, output);
         });
       });
     });
@@ -75,7 +94,7 @@ module.exports = (req, res) => {
   if (!req.body.project_route || typeof req.body.project_route != 'string')
     return res.json({ err: 'bad_request' });
 
-  createNodeFolder(req.body.host, err => {
+  createNecessaryNodeFolders(req.body.host, err => {
     if (err)
       return res.json({ err: err });
 
