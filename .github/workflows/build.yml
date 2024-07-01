@@ -27,6 +27,16 @@ jobs:
           mkdir -p ~/private_keys/
           echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
+      - name: Check for notarytool
+        run: |
+          if ! command -v notarytool &> /dev/null
+          then
+            echo "notarytool could not be found"
+            exit 1
+          else
+            echo "notarytool is installed"
+          fi
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
