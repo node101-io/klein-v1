@@ -2,7 +2,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
-const unjailValidatorCommand = require('../../../../../commands/node/tx/unjailValidator');
+const unjailValidatorCommand = require('../../../../../commands/node/tx/unjail-validator/default');
 
 const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;

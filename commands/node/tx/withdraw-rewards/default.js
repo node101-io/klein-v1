@@ -1,4 +1,4 @@
-const createGasFeeFlags = require('./functions/createGasFeeFlags');
+const createGasFeeFlags = require('../functions/createGasFeeFlags');
 
 module.exports = data => `
   $DAEMON_NAME tx distribution withdraw-rewards ${data.from_validator_valoper.trim()} \\

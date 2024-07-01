@@ -1,7 +1,7 @@
-const createGasFeeFlags = require('./functions/createGasFeeFlags');
+const createGasFeeFlags = require('../functions/createGasFeeFlags');
 
 module.exports = data => `
-  $DAEMON_NAME tx staking delegate ${data.to_validator_valoper.trim()} ${data.amount}$DENOM \\
+  $DAEMON_NAME tx gov vote ${data.proposal_id.trim()} ${data.option} \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\

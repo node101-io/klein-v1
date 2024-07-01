@@ -2,7 +2,8 @@ const sshRequest = require('../../../../../utils/sshRequest');
 const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
-const sendTokenCommand = require('../../../../../commands/node/tx/sendToken');
+let sendTokenCommand = require('../../../../../commands/node/tx/send-token/default');
+const sendTokenCommand_celestiatestnet3 = require('../../../../../commands/node/tx/send-token/celestiatestnet3');
 
 const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
@@ -16,6 +17,12 @@ module.exports = (req, res) => {
 
   if (!req.body.to_address || typeof req.body.to_address != 'string' || !req.body.to_address.trim().length || req.body.to_address.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
+
+  if (req.body.non_generic_tx_commands && Array.isArray(req.body.non_generic_tx_commands) && req.body.non_generic_tx_commands.includes('send_token')) {
+    if (req.body.identifier == 'celestiatestnet3') {
+      sendTokenCommand = sendTokenCommand_celestiatestnet3;
+    };
+  };
 
   sshRequest('exec', {
     host: req.body.host,
