@@ -71,7 +71,7 @@ expressApp.all('*', (req, res) => {
 });
 
 const setupTrayMenu = _ => {
-  const image = nativeImage.createFromPath(path.join(__dirname, 'public/img/icons/favicon.ico'));
+  const image = nativeImage.createFromPath(path.join(__dirname, 'build/icon.png'));
   const tray = Tray(image.resize({ width: 16, height: 16 }));
   const menu = Menu.buildFromTemplate([
     {
