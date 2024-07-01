@@ -453,6 +453,19 @@ window.addEventListener('load', _ => {
       });
     };
 
+    if (event.target.closest('#undelegate-token-button')) {
+      txManager.undelegateToken({
+        amount: 200000,
+        from_key_name: 'klein101',
+        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res);
+      });
+    };
+
     if (event.target.closest('#unjail-validator-button')) {
       txManager.unjailValidator({
         from_key_name: 'klein101',

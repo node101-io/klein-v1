@@ -44,6 +44,7 @@ const delegateTokenPostController = require('../controllers/ssh/node/tx/delegate
 const editValidatorPostController = require('../controllers/ssh/node/tx/edit-validator/post');
 const redelegateTokenPostController = require('../controllers/ssh/node/tx/redelegate-token/post');
 const sendTokenPostController = require('../controllers/ssh/node/tx/send-token/post');
+const undelegateTokenPostController = require('../controllers/ssh/node/tx/undelegate-token/post');
 const unjailValidatorPostController = require('../controllers/ssh/node/tx/unjail-validator/post');
 const voteProposalPostController = require('../controllers/ssh/node/tx/vote-proposal/post');
 const withdrawRewardsPostController = require('../controllers/ssh/node/tx/withdraw-rewards/post');
@@ -238,9 +239,14 @@ router.post(
     sendTokenPostController
 );
 router.post(
-  '/node/tx/withdraw-rewards',
+  '/node/tx/undelegate-token',
     isAuth,
-    withdrawRewardsPostController
+    undelegateTokenPostController
+);
+router.post(
+  '/node/tx/unjail-validator',
+    isAuth,
+    unjailValidatorPostController
 );
 router.post(
   '/node/tx/vote-proposal',
@@ -248,9 +254,9 @@ router.post(
     voteProposalPostController
 );
 router.post(
-  '/node/tx/unjail-validator',
+  '/node/tx/withdraw-rewards',
     isAuth,
-    unjailValidatorPostController
+    withdrawRewardsPostController
 );
 
 router.post(
