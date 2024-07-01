@@ -22,6 +22,9 @@ module.exports = (req, res) => {
 
   if (req.body.non_generic_tx_commands && Array.isArray(req.body.non_generic_tx_commands) && req.body.non_generic_tx_commands.includes('send_token')) {
     if (req.body.identifier == 'celestiatestnet3') {
+      if (!req.body.fees || typeof req.body.fees != 'number' || req.body.fees < 0)
+        return res.json({ err: 'bad_request' });
+
       command = sendTokenCommand_celestiatestnet3({
         amount: req.body.amount,
         fees: req.body.fees,
