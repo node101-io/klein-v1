@@ -2,7 +2,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
-const createValidatorCommand = require('../../../../../commands/node/tx/createValidator');
+const createValidatorCommand = require('../../../../../commands/node/tx/create-validator/default');
 
 const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;

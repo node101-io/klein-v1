@@ -1,7 +1,7 @@
-const createGasFeeFlags = require('./functions/createGasFeeFlags');
+const createGasFeeFlags = require('../functions/createGasFeeFlags');
 
 module.exports = data => `
-  $DAEMON_NAME tx gov vote ${data.proposal_id.trim()} ${data.option} \\
+  $DAEMON_NAME tx slashing unjail \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\
