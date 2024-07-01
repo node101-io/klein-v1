@@ -11,15 +11,15 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: getKeyBalanceCommand(req.body.key_address),
     in_container: true
-  }, (err, balance) => {
+  }, (err, get_key_balance_response) => {
     if (err)
       return res.json({ err: err });
 
-    balance = jsonify(balance);
+    get_key_balance_response.stdout = jsonify(get_key_balance_response.stdout);
 
-    if (!balance || !balance.denom || !balance.amount)
+    if (!get_key_balance_response.stdout || !get_key_balance_response.stdout.denom || !get_key_balance_response.stdout.amount)
       return res.json({ err: 'unknown_error' });
 
-    return res.json({ data: balance });
+    return res.json({ data: get_key_balance_response.stdout });
   });
 };

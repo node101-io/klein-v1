@@ -6,13 +6,13 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: getDockerContainerListCommand()
-  }, (err, container_list) => {
+  }, (err, get_container_list_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (container_list && container_list.includes('klein-node'))
+    if (get_container_list_response.stdout && get_container_list_response.stdout.includes('klein-node'))
       return res.json({ err: 'another_node_instance' });
 
-    return res.json({ data: container_list });
+    return res.json({ data: get_container_list_response.stdout });
   });
 };

@@ -12,11 +12,11 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: deleteKeyInNodeCommand(req.body.key_name),
     in_container: true
-  }, (err, data) => {
+  }, (err, delete_key_in_node_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(data))
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(delete_key_in_node_response.stderr))
       return res.json({ err: 'key_not_found' });
 
     return res.json({});

@@ -9,10 +9,10 @@ module.exports = (req, res) => {
     host: req.body.host,
     id: req.body.id,
     command: installServerListenerCommand(versions.serverListener)
-  }, (err, output) => {
+  }, (err, install_server_listener_response) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: output });
+    return res.json({ data: install_server_listener_response.stdout });
   });
 };

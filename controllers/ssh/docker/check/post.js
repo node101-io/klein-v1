@@ -7,21 +7,21 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: checkDockerExistentCommand()
-  }, (err, docker_existent) => {
+  }, (err, check_docker_existent_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (!docker_existent || docker_existent != '0')
+    if (!check_docker_existent_response.stdout || check_docker_existent_response.stdout != '0')
       return res.json({ err: 'docker_not_installed' });
 
     sshRequest('exec', {
       host: req.body.host,
       command: checkDockerSetupCommand()
-    }, (err, status) => {
+    }, (err, check_docker_setup_response) => {
       if (err)
         return res.json({ err: err });
 
-      if (!status || status != 'active')
+      if (!check_docker_setup_response.stdout || check_docker_setup_response.stdout != 'active')
         return res.json({ err: 'docker_not_running' });
 
       return res.json({});

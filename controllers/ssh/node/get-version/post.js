@@ -7,10 +7,10 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: getNodeVersionCommand(),
     in_container: true
-  }, (err, node_version) => {
+  }, (err, get_node_version_response) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({ data: node_version });
+    return res.json({ data: get_node_version_response.stdout });
   });
 };

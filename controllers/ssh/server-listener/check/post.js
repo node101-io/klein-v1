@@ -10,13 +10,13 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: checkServerListenerExistentCommand()
-  }, (err, status) => {
+  }, (err, check_server_listener_response) => {
     if (err)
       return res.json({ err: err });
 
-    status = jsonify(status);
+    check_server_listener_response.stdout = jsonify(check_server_listener_response.stdout);
 
-    if (!status || status.status != 'ok')
+    if (!check_server_listener_response.stdout || check_server_listener_response.stdout.status != 'ok')
       return res.json({ err: 'server_listener_not_running' });
 
     sshRequest('sftp:read_file', {
