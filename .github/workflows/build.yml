@@ -30,14 +30,7 @@ jobs:
       - name: Check for notarytool
         if: matrix.os == 'macos-latest'
         run: |
-          if ! command -v notarytool &> /dev/null
-          then
-            echo "notarytool could not be found, installing it now."
-            sudo softwareupdate --install-rosetta
-            sudo softwareupdate --install -a
-          else
-            echo "notarytool is installed"
-          fi
+          xcrun notarytool --version
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
