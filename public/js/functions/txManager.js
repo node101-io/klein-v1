@@ -92,6 +92,20 @@ const makeTxManager = _ => {
         return callback(null, res);
       });
     },
+    undelegateToken: (data, callback) => {
+      localhostRequest('/ssh/node/tx/undelegate-token', 'POST', {
+        host: window.host,
+        amount: data.amount,
+        fees: data.fees,
+        from_key_name: data.from_key_name,
+        from_validator_valoper: data.from_validator_valoper
+      }, (err, res) => {
+        if (err)
+          return callback(err);
+
+        return callback(null, res);
+      });
+    },
     unjailValidator: (data, callback) => {
       localhostRequest('/ssh/node/tx/unjail-validator', 'POST', {
         host: window.host,
