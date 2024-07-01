@@ -53,7 +53,8 @@
       "hardenedRuntime": true,
       "extendInfo": {
         "LSUIElement": 1
-      }
+      },
+      "notarize": true
     }
   },
   "devDependencies": {
