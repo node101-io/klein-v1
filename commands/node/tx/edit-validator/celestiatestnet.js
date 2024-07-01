@@ -1,4 +1,4 @@
-const createGasFeeFlags = require('../functions/create-gas-fee-flags/default');
+const createGasFeeFlags = require('../functions/create-gas-fee-flags//celestiatestnet3');
 
 module.exports = data => `
   $DAEMON_NAME tx staking edit-validator \\

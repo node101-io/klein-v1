@@ -1,4 +1,4 @@
-const createGasFeeFlags = require('../functions/createGasFeeFlags');
+const createGasFeeFlags = require('../functions/create-gas-fee-flags/default');
 
 module.exports = data => `
   $DAEMON_NAME tx staking delegate ${data.to_validator_valoper.trim()} ${data.amount}$DENOM \\

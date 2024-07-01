@@ -1,7 +1,7 @@
-const createGasFeeFlags = require('../functions/create-gas-fee-flags/default');
+const createGasFeeFlags = require('../functions/create-gas-fee-flags/celestiatestnet3');
 
 module.exports = data => `
-  $DAEMON_NAME tx bank send ${data.from_key_name.trim()} ${data.to_address.trim()} ${data.amount}$DENOM \\
+  $DAEMON_NAME tx gov vote ${data.proposal_id.trim()} ${data.option} \\
     --chain-id $CHAIN_ID \\
     --keyring-backend test \\
     --yes \\
