@@ -1,9 +1,8 @@
 name: Build/release
 
 on:
-  push:
-    branches:
-      - release
+  release:
+    types: [created]
 
 jobs:
   release:
