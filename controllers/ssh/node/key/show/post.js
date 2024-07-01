@@ -20,13 +20,13 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: showKeyInNodeCommand(req.body.key_name, req.body.type),
     in_container: true
-  }, (err, pubkey) => {
+  }, (err, show_key_in_node_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (INVALID_NAME_ERROR_MESSAGE_REGEX.test(pubkey))
+    if (INVALID_NAME_ERROR_MESSAGE_REGEX.test(show_key_in_node_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    return res.json({ data: pubkey });
+    return res.json({ data: show_key_in_node_response.stdout });
   });
 };

@@ -9,7 +9,7 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: setNodeConfigVariableCommand('persistent_peers', req.body.peers.join(','))
-  }, (err, data) => {
+  }, (err, set_node_config_variable_response) => {
     if (err)
       return res.json({ err: err });
 

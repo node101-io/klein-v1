@@ -53,7 +53,11 @@
       "extendInfo": {
         "LSUIElement": 1
       },
-      "notarize": true
+      "notarize": {
+        "appleId": "",
+        "appleIdPassword": "",
+        "teamId": ""
+      }
     }
   },
   "devDependencies": {

@@ -20,13 +20,13 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: listKeysInNodeCommand(),
     in_container: true
-  }, (err, key_list) => {
+  }, (err, list_keys_in_node_response) => {
     if (err)
       return res.json({ err: err });
 
-    key_list = NO_RECORDS_FOUND_MESSAGE_REGEX.test(key_list) ? [] : jsonify(key_list);
+    list_keys_in_node_response.stdout = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stdout) ? [] : jsonify(list_keys_in_node_response.stdout);
 
-    for (const key of key_list)
+    for (const key of list_keys_in_node_response.stdout)
       if (key.name == req.body.key_name)
         return res.json({ err: 'key_name_already_exists' });
 
@@ -34,24 +34,24 @@ module.exports = (req, res) => {
       host: req.body.host,
       command: recoverKeyInNodeCommand(req.body.key_name, req.body.mnemonic),
       in_container: true
-    }, (err, key) => {
+    }, (err, recover_key_in_node_response) => {
       if (err)
         return res.json({ err: err });
 
-      if (ABORTED_ERROR_MESSAGE_REGEX.test(key))
+      if (ABORTED_ERROR_MESSAGE_REGEX.test(recover_key_in_node_response.stderr))
         return res.json({ err: 'unknown_error' });
 
-      if (DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX.test(key))
+      if (DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX.test(recover_key_in_node_response.stderr))
         return res.json({ err: 'key_already_exists' });
 
-      if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(key))
+      if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(recover_key_in_node_response.stderr))
         return res.json({ err: 'invalid_mnemonic' });
 
-      key = jsonify(key);
+      recover_key_in_node_response.stdout = jsonify(recover_key_in_node_response.stdout);
 
       return res.json({ data: {
-        address: key.address,
-        mnemonic: key.mnemonic
+        address: recover_key_in_node_response.stdout.address,
+        mnemonic: recover_key_in_node_response.stdout.mnemonic
       }});
     });
   });

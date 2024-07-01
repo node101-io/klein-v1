@@ -6,7 +6,7 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: startNodeCommand()
-  }, (err, data) => {
+  }, (err, start_node_response) => {
     if (err)
       return res.json({ err: err });
 

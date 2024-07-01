@@ -17,7 +17,7 @@ module.exports = (req, res) => {
     sshRequest('exec', {
       host: req.body.host,
       command: removeDataFolderCommand()
-    }, (err, data) => {
+    }, (err, remove_data_folder_response) => {
       if (err)
         return res.json({ err: err });
 

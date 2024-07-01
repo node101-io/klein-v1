@@ -6,10 +6,10 @@ module.exports = (req, res) => {
   sshRequest('exec', {
     host: req.body.host,
     command: uninstallDockerCommand()
-  }, (err, data) => {
+  }, (err, uninstall_docker_response) => {
     if (err)
       return res.json({ err: err });
 
-    return res.json({});
+    return res.json({ data: uninstall_docker_response.stdout });
   });
 };

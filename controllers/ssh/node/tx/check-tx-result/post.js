@@ -16,20 +16,20 @@ module.exports = (req, res) => {
     command: checkTxResultCommand({
       tx_hash: req.body.tx_hash
     })
-  }, (err, tx_response) => {
+  }, (err, check_tx_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (TX_NOT_FOUND_ERROR_MESSAGE_REGEX.test(tx_response))
+    if (TX_NOT_FOUND_ERROR_MESSAGE_REGEX.test(check_tx_response.stderr))
       return res.json({ err: 'tx_not_found' });
 
-    tx_response = jsonify(tx_response);
+    check_tx_response.stdout = jsonify(check_tx_response.stdout);
 
-    evaluateTxResponseError(tx_response, err => {
+    evaluateTxResponseError(check_tx_response.stdout, err => {
       if (err)
-        return res.json({ err: err, data: tx_response });
+        return res.json({ err: err, data: check_tx_response.stdout });
 
-      return res.json({ data: tx_response });
+      return res.json({ data: check_tx_response.stdout });
     });
   });
 };

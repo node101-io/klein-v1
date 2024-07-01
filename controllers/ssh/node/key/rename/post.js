@@ -16,14 +16,14 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: renameKeyInNodeCommand(req.body.key_name, req.body.new_key_name),
     in_container: true
-  }, (err, data) => {
+  }, (err, remove_key_in_node_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (KEY_ALREADY_EXISTS_ERROR_MESSAGE_REGEX.test(data))
+    if (KEY_ALREADY_EXISTS_ERROR_MESSAGE_REGEX.test(remove_key_in_node_response.stderr))
       return res.json({ err: 'key_name_already_exists' });
 
-    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(data))
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(remove_key_in_node_response.stderr))
       return res.json({ err: 'key_not_found' });
 
     return res.json({});

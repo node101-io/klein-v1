@@ -11,15 +11,15 @@ module.exports = (req, res) => {
     host: req.body.host,
     command: createKeyInNodeCommand(req.body.key_name),
     in_container: true
-  }, (err, key) => {
+  }, (err, create_key_in_node_response) => {
     if (err)
       return res.json({ err: err });
 
-    key = jsonify(key);
+    create_key_in_node_response.stdout = jsonify(create_key_in_node_response.stdout);
 
     return res.json({ data: {
-      address: key.address,
-      mnemonic: key.mnemonic
+      address: create_key_in_node_response.stdout.address,
+      mnemonic: create_key_in_node_response.stdout.mnemonic
     }});
   });
 };

@@ -353,28 +353,12 @@ const sshRequest = (type, data, callback) => {
                 console.log('code:', code);
                 console.log('stderr:', stderr);
                 console.log('stdout:', stdout);
-                if (code == 0)
-                  return callback(null, stdout.trim() || stderr.trim() || null);
 
-                if (code == 1)
-                  return callback(stderr.trim() || stdout.trim() || null, null);
-
-                if (code == 2)
-                  return callback('shell_syntax_error', stderr.trim() || stdout.trim() || null);
-
-                if (code == 126)
-                  return callback('command_cannot_execute', stderr.trim() || stdout.trim() || null);
-
-                if (code == 127)
-                  return callback('command_not_found', stderr.trim() || stdout.trim() || null);
-
-                if (code == 128)
-                  return callback('invalid_exit_argument', stderr.trim() || stdout.trim() || null);
-
-                if (code == 130)
-                  return callback('user_interruption', stderr.trim() || stdout.trim() || null);
-
-                return callback('unknown_error', stderr.trim() || stdout.trim() || null);
+                return callback(null, {
+                  code: code,
+                  stdout: stdout.trim() || null,
+                  stderr: stderr.trim() || null
+                });
               })
               .stderr.on('data', stderr_data => {
                 stderr += stderr_data;
