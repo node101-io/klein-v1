@@ -27,6 +27,12 @@ jobs:
           mkdir -p ~/private_keys/
           echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
 
+      - name: Install Xcode Command Line Tools
+        if: matrix.os == 'macos-latest'
+        run: |
+          xcode-select --install
+          sudo xcodebuild -license accept
+
       - name: Check for notarytool
         run: |
           if ! command -v notarytool &> /dev/null
