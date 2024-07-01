@@ -2,7 +2,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponseError');
 const jsonify = require('../../../../../utils/jsonify');
 
-let sendTokenCommand = require('../../../../../commands/node/tx/send-token/default');
+const sendTokenCommand = require('../../../../../commands/node/tx/send-token/default');
 const sendTokenCommand_celestiatestnet3 = require('../../../../../commands/node/tx/send-token/celestiatestnet3');
 
 const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
@@ -18,20 +18,31 @@ module.exports = (req, res) => {
   if (!req.body.to_address || typeof req.body.to_address != 'string' || !req.body.to_address.trim().length || req.body.to_address.length > DEFAULT_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
+  let command;
+
   if (req.body.non_generic_tx_commands && Array.isArray(req.body.non_generic_tx_commands) && req.body.non_generic_tx_commands.includes('send_token')) {
     if (req.body.identifier == 'celestiatestnet3') {
-      sendTokenCommand = sendTokenCommand_celestiatestnet3;
+      command = sendTokenCommand_celestiatestnet3({
+        amount: req.body.amount,
+        fees: req.body.fees,
+        from_key_name: req.body.from_key_name,
+        to_address: req.body.to_address
+      });
+    } else {
+      return res.json({ err: 'not_implemented' });
     };
-  };
-
-  sshRequest('exec', {
-    host: req.body.host,
-    command: sendTokenCommand({
+  } else {
+    command = sendTokenCommand({
       amount: req.body.amount,
       fees: req.body.fees,
       from_key_name: req.body.from_key_name,
       to_address: req.body.to_address
-    }),
+    });
+  };
+
+  sshRequest('exec', {
+    host: req.body.host,
+    command: command,
     in_container: true
   }, (err, tx_response, ) => {
     if (err)
