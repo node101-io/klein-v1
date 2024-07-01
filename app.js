@@ -17,6 +17,7 @@ const {
   Tray
 } = require('electron');
 
+// console.log(process.env);
 dotenv.config();
 
 const AppKey = require('./utils/appKey');
