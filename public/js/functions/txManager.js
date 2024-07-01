@@ -1,5 +1,16 @@
 const makeTxManager = _ => {
   return {
+    checkTxResult: (data, callback) => {
+      localhostRequest('/ssh/node/tx/check-tx-result', 'POST', {
+        host: window.host,
+        tx_hash: data.tx_hash
+      }, (err, res) => {
+        if (err)
+          return callback(err);
+
+        return callback(null, res);
+      });
+    },
     createValidator: (data, callback) => {
       localhostRequest('/ssh/node/tx/create-validator', 'POST', {
         host: window.host,

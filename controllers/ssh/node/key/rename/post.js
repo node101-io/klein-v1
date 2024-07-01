@@ -20,11 +20,11 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(data))
-      return res.json({ err: 'key_not_found' });
-
     if (KEY_ALREADY_EXISTS_ERROR_MESSAGE_REGEX.test(data))
       return res.json({ err: 'key_name_already_exists' });
+
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(data))
+      return res.json({ err: 'key_not_found' });
 
     return res.json({});
   });

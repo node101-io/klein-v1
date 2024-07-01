@@ -354,7 +354,7 @@ const sshRequest = (type, data, callback) => {
                 console.log('stderr:', stderr);
                 console.log('stdout:', stdout);
                 if (code == 0)
-                  return callback(null, stderr.trim() || stdout.trim() || null);
+                  return callback(null, stdout.trim() || stderr.trim() || null);
 
                 if (code == 1)
                   return callback(stderr.trim() || stdout.trim() || null, null);
@@ -374,10 +374,7 @@ const sshRequest = (type, data, callback) => {
                 if (code == 130)
                   return callback('user_interruption', stderr.trim() || stdout.trim() || null);
 
-                if (code == 255)
-                  return callback('unknown_error', stderr.trim() || stdout.trim() || null);
-
-                return callback(stderr.trim() || null, stdout.trim() || null);
+                return callback('unknown_error', stderr.trim() || stdout.trim() || null);
               })
               .stderr.on('data', stderr_data => {
                 stderr += stderr_data;
