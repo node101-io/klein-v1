@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: 21
 
+      - name: Prepare for app notarization
+        if: startsWith(matrix.os, 'macos')
+        # Import Apple API key for app notarization on macOS
+        run: |
+            mkdir -p ~/private_keys/
+            echo '${{ secrets.APPLE_API_KEY }}' > ~/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1.6.0
         with:
@@ -38,10 +45,9 @@ jobs:
           # windows_certs_password: ${{ secrets.windows_certs_password }}
         env:
           # macOS notarization API key
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          TEAM_ID: ${{ secrets.TEAM_ID }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_API_KEY: ~/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
 
       - name: Upload notarization log if it exists
         if: failure()
