@@ -53,11 +53,7 @@
       "extendInfo": {
         "LSUIElement": 1
       },
-      "notarize": {
-        "appleId": "necipsagiroglu@icloud.com",
-        "appleIdPassword": "yxau-tmin-mppd-rdrg",
-        "teamId": "L7VYDQJ4N3"
-      }
+      "notarize": true
     }
   },
   "devDependencies": {
