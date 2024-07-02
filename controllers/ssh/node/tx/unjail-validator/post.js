@@ -3,35 +3,51 @@ const evaluateTxResponseError = require('../../../../../utils/evaluateTxResponse
 const jsonify = require('../../../../../utils/jsonify');
 
 const unjailValidatorCommand = require('../../../../../commands/node/tx/unjail-validator/default');
+const unjailValidatorCommand_celestiatestnet3 = require('../../../../../commands/node/tx/unjail-validator/celestiatestnet3');
 
-const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
+const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
-  if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_TEXT_FIELD_LENGTH)
+  if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
+
+  let command;
+
+  if (req.body.non_generic_tx_commands && Array.isArray(req.body.non_generic_tx_commands) && req.body.non_generic_tx_commands.includes('unjail_validator')) {
+    if (req.body.chain_registry_identifier == 'celestiatestnet3') {
+      command = unjailValidatorCommand_celestiatestnet3({
+        fees: req.body.fees,
+        from_key_name: req.body.from_key_name
+      });
+    } else {
+      return res.json({ err: 'not_implemented' });
+    };
+  } else {
+    command = unjailValidatorCommand({
+      fees: req.body.fees,
+      from_key_name: req.body.from_key_name
+    });
+  };
 
   sshRequest('exec', {
     host: req.body.host,
-    command: unjailValidatorCommand({
-      fees: req.body.fees,
-      from_key_name: req.body.from_key_name
-    }),
-    is_container: true
-  }, (err, tx_response) => {
+    command,
+    in_container: true
+  }, (err, unjail_validator_response) => {
     if (err)
       return res.json({ err: err });
 
-    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(tx_response))
+    if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(unjail_validator_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    tx_response = jsonify(tx_response);
+    unjail_validator_response.stdout = jsonify(unjail_validator_response.stdout);
 
-    evaluateTxResponseError(tx_response, err => {
+    evaluateTxResponseError(unjail_validator_response.stdout, err => {
       if (err)
-        return res.json({ err: err, data: tx_response });
+        return res.json({ err: err, data: unjail_validator_response.stdout });
 
-      return res.json({ data: tx_response });
+      return res.json({ data: unjail_validator_response.stdout });
     });
   });
 };

@@ -4,7 +4,7 @@ const { app } = require('electron');
 
 const savedServersPath = path.join(app.getPath('userData'), 'savedServers.json');
 
-const DEFAULT_TEXT_FIELD_LENGTH = 1e4;
+const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
 const DEFAULT_USERNAME = 'root';
 const LOGIN_TYPES = [ 'password', 'key' ];
 
@@ -41,7 +41,7 @@ const SavedServers = {
     if (!server || typeof server != 'object')
       return callback('bad_request');
 
-    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_TEXT_FIELD_LENGTH)
+    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
       return callback('bad_request');
 
     getLocalSavedServers((err, savedServers) => {
@@ -73,7 +73,7 @@ const SavedServers = {
     if (!server || typeof server != 'object')
       return callback('bad_request');
 
-    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_TEXT_FIELD_LENGTH)
+    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
       return callback('bad_request');
 
     getLocalSavedServers((err, savedServers) => {
@@ -106,7 +106,7 @@ const SavedServers = {
     if (!server || typeof server != 'object')
       return callback('bad_request');
 
-    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_TEXT_FIELD_LENGTH)
+    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
       return callback('bad_request');
 
     getLocalSavedServers((err, savedServers) => {
