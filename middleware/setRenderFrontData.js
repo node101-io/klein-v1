@@ -18,6 +18,10 @@ module.exports = (req, res, next) => {
   res.locals.setFrontDisplayStyle = setFrontDisplayStyle;
   res.locals.color_theme = req.session.color_theme && ALLOWED_COLOR_THEME_LIST.includes(req.session.color_theme) ? req.session.color_theme : DEFAULT_COLOR_THEME;
   res.locals.includes = INCLUDES;
+  res.locals.projects = [];
+  res.locals.project = {};
+  res.locals.node = {};
+  res.locals.saved_ip_list = [];
 
   return next();
 }
