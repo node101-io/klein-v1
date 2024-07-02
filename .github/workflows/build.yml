@@ -1,13 +1,9 @@
 name: Build/release
 
-# on:
-#   release:
-#     types: [created]
 on:
-  push:
-    # Run when a tag matching the pattern "v*"" is pushed.
-    tags:
-        - "v*"
+  release:
+    types: [created]
+
 jobs:
   release:
     runs-on: ${{ matrix.os }}

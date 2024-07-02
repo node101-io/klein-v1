@@ -54,6 +54,10 @@
         "LSUIElement": 1
       },
       "notarize": true
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
     }
   },
   "devDependencies": {
