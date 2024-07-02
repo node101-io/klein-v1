@@ -350,14 +350,18 @@ const sshRequest = (type, data, callback) => {
               .on('close', (code, signal) => {
                 connection.markAsSeen();
 
+                console.log('command:', data.command);
+
+                if (code == 7) console.log(7, data.command);
+
                 console.log('code:', code);
                 console.log('stderr:', stderr);
                 console.log('stdout:', stdout);
 
                 return callback(null, {
                   code: code,
-                  stdout: stdout.trim() || null,
-                  stderr: stderr.trim() || null
+                  stderr: stderr.trim() || null,
+                  stdout: stdout.trim() || null
                 });
               })
               .stderr.on('data', stderr_data => {

@@ -2,10 +2,11 @@ const sshRequest = require('../../../../../utils/sshRequest');
 
 const deleteKeyInNodeCommand = require('../../../../../commands/node/key/delete');
 
+const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
-  if (!req.body.key_name)
+  if (!req.body.key_name || typeof req.body.key_name != 'string' || !req.body.key_name.trim().length || req.body.key_name.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
