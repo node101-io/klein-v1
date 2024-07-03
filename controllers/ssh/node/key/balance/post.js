@@ -11,17 +11,19 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: getKeyBalanceCommand(req.body.key_address),
+    command: getKeyBalanceCommand({
+      key_address: req.body.key_address
+    }),
     in_container: true
   }, (err, get_key_balance_response) => {
     if (err)
       return res.json({ err: err });
 
-    get_key_balance_response.stdout = jsonify(get_key_balance_response.stdout);
+    const getKeyBalanceOutput = get_key_balance_response.stdout ? jsonify(get_key_balance_response.stdout) : jsonify(get_key_balance_response.stderr);
 
-    if (!get_key_balance_response.stdout || !get_key_balance_response.stdout.denom || !get_key_balance_response.stdout.amount)
+    if (!getKeyBalanceOutput || !getKeyBalanceOutput.denom || !getKeyBalanceOutput.amount)
       return res.json({ err: 'unknown_error' });
 
-    return res.json({ data: get_key_balance_response.stdout });
+    return res.json({ data: getKeyBalanceOutput });
   });
 };

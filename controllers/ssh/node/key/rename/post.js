@@ -15,7 +15,10 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: renameKeyInNodeCommand(req.body.key_name, req.body.new_key_name),
+    command: renameKeyInNodeCommand({
+      key_name: req.body.key_name,
+      new_key_name: req.body.new_key_name
+    }),
     in_container: true
   }, (err, remove_key_in_node_response) => {
     if (err)

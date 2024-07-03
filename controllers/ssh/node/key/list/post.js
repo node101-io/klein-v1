@@ -14,11 +14,8 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr))
-      return res.json({ data: [] });
+    const listKeysOutput = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) || NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stdout) ? [] : jsonify(list_keys_in_node_response.stdout);
 
-    list_keys_in_node_response.stdout = jsonify(list_keys_in_node_response.stdout);
-
-    return res.json({ data: list_keys_in_node_response.stdout });
+    return res.json({ data: listKeysOutput });
   });
 };

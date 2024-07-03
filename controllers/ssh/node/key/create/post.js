@@ -19,25 +19,27 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    list_keys_in_node_response.stdout = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) ? [] : jsonify(list_keys_in_node_response.stdout);
+    const listKeysOutput = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) || NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stdout) ? [] : jsonify(list_keys_in_node_response.stdout);
 
-    for (const key of list_keys_in_node_response.stdout)
+    for (const key of listKeysOutput)
       if (key.name == req.body.key_name)
         return res.json({ err: 'key_name_already_exists' });
 
     sshRequest('exec', {
       host: req.body.host,
-      command: createKeyInNodeCommand(req.body.key_name),
+      command: createKeyInNodeCommand({
+        key_name: req.body.key_name
+      }),
       in_container: true
     }, (err, create_key_in_node_response) => {
       if (err)
         return res.json({ err: err });
 
-      create_key_in_node_response.stderr = jsonify(create_key_in_node_response.stderr);
+      const createKeyOutput = create_key_in_node_response.stdout ? jsonify(create_key_in_node_response.stdout) : jsonify(create_key_in_node_response.stderr);
 
       return res.json({ data: {
-        address: create_key_in_node_response.stderr.address,
-        mnemonic: create_key_in_node_response.stderr.mnemonic
+        address: createKeyOutput.address,
+        mnemonic: createKeyOutput.mnemonic
       }});
     });
   });

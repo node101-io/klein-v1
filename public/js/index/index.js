@@ -312,7 +312,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#get-wallet-balance-button')) {
       walletManager.getWalletBalance({
-        key_address: 'celestia12zvzsymhr2za5lacnve2cyxl7xu8n6h4f7jzkm'
+        key_address: 'lava@1q5y9fuq8xljxqhdqxyqkk975tlcrl05fsrasms'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -346,7 +346,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#show-button')) {
       walletManager.showWallet({
         wallet_name: document.getElementById('wallet-name-value').value,
-        key_type: 'account'
+        key_type: 'consensus'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -390,7 +390,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#check-tx-result-button')) {
       txManager.checkTxResult({
-        tx_hash: '4E00116A57173E0374C9088E74446FD841BE8AFD9BA91BDECE430A0E9218C6D0',
+        tx_hash: 'DBC1CFAB7D9FD484F42BE3FB0018C8F5EB9C76855527B5DEE22BA37D3589B318',
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -402,13 +402,13 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#create-validator-button')) {
       txManager.createValidator({
         amount: 500000,
-        chain_registry_identifier: 'celestiatestnet3',
+        // chain_registry_identifier: 'celestiatestnet3',
         commission_max_change_rate: 0.01,
         commission_max_rate: 0.20,
         commission_rate: 0.05,
-        from_key_name: 'klein101',
+        from_key_name: 'kleinv1',
         moniker: 'Klein',
-        non_generic_tx_commands: [ 'create_validator' ]
+        // non_generic_tx_commands: [ 'create_validator' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -419,11 +419,11 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#delegate-token-button')) {
       txManager.delegateToken({
-        amount: 2000000,
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        non_generic_tx_commands: [ 'delegate_token' ],
-        to_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp'
+        amount: 500000,
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        // non_generic_tx_commands: [ 'delegate_token' ],
+        to_validator_valoper: 'lava@valoper1q5y9fuq8xljxqhdqxyqkk975tlcrl05fy2xhf8'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -434,10 +434,11 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#edit-validator-button')) {
       txManager.editValidator({
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        moniker: 'Klein v1: Forrest',
-        non_generic_tx_commands: [ 'edit_validator' ],
+        // chain_registry_identifier: 'celestiatestnet3',
+        details: 'The second validator of Klein on Lava testnet',
+        from_key_name: 'kleinv1',
+        moniker: 'Klein v2: Allen',
+        // non_generic_tx_commands: [ 'edit_validator' ],
         website: 'https://klein.run'
       }, (err, res) => {
         if (err)
@@ -449,12 +450,12 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#redelegate-token-button')) {
       txManager.redelegateToken({
-        amount: 2000000,
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        from_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp',
-        non_generic_tx_commands: [ 'redelegate_token' ],
-        to_validator_valoper: 'celestiavaloper1qyuwqj0cxe6hlzjru587nygwwmgh03ha9ve9ac'
+        amount: 10000,
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        from_validator_valoper: 'lava@valoper1q5y9fuq8xljxqhdqxyqkk975tlcrl05fy2xhf8',
+        // non_generic_tx_commands: [ 'redelegate_token' ],
+        to_validator_valoper: 'lava@valoper1z06tqx7ge2w56auf94e7ql3zafl4m2xm4emuc7'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -466,10 +467,10 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#send-token-button')) {
       txManager.sendToken({
         amount: 10000,
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein102',
-        to_address: 'celestia12zvzsymhr2za5lacnve2cyxl7xu8n6h4f7jzkm',
-        non_generic_tx_commands: [ 'send_token' ]
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        to_address: 'lava@1z06tqx7ge2w56auf94e7ql3zafl4m2xmpsqm2f',
+        // non_generic_tx_commands: [ 'send_token' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -480,11 +481,11 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#undelegate-token-button')) {
       txManager.undelegateToken({
-        amount: 2000000,
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        from_validator_valoper: 'celestiavaloper1qyuwqj0cxe6hlzjru587nygwwmgh03ha9ve9ac',
-        non_generic_tx_commands: [ 'undelegate_token' ]
+        amount: 10000,
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        from_validator_valoper: 'lava@valoper1z06tqx7ge2w56auf94e7ql3zafl4m2xm4emuc7',
+        // non_generic_tx_commands: [ 'undelegate_token' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -495,9 +496,9 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#unjail-validator-button')) {
       txManager.unjailValidator({
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        non_generic_tx_commands: [ 'unjail_validator' ]
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        // non_generic_tx_commands: [ 'unjail_validator' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -508,9 +509,9 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#vote-proposal-button')) {
       txManager.voteProposal({
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        non_generic_tx_commands: [ 'vote_proposal' ],
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        // non_generic_tx_commands: [ 'vote_proposal' ],
         option: 'yes',
         proposal_id: '1'
       }, (err, res) => {
@@ -523,10 +524,10 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#withdraw-rewards-button')) {
       txManager.withdrawRewards({
-        chain_registry_identifier: 'celestiatestnet3',
-        from_key_name: 'klein101',
-        from_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp',
-        non_generic_tx_commands: [ 'withdraw_rewards' ],
+        // chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'kleinv1',
+        from_validator_valoper: 'lava@valoper1q5y9fuq8xljxqhdqxyqkk975tlcrl05fy2xhf8',
+        // non_generic_tx_commands: [ 'withdraw_rewards' ],
         withdraw_commission: false
       }, (err, res) => {
         if (err)

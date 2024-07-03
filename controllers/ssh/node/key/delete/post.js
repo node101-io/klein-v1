@@ -11,7 +11,9 @@ module.exports = (req, res) => {
 
   sshRequest('exec', {
     host: req.body.host,
-    command: deleteKeyInNodeCommand(req.body.key_name),
+    command: deleteKeyInNodeCommand({
+      key_name: req.body.key_name
+    }),
     in_container: true
   }, (err, delete_key_in_node_response) => {
     if (err)
