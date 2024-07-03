@@ -49,10 +49,3 @@ jobs:
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ~/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
-
-      - name: Upload notarization log if it exists
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: notarization-error-log
-          path: notarization-error.log
