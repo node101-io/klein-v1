@@ -18,6 +18,8 @@ module.exports = (req, res) => {
     if (req.body.chain_registry_identifier == 'celestiatestnet3') {
       command = editValidatorCommand_celestiatestnet3({
         commission_rate: req.body.commission_rate,
+        details: req.body.details,
+        fees: req.body.fees,
         from_key_name: req.body.from_key_name,
         identity: req.body.identity,
         moniker: req.body.moniker,
@@ -30,6 +32,8 @@ module.exports = (req, res) => {
   } else {
     command = editValidatorCommand({
       commission_rate: req.body.commission_rate,
+      details: req.body.details,
+      fees: req.body.fees,
       from_key_name: req.body.from_key_name,
       identity: req.body.identity,
       moniker: req.body.moniker,

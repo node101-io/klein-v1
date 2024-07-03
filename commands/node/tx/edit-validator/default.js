@@ -9,6 +9,7 @@ module.exports = data => `
     ${createGasFeeFlags(data.fees)} \\
     --from ${data.from_key_name.trim()} \\
     ${data.commission_rate ? `--commission-rate ${data.commission_rate}` : ''} \\
+    ${data.details && data.details.trim() ? `--details '${data.details.trim()}'` : ''} \\
     ${data.identity && data.identity.trim() ? `--identity '${data.identity.trim()}'` : ''} \\
     ${data.moniker && data.moniker.trim() ? `--new-moniker '${data.moniker.trim()}'` : ''} \\
     ${data.security_contact && data.security_contact.trim() ? `--security-contact '${data.security_contact.trim()}'` : ''} \\
