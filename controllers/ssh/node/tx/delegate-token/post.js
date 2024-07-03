@@ -53,7 +53,7 @@ module.exports = (req, res) => {
 
     delegate_token_response.stdout = jsonify(delegate_token_response.stdout);
 
-    evaluateTxResponseError(delegate_token_response.stdout, err => {
+    evaluateTxResponseError(delegate_token_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: delegate_token_response.stdout});
 

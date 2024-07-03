@@ -43,7 +43,7 @@ module.exports = (req, res) => {
 
     unjail_validator_response.stdout = jsonify(unjail_validator_response.stdout);
 
-    evaluateTxResponseError(unjail_validator_response.stdout, err => {
+    evaluateTxResponseError(unjail_validator_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: unjail_validator_response.stdout });
 

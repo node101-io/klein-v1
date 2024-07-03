@@ -53,7 +53,7 @@ module.exports = (req, res) => {
 
     withdraw_rewards_response.stdout = jsonify(withdraw_rewards_response.stdout);
 
-    evaluateTxResponseError(withdraw_rewards_response.stdout, err => {
+    evaluateTxResponseError(withdraw_rewards_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: withdraw_rewards_response.stdout });
 

@@ -20,12 +20,12 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    if (TX_NOT_FOUND_ERROR_MESSAGE_REGEX.test(check_tx_response.stderr))
+    if (TX_NOT_FOUND_ERROR_MESSAGE_REGEX.test(check_tx_response.stdout))
       return res.json({ err: 'tx_not_found' });
 
     check_tx_response.stdout = jsonify(check_tx_response.stdout);
 
-    evaluateTxResponseError(check_tx_response.stdout, err => {
+    evaluateTxResponseError(check_tx_response.stdout?.result?.tx_result?.code, err => {
       if (err)
         return res.json({ err: err, data: check_tx_response.stdout });
 

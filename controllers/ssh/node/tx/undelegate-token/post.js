@@ -53,7 +53,7 @@ module.exports = (req, res) => {
 
     undelegate_token_response.stdout = jsonify(undelegate_token_response.stdout);
 
-    evaluateTxResponseError(undelegate_token_response.stdout, err => {
+    evaluateTxResponseError(undelegate_token_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: undelegate_token_response.stdout });
 

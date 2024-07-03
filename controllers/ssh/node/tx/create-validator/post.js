@@ -76,7 +76,7 @@ module.exports = (req, res) => {
 
     create_validator_response.stdout = jsonify(create_validator_response.stdout);
 
-    evaluateTxResponseError(create_validator_response.stdout, err => {
+    evaluateTxResponseError(create_validator_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: create_validator_response.stdout });
 
