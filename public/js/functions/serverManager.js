@@ -157,7 +157,7 @@ const makeServerManager = _ => {
         return stream.id;
       });
     },
-    checkAvailibilityForNodeInstallation: callback => {
+    checkAvailabilityForNodeInstallation: callback => {
       _checkDocker(err => {
         if (err) return callback(err);
 

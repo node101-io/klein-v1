@@ -22,16 +22,15 @@ const makeWalletManager = _ => {
         return callback(null);
       });
     },
-    showWallet: (data, callback) => {
-      localhostRequest('/ssh/node/key/show', 'POST', {
+    getWalletBalance: (data, callback) => {
+      localhostRequest('/ssh/node/key/balance', 'POST', {
         host: window.host,
-        key_name: data.wallet_name,
-        type: data.type
-      }, (err, pubkey) => {
+        key_address: data.key_address
+      }, (err, balance) => {
         if (err)
           return callback(err);
 
-        return callback(null, pubkey);
+        return callback(null, balance);
       });
     },
     listWallets: callback => {
@@ -44,6 +43,18 @@ const makeWalletManager = _ => {
         return callback(null, key_list);
       });
     },
+    showWallet: (data, callback) => {
+      localhostRequest('/ssh/node/key/show', 'POST', {
+        host: window.host,
+        key_name: data.wallet_name,
+        key_type: data.key_type
+      }, (err, pubkey) => {
+        if (err)
+          return callback(err);
+
+        return callback(null, pubkey);
+      });
+    },
     recoverWallet: (data, callback) => {
       localhostRequest('/ssh/node/key/recover', 'POST', {
         host: window.host,
@@ -53,7 +64,7 @@ const makeWalletManager = _ => {
         if (err)
           return callback(err);
 
-        return callback(null);
+        return callback(null, res);
       });
     },
     renameWallet: (data, callback) => {

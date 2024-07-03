@@ -21,12 +21,6 @@ const showRemoteKeysPostController = require('../controllers/ssh/key/remote/show
 
 const checkNodePostController = require('../controllers/ssh/node/check/post');
 const installNodePostController = require('../controllers/ssh/node/install/post');
-const createKeyPostController = require('../controllers/ssh/node/key/create/post');
-const deleteKeyPostController = require('../controllers/ssh/node/key/delete/post');
-const showKeyPostController = require('../controllers/ssh/node/key/show/post');
-const listKeysPostController = require('../controllers/ssh/node/key/list/post');
-const recoverKeyPostController = require('../controllers/ssh/node/key/recover/post');
-const renameKeyPostController = require('../controllers/ssh/node/key/rename/post');
 const restartNodePostController = require('../controllers/ssh/node/restart/post');
 const startNodePostController = require('../controllers/ssh/node/start/post');
 const logsNodePostController = require('../controllers/ssh/node/logs/post');
@@ -37,6 +31,14 @@ const setSeedsPostController = require('../controllers/ssh/node/sync/set-seeds/p
 const installSnapshotPostController = require('../controllers/ssh/node/sync/install-snapshot/post');
 const stopNodePostController = require('../controllers/ssh/node/stop/post');
 const uninstallNodePostController = require('../controllers/ssh/node/uninstall/post');
+
+const createKeyPostController = require('../controllers/ssh/node/key/create/post');
+const deleteKeyPostController = require('../controllers/ssh/node/key/delete/post');
+const getWalletBalancePostController = require('../controllers/ssh/node/key/balance/post')
+const listKeysPostController = require('../controllers/ssh/node/key/list/post');
+const showKeyPostController = require('../controllers/ssh/node/key/show/post');
+const recoverKeyPostController = require('../controllers/ssh/node/key/recover/post');
+const renameKeyPostController = require('../controllers/ssh/node/key/rename/post');
 
 const checkTxResultPostController = require('../controllers/ssh/node/tx/check-tx-result/post');
 const createValidatorPostController = require('../controllers/ssh/node/tx/create-validator/post');
@@ -128,36 +130,6 @@ router.post(
     installNodePostController
 );
 router.post(
-  '/node/key/create',
-    isAuth,
-    createKeyPostController
-);
-router.post(
-  '/node/key/delete',
-    isAuth,
-    deleteKeyPostController
-);
-router.post(
-  '/node/key/show',
-    isAuth,
-    showKeyPostController
-);
-router.post(
-  '/node/key/list',
-    isAuth,
-    listKeysPostController
-);
-router.post(
-  '/node/key/recover',
-    isAuth,
-    recoverKeyPostController
-);
-router.post(
-  '/node/key/rename',
-    isAuth,
-    renameKeyPostController
-);
-router.post(
   '/node/restart',
     isAuth,
     restartNodePostController
@@ -206,6 +178,42 @@ router.post(
   '/node/uninstall',
     isAuth,
     uninstallNodePostController
+);
+
+router.post(
+  '/node/key/create',
+  isAuth,
+  createKeyPostController
+);
+router.post(
+  '/node/key/delete',
+  isAuth,
+  deleteKeyPostController
+);
+router.post(
+  '/node/key/balance',
+  isAuth,
+  getWalletBalancePostController
+)
+router.post(
+  '/node/key/show',
+    isAuth,
+    showKeyPostController
+);
+router.post(
+  '/node/key/list',
+    isAuth,
+    listKeysPostController
+);
+router.post(
+  '/node/key/recover',
+    isAuth,
+    recoverKeyPostController
+);
+router.post(
+  '/node/key/rename',
+    isAuth,
+    renameKeyPostController
 );
 
 router.post(

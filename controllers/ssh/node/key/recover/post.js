@@ -5,12 +5,13 @@ const listKeysInNodeCommand = require('../../../../../commands/node/key/list');
 const recoverKeyInNodeCommand = require('../../../../../commands/node/key/recover');
 
 const ABORTED_ERROR_MESSAGE_REGEX = /Error: aborted/;
+const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
 const DUPLICATED_ADDRESS_ERROR_MESSAGE_REGEX = /Error: duplicated address created/;
 const INVALID_MNEMONIC_ERROR_MESSAGE_REGEX = /Error: invalid mnemonic/;
 const NO_RECORDS_FOUND_MESSAGE_REGEX = /No records were found in keyring/
 
 module.exports = (req, res) => {
-  if (!req.body.key_name || typeof req.body.key_name != 'string')
+  if (!req.body.key_name || typeof req.body.key_name != 'string' || !req.body.key_name.trim().length || req.body.key_name.length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
     return res.json({ err: 'bad_request' });
 
   if (!req.body.mnemonic || typeof req.body.mnemonic != 'string')
@@ -24,7 +25,7 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    list_keys_in_node_response.stdout = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stdout) ? [] : jsonify(list_keys_in_node_response.stdout);
+    list_keys_in_node_response.stdout = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) ? [] : jsonify(list_keys_in_node_response.stdout);
 
     for (const key of list_keys_in_node_response.stdout)
       if (key.name == req.body.key_name)
@@ -47,11 +48,10 @@ module.exports = (req, res) => {
       if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(recover_key_in_node_response.stderr))
         return res.json({ err: 'invalid_mnemonic' });
 
-      recover_key_in_node_response.stdout = jsonify(recover_key_in_node_response.stdout);
+      recover_key_in_node_response.stdout = jsonify(recover_key_in_node_response.stderr);
 
       return res.json({ data: {
-        address: recover_key_in_node_response.stdout.address,
-        mnemonic: recover_key_in_node_response.stdout.mnemonic
+        address: recover_key_in_node_response.stdout.address
       }});
     });
   });

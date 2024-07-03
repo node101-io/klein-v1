@@ -52,7 +52,7 @@ window.addEventListener('load', _ => {
       localhostRequest('/ssh', 'POST', {
         type: 'exec',
         host: window.host,
-        command: 'echo deneme',
+        command: 'ls -a',
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -140,7 +140,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#check-availability-button')) {
-      serverManager.checkAvailibilityForNodeInstallation((err, res) => {
+      serverManager.checkAvailabilityForNodeInstallation((err, res) => {
         if (err)
           return console.error(err);
 
@@ -212,7 +212,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#install-node-button')) {
       nodeManager.getInstallationScriptByProject({
         network: 'cosmos',
-        project: 'lavatestnet',
+        project: 'celestiatestnet3',
         is_mainnet: false
       }, (err, res) => {
         if (err)
@@ -254,7 +254,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#restart-node-button')) {
       nodeManager.restartNode({
         network: 'cosmos',
-        project: 'lavatestnet',
+        project: 'celestiatestnet3',
         is_mainnet: false,
       }, (err, res) => {
         if (err)
@@ -306,6 +306,17 @@ window.addEventListener('load', _ => {
       });
     };
 
+    if (event.target.closest('#get-wallet-balance-button')) {
+      walletManager.getWalletBalance({
+        key_address: 'celestia12zvzsymhr2za5lacnve2cyxl7xu8n6h4f7jzkm'
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+
+        return console.log(res)
+      });
+    };
+
     if (event.target.closest('#create-wallet-button')) {
       walletManager.createWallet({
         wallet_name: document.getElementById('wallet-name-value').value,
@@ -331,7 +342,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#show-button')) {
       walletManager.showWallet({
         wallet_name: document.getElementById('wallet-name-value').value,
-        type: 'account'
+        key_type: 'account'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -375,7 +386,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#check-tx-result-button')) {
       txManager.checkTxResult({
-        tx_hash: 'BED97703277B3CF45681013D15606FABE7A769725993D8CC3CE9E261E0CA058F',
+        tx_hash: '4E00116A57173E0374C9088E74446FD841BE8AFD9BA91BDECE430A0E9218C6D0',
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -387,11 +398,13 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#create-validator-button')) {
       txManager.createValidator({
         amount: 500000,
+        chain_registry_identifier: 'celestiatestnet3',
         commission_max_change_rate: 0.01,
         commission_max_rate: 0.20,
         commission_rate: 0.05,
         from_key_name: 'klein101',
-        moniker: 'klein'
+        moniker: 'Klein',
+        non_generic_tx_commands: [ 'create_validator' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -403,8 +416,10 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#delegate-token-button')) {
       txManager.delegateToken({
         amount: 2000000,
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
-        to_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz'
+        non_generic_tx_commands: [ 'delegate_token' ],
+        to_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -415,8 +430,10 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#edit-validator-button')) {
       txManager.editValidator({
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
         moniker: 'Klein v1: Forrest',
+        non_generic_tx_commands: [ 'edit_validator' ],
         website: 'https://klein.run'
       }, (err, res) => {
         if (err)
@@ -429,9 +446,11 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#redelegate-token-button')) {
       txManager.redelegateToken({
         amount: 2000000,
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
-        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz',
-        to_validator_valoper: 'lava@valoper1z06tqx7ge2w56auf94e7ql3zafl4m2xm4emuc7'
+        from_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp',
+        non_generic_tx_commands: [ 'redelegate_token' ],
+        to_validator_valoper: 'celestiavaloper1qyuwqj0cxe6hlzjru587nygwwmgh03ha9ve9ac'
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -442,9 +461,11 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#send-token-button')) {
       txManager.sendToken({
-        from_key_name: 'klein101',
-        to_address: 'lava@1z06tqx7ge2w56auf94e7ql3zafl4m2xmpsqm2f',
-        amount: 500000
+        amount: 10000,
+        chain_registry_identifier: 'celestiatestnet3',
+        from_key_name: 'klein102',
+        to_address: 'celestia12zvzsymhr2za5lacnve2cyxl7xu8n6h4f7jzkm',
+        non_generic_tx_commands: [ 'send_token' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -455,9 +476,11 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#undelegate-token-button')) {
       txManager.undelegateToken({
-        amount: 200000,
+        amount: 2000000,
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
-        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz'
+        from_validator_valoper: 'celestiavaloper1qyuwqj0cxe6hlzjru587nygwwmgh03ha9ve9ac',
+        non_generic_tx_commands: [ 'undelegate_token' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -468,7 +491,9 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#unjail-validator-button')) {
       txManager.unjailValidator({
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
+        non_generic_tx_commands: [ 'unjail_validator' ]
       }, (err, res) => {
         if (err)
           return console.error(err);
@@ -479,7 +504,9 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#vote-proposal-button')) {
       txManager.voteProposal({
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
+        non_generic_tx_commands: [ 'vote_proposal' ],
         option: 'yes',
         proposal_id: '1'
       }, (err, res) => {
@@ -492,8 +519,10 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#withdraw-rewards-button')) {
       txManager.withdrawRewards({
+        chain_registry_identifier: 'celestiatestnet3',
         from_key_name: 'klein101',
-        from_validator_valoper: 'lava@valoper15f6d00t0q84m6tlzha9snj852sghv8ycpg5pwz',
+        from_validator_valoper: 'celestiavaloper1dg9dp8368t5r569u2fxhp6wau3uwtsy9xzw4sp',
+        non_generic_tx_commands: [ 'withdraw_rewards' ],
         withdraw_commission: false
       }, (err, res) => {
         if (err)
