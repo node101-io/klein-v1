@@ -25,15 +25,18 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
-    list_keys_in_node_response.stdout = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) ? [] : jsonify(list_keys_in_node_response.stdout);
+    const listKeysOutput = NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stderr) || NO_RECORDS_FOUND_MESSAGE_REGEX.test(list_keys_in_node_response.stdout) ? [] : jsonify(list_keys_in_node_response.stdout);
 
-    for (const key of list_keys_in_node_response.stdout)
+    for (const key of listKeysOutput)
       if (key.name == req.body.key_name)
         return res.json({ err: 'key_name_already_exists' });
 
     sshRequest('exec', {
       host: req.body.host,
-      command: recoverKeyInNodeCommand(req.body.key_name, req.body.mnemonic),
+      command: recoverKeyInNodeCommand({
+        key_name: req.body.key_name,
+        mnemonic: req.body.mnemonic
+      }),
       in_container: true
     }, (err, recover_key_in_node_response) => {
       if (err)
@@ -48,10 +51,10 @@ module.exports = (req, res) => {
       if (INVALID_MNEMONIC_ERROR_MESSAGE_REGEX.test(recover_key_in_node_response.stderr))
         return res.json({ err: 'invalid_mnemonic' });
 
-      recover_key_in_node_response.stdout = jsonify(recover_key_in_node_response.stderr);
+      const recoverKeyOutput = recover_key_in_node_response.stdout ? jsonify(recover_key_in_node_response.stdout) : jsonify(recover_key_in_node_response.stderr);
 
       return res.json({ data: {
-        address: recover_key_in_node_response.stdout.address
+        address: recoverKeyOutput.address
       }});
     });
   });

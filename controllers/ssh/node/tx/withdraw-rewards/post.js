@@ -6,6 +6,8 @@ const withdrawRewardsCommand = require('../../../../../commands/node/tx/withdraw
 const withdrawRewardsCommand_celestiatestnet3 = require('../../../../../commands/node/tx/withdraw-rewards/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
@@ -48,16 +50,19 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(withdraw_rewards_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(withdraw_rewards_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    withdraw_rewards_response.stdout = jsonify(withdraw_rewards_response.stdout);
+    const withdrawRewardsOutput = jsonify(withdraw_rewards_response.stdout);
 
-    evaluateTxResponseError(withdraw_rewards_response.stdout?.code, err => {
+    evaluateTxResponseError(withdrawRewardsOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: withdraw_rewards_response.stdout });
+        return res.json({ err: err, data: withdrawRewardsOutput });
 
-      return res.json({ data: withdraw_rewards_response.stdout });
+      return res.json({ data: withdrawRewardsOutput });
     });
   });
 };

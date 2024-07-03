@@ -6,6 +6,8 @@ const delegateTokenCommand = require('../../../../../commands/node/tx/delegate-t
 const delegateTokenCommand_celestiatestnet3 = require('../../../../../commands/node/tx/delegate-token/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
@@ -48,16 +50,19 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(delegate_token_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(delegate_token_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    delegate_token_response.stdout = jsonify(delegate_token_response.stdout);
+    const delegateTokenOutput = jsonify(delegate_token_response.stdout);
 
-    evaluateTxResponseError(delegate_token_response.stdout?.code, err => {
+    evaluateTxResponseError(delegateTokenOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: delegate_token_response.stdout});
+        return res.json({ err: err, data: delegateTokenOutput});
 
-      return res.json({ data: delegate_token_response.stdout});
+      return res.json({ data: delegateTokenOutput});
     });
   });
 };

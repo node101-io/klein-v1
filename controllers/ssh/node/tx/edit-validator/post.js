@@ -6,6 +6,8 @@ const editValidatorCommand = require('../../../../../commands/node/tx/edit-valid
 const editValidatorCommand_celestiatestnet3 = require('../../../../../commands/node/tx/edit-validator/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
@@ -50,16 +52,19 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(edit_validator_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(edit_validator_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    edit_validator_response.stdout = jsonify(edit_validator_response.stdout);
+    const editValidatorOutput = jsonify(edit_validator_response.stdout);
 
-    evaluateTxResponseError(edit_validator_response.stdout?.code, err => {
+    evaluateTxResponseError(editValidatorOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: edit_validator_response.stdout });
+        return res.json({ err: err, data: editValidatorOutput });
 
-      return res.json({ data: edit_validator_response.stdout });
+      return res.json({ data: editValidatorOutput });
     });
   });
 };

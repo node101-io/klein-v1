@@ -6,6 +6,8 @@ const redelegateTokenCommand = require('../../../../../commands/node/tx/redelega
 const redelegateTokenCommand_celestiatestnet3 = require('../../../../../commands/node/tx/redelegate-token/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 
 module.exports = (req, res) => {
@@ -53,16 +55,19 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(redelegate_tx_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(redelegate_tx_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    redelegate_tx_response.stdout = jsonify(redelegate_tx_response.stdout);
+    const redelegateTokenOutput = jsonify(redelegate_tx_response.stdout);
 
-    evaluateTxResponseError(redelegate_tx_response.stdout?.code, err => {
+    evaluateTxResponseError(redelegateTokenOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: redelegate_tx_response.stdout });
+        return res.json({ err: err, data: redelegateTokenOutput });
 
-      return res.json({ data: redelegate_tx_response.stdout });
+      return res.json({ data: redelegateTokenOutput });
     });
   });
 };
