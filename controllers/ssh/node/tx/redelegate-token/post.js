@@ -58,7 +58,7 @@ module.exports = (req, res) => {
 
     redelegate_tx_response.stdout = jsonify(redelegate_tx_response.stdout);
 
-    evaluateTxResponseError(redelegate_tx_response.stdout, err => {
+    evaluateTxResponseError(redelegate_tx_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: redelegate_tx_response.stdout });
 

@@ -386,7 +386,7 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('#check-tx-result-button')) {
       txManager.checkTxResult({
-        tx_hash: '04C061D13661B1EAA62A625CF382101F6B62EFBF7DB43DAD3D3515C3DD2AF41F',
+        tx_hash: '4E00116A57173E0374C9088E74446FD841BE8AFD9BA91BDECE430A0E9218C6D0',
       }, (err, res) => {
         if (err)
           return console.error(err);

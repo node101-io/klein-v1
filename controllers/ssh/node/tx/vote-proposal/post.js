@@ -54,7 +54,7 @@ module.exports = (req, res) => {
 
     vote_proposal_response.stdout = jsonify(vote_proposal_response.stdout);
 
-    evaluateTxResponseError(vote_proposal_response.stdout, err => {
+    evaluateTxResponseError(vote_proposal_response.stdout?.code, err => {
       if (err)
         return res.json({ err: err, data: vote_proposal_response.stdout });
 
