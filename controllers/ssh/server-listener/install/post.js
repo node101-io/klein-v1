@@ -4,15 +4,43 @@ const installServerListenerCommand = require('../../../../commands/server-listen
 
 const versions = require('../../../../versions.json');
 
-module.exports = (req, res) => {
-  sshRequest('exec:stream', {
-    host: req.body.host,
-    id: req.body.id,
-    command: installServerListenerCommand(versions.serverListener)
-  }, (err, install_server_listener_response) => {
-    if (err)
-      return res.json({ err: err });
+const createFolderIfNotExists = (host, path, callback) => {
+  sshRequest('sftp:exists', {
+    host: host,
+    path: path
+  }, (err, data) => {
+    if (err && err != 'document_not_found')
+      return callback(err);
 
-    return res.json({ data: install_server_listener_response.stdout });
+    if (err)
+      sshRequest('sftp:mkdir', {
+        host: host,
+        path: path
+      }, (err, data) => {
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+    else
+      return callback(null);
+  });
+};
+
+module.exports = (req, res) => {
+  createFolderIfNotExists(req.body.host, 'klein-node-volume', err => {
+    if (err)
+      return callback(err);
+
+    sshRequest('exec:stream', {
+      host: req.body.host,
+      id: req.body.id,
+      command: installServerListenerCommand(versions.serverListener)
+    }, (err, install_server_listener_response) => {
+      if (err)
+        return res.json({ err: err });
+
+      return res.json({ data: install_server_listener_response.stdout });
+    });
   });
 };

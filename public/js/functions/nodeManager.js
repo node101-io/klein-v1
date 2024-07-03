@@ -94,7 +94,7 @@ const makeNodeManager = _ => {
         return callback(null);
       });
 
-      return stream.id;
+      return stream;
     },
     uninstallRunningNode: callback => {
       localhostRequest('/ssh/node/uninstall', 'POST', {
@@ -175,7 +175,7 @@ const makeNodeManager = _ => {
         return callback(null);
       });
 
-      return stream.id;
+      return stream;
     },
     installSnapshot: (onData, callback) => {
       const stream = makeStream(onData);
@@ -192,7 +192,7 @@ const makeNodeManager = _ => {
         return callback(null);
       });
 
-      return stream.id;
+      return stream;
     }
   };
 };

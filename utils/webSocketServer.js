@@ -15,6 +15,10 @@ const WebSocketServer = {
         return callback(null);
       })
       .on('connection', ws => {
+        ws.isReady = () => {
+          return ws.readyState == ws.OPEN;
+        };
+
         server = ws;
       })
       .on('close', _ => {
