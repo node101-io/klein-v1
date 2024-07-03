@@ -1,8 +1,9 @@
 :root {
   --index-content-padding: 40px;
-  --index-content-inner-padding: 8px;
   --index-content-inner-gap: 20px;
+  --index-content-inner-padding: 8px;
 
+  --index-font-size-huge: 36px;
   --index-font-size-big: 16px;
   --index-font-size-medium: 15px;
   --index-font-size-small: 11px;
