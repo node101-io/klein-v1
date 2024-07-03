@@ -1,7 +1,7 @@
 // window.host = 'localhost';
-window.host = '164.68.108.76';
+// window.host = '164.68.108.76';
 // window.host = '164.90.186.117';
-// window.host = '144.91.93.154';
+window.host = '144.91.93.154';
 
 window.addEventListener('load', _ => {
   document.addEventListener('click', event => {
@@ -149,7 +149,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#install-docker-button')) {
-      const requestId = serverManager.installDocker(
+      const stream = serverManager.installDocker(
         data => {
           console.log(data.data);
         },
@@ -161,7 +161,7 @@ window.addEventListener('load', _ => {
         }
       );
 
-      console.log(requestId);
+      console.log(stream);
     };
 
     if (event.target.closest('#uninstall-docker-button')) {
@@ -174,7 +174,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#install-server-listener-button')) {
-      const requestId = serverManager.installServerListener(
+      const stream = serverManager.installServerListener(
         data => {
           console.log(data.data);
         },
@@ -186,7 +186,7 @@ window.addEventListener('load', _ => {
         }
       );
 
-      console.log(requestId);
+      console.log(stream);
     };
 
     if (event.target.closest('#uninstall-server-listener-button')) {
@@ -220,7 +220,7 @@ window.addEventListener('load', _ => {
 
         let completedStepCount = 0;
 
-        const requestId = nodeManager.installNode({
+        const stream = nodeManager.installNode({
           docker_compose_content: res.docker_compose_content,
           dockerfile_content: res.dockerfile_content,
           project_route: res.project_route
@@ -238,7 +238,7 @@ window.addEventListener('load', _ => {
           return console.log(res);
         });
 
-        return console.log(requestId);
+        return console.log(stream);
       });
     };
 
@@ -283,7 +283,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('#node-logs')) {
-      const requestId = nodeManager.checkLogs(data => {
+      const stream = nodeManager.checkLogs(data => {
         console.log(data.data);
       }, (err, res) => {
         if (err)
@@ -292,7 +292,11 @@ window.addEventListener('load', _ => {
         return console.log(res);
       });
 
-      return console.log(requestId);
+      setTimeout(_ => {
+        stream.end();
+      }, 10000);
+
+      return console.log(stream);
     };
 
     if (event.target.closest('#install-snapshot-button')) {

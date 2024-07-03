@@ -16,7 +16,8 @@ const END_EXPIRED_CONNECTIONS_EXPIRATION_TIME = 60 * 1000;
 const END_EXPIRED_CONNECTIONS_INTERVAL = 30 * 1000;
 const SSH_CONNECTION_EXPIRATION_TIME = 15 * 60 * 1000;
 const SSH_HANDSHAKE_TIMEOUT = 30 * 1000;
-const SSH_KEEP_ALIVE_INTERVAL = 1000;
+const SSH_KEEP_ALIVE_INTERVAL = 10000;
+const SSH_KEEP_ALIVE_MAX_TRY = 3;
 
 const TYPE_VALUES = [
   'connect:key',
@@ -34,17 +35,6 @@ const TYPE_VALUES = [
   'sftp:get_file',
   'sftp:upload_file'
 ];
-
-const handleExecError = code => {
-  if (code == 1)
-    return 'not_authenticated_request';
-  else if (code == 2)
-    return 'connect_failed';
-  else if (code == 4)
-    return 'resource_usage_high';
-  else
-    return 'unknown_error';
-};
 
 const handleSFTPError = code => {
   if (code == SFTP_STATUS_CODES.OK)
@@ -243,7 +233,7 @@ const sshRequest = (type, data, callback) => {
     if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
       return callback('bad_request');
 
-    if (!ws || ws.readyState != ws.OPEN)
+    if (!ws || !ws.isReady())
       return callback('websocket_error');
 
     const connectData = {
@@ -251,7 +241,7 @@ const sshRequest = (type, data, callback) => {
       host: data.host.trim(),
       readyTimeout: SSH_HANDSHAKE_TIMEOUT,
       keepaliveInterval: SSH_KEEP_ALIVE_INTERVAL,
-      keepaliveCountMax: 3
+      keepaliveCountMax: SSH_KEEP_ALIVE_MAX_TRY
     };
 
     if (data.port && typeof data.port == 'number' && 0 < data.port)
@@ -338,7 +328,7 @@ const sshRequest = (type, data, callback) => {
         try {
           connection.client.exec(data.command, (err, stream) => {
             if (err)
-              return callback(handleExecError(err.reason));
+              return callback('connection_lost');
 
             let stdout = '';
             let stderr = '';
@@ -350,13 +340,12 @@ const sshRequest = (type, data, callback) => {
               .on('close', (code, signal) => {
                 connection.markAsSeen();
 
-                console.log('command:', data.command);
-
-                if (code == 7) console.log(7, data.command);
-
-                console.log('code:', code);
-                console.log('stderr:', stderr);
-                console.log('stdout:', stdout);
+                console.log({
+                  command: data.command,
+                  code: code,
+                  stderr: stderr.trim() || null,
+                  stdout: stdout.trim() || null
+                });
 
                 return callback(null, {
                   code: code,
@@ -376,13 +365,13 @@ const sshRequest = (type, data, callback) => {
         if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
           return callback('bad_request');
 
-        if (!ws || ws.readyState != ws.OPEN)
+        if (!ws || !ws.isReady())
           return callback('websocket_error');
 
         try {
           connection.client.exec(data.command, (err, stream) => {
             if (err)
-              return callback(handleExecError(err.reason));
+              return callback('connection_lost');
 
             connection.markAsSeen();
 
