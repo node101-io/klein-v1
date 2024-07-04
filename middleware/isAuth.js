@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   //   if (req.method == 'GET')
   //     return res.redirect('/auth');
 
-  //   return res.json({ error: 'not_authenticated_request' });
+  //   return res.json({ err: 'not_authenticated_request' });
   // };
 
   return next();

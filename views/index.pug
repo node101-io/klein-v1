@@ -28,10 +28,11 @@ block main
         .index-home-header-each-button#index-home-header-each-button-mainnet= __('index-home-header-each-button-mainnet')
       .index-home-content-wrapper#index-home-content-testnet-wrapper
         .index-general-projects-wrapper
+          - console.log(1, projects)
           each project in projects
             .index-general-each-project-wrapper
               .index-general-each-project-inner-wrapper
-                img.index-general-each-project-image(src=project.image alt=`${__('index-home-each-project-image-alt')} ${project.name}`)
+                img.index-general-each-project-image(src=project.image[project.image.length - 1].url alt=`${__('index-home-each-project-image-alt')} ${project.name}`)
                 .index-general-each-project-content-wrapper
                   .index-general-each-project-content-header-wrapper
                     .index-general-each-project-name= project.name
@@ -77,7 +78,7 @@ block main
           each project in projects
             .index-general-each-project-wrapper
               .index-general-each-project-inner-wrapper
-                img.index-general-each-project-image(src=project.image alt=`${__('index-search-each-project-image-alt')} ${project.name}`)
+                img.index-general-each-project-image(src=project.image[project.image.length - 1].url alt=`${__('index-search-each-project-image-alt')} ${project.name}`)
                 .index-general-each-project-content-wrapper
                   .index-general-each-project-content-header-wrapper
                     .index-general-each-project-name= project.name
@@ -111,19 +112,19 @@ block main
             .index-login-project-stake-with-us= __('index-login-project-stake-with-us')
             .index-login-project-requirements-wrapper
               .index-login-project-requirements-title= __('index-login-project-requirements-title')
-              .index-login-project-requirements-inner-wrapper
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-cpu')
-                  .index-login-project-each-requirement-text= project.requirements.cpu
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-ram')
-                  .index-login-project-each-requirement-text= project.requirements.ram
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-storage')
-                  .index-login-project-each-requirement-text= project.requirements.storage
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-os')
-                  .index-login-project-each-requirement-text= project.requirements.os
+              //- .index-login-project-requirements-inner-wrapper
+              //-   .index-login-project-each-requirement-wrapper
+              //-     .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-cpu')
+              //-     .index-login-project-each-requirement-text= project.requirements.cpu
+              //-   .index-login-project-each-requirement-wrapper
+              //-     .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-ram')
+              //-     .index-login-project-each-requirement-text= project.requirements.ram
+              //-   .index-login-project-each-requirement-wrapper
+              //-     .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-storage')
+              //-     .index-login-project-each-requirement-text= project.requirements.storage
+              //-   .index-login-project-each-requirement-wrapper
+              //-     .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-os')
+              //-     .index-login-project-each-requirement-text= project.requirements.os
             .index-login-project-rent-server-title= __('index-login-project-rent-server-title')
             .index-login-project-rent-server-wrapper
               a.index-login-project-each-rent-server(href='https://node101.io' target='_blank') PQ Hosting
