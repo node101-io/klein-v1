@@ -36,8 +36,8 @@ const makeNodeManager = _ => {
       .replace(/GENESIS_FILE_PLACEHOLDER/g, chain_info.genesis_file)
       .replace(/PEERS_PLACEHOLDER/g, chain_info.peers.join(','))
       .replace(/SEEDS_PLACEHOLDER/g, chain_info.seeds.join(','))
-      .replace(/MIN_GAS_PRICE_PLACEHOLDER/g, String(chain_info.min_gas_price))
-      .replace(/AVERAGE_GAS_PRICE_PLACEHOLDER/g, String(chain_info.average_gas_price))
+      .replace(/MIN_GAS_PRICE_PLACEHOLDER/g, `'${chain_info.min_gas_price}'`)
+      .replace(/AVERAGE_GAS_PRICE_PLACEHOLDER/g, `'${chain_info.average_gas_price}'`)
       .replace(/DENOM_PLACEHOLDER/g, chain_info.denom)
       .replace(/MONIKER_PLACEHOLDER/g, `klein_node_${Date.now()}`)
     );
@@ -156,9 +156,6 @@ const makeNodeManager = _ => {
           });
         });
       });
-    },
-    updateNode: callback => {
-      // TODO
     },
     checkLogs: (onData, callback) => {
       const stream = makeStream(onData);
