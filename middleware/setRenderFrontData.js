@@ -9,7 +9,8 @@ const INCLUDES = {
     'partials/header'
   ],
   js: [
-    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/keyManager', 'functions/preferenceManager', 'functions/jsonify'
+    'index/home', 'index/login',
+    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/jsonify'
   ]
 };
 

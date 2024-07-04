@@ -359,7 +359,9 @@
   margin-right: auto;
   cursor: pointer;
 }
-
+.index-login-right-remember-me-input {
+  display: none;
+}
 .index-login-right-remember-me-icon-wrapper {
   height: var(--index-login-right-remember-me-icon-wrapper-size);
   min-height: var(--index-login-right-remember-me-icon-wrapper-size);
