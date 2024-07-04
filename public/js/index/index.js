@@ -212,7 +212,7 @@ window.addEventListener('load', _ => {
     if (event.target.closest('#install-node-button')) {
       nodeManager.getInstallationScriptByProject({
         network: 'cosmos',
-        project: 'celestiatestnet3',
+        project: 'lavatestnet',
         is_mainnet: false
       }, (err, res) => {
         if (err)
