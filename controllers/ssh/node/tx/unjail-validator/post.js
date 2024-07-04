@@ -6,7 +6,10 @@ const unjailValidatorCommand = require('../../../../../commands/node/tx/unjail-v
 const unjailValidatorCommand_celestiatestnet3 = require('../../../../../commands/node/tx/unjail-validator/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
 const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
+const VALIDATOR_NOT_JAILED_ERROR_MESSAGE_REGEX = /(.*?): validator not jailed/;
 
 module.exports = (req, res) => {
   if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
@@ -38,16 +41,22 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(unjail_validator_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(unjail_validator_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    unjail_validator_response.stdout = jsonify(unjail_validator_response.stdout);
+    if (VALIDATOR_NOT_JAILED_ERROR_MESSAGE_REGEX.test(unjail_validator_response.stderr))
+      return res.json({ err: 'validator_not_jailed' });
 
-    evaluateTxResponseError(unjail_validator_response.stdout?.code, err => {
+    const unjailValidatorOutput = jsonify(unjail_validator_response.stdout);
+
+    evaluateTxResponseError(unjailValidatorOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: unjail_validator_response.stdout });
+        return res.json({ err: err, data: unjailValidatorOutput });
 
-      return res.json({ data: unjail_validator_response.stdout });
+      return res.json({ data: unjailValidatorOutput });
     });
   });
 };

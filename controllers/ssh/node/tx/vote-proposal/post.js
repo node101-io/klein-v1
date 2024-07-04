@@ -6,8 +6,11 @@ const voteProposalCommand = require('../../../../../commands/node/tx/vote-propos
 const voteProposalCommand_celestiatestnet3 = require('../../../../../commands/node/tx/vote-proposal/celestiatestnet3');
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
-const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
 const VOTE_OPTIONS = [ 'yes', 'no', 'no_with_veto', 'abstain' ];
+
+const ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX = /account sequence mismatch/;
+const KEY_NOT_FOUND_ERROR_MESSAGE_REGEX = /Error: (.*?): key not found/;
+const PROPOSAL_NOT_ACTIVE_ERROR_MESSAGE_REGEX = /(.*?): inactive proposal/;
 
 module.exports = (req, res) => {
   if (!req.body.from_key_name || typeof req.body.from_key_name != 'string' || !req.body.from_key_name.trim().length || req.body.from_key_name.length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
@@ -49,16 +52,22 @@ module.exports = (req, res) => {
     if (err)
       return res.json({ err: err });
 
+    if (ACCOUNT_SEQUENCE_MISMATCH_ERROR_MESSAGE_REGEX.test(vote_proposal_response.stderr))
+      return res.json({ err: 'account_sequence_mismatch' });
+
     if (KEY_NOT_FOUND_ERROR_MESSAGE_REGEX.test(vote_proposal_response.stderr))
       return res.json({ err: 'key_not_found' });
 
-    vote_proposal_response.stdout = jsonify(vote_proposal_response.stdout);
+    if (PROPOSAL_NOT_ACTIVE_ERROR_MESSAGE_REGEX.test(vote_proposal_response.stderr))
+      return res.json({ err: 'proposal_not_active' });
 
-    evaluateTxResponseError(vote_proposal_response.stdout?.code, err => {
+    const voteProposalOutput = jsonify(vote_proposal_response.stdout);
+
+    evaluateTxResponseError(voteProposalOutput?.code, err => {
       if (err)
-        return res.json({ err: err, data: vote_proposal_response.stdout });
+        return res.json({ err: err, data: voteProposalOutput });
 
-      return res.json({ data: vote_proposal_response.stdout });
+      return res.json({ data: voteProposalOutput });
     });
   });
 };

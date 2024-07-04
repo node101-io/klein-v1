@@ -4,9 +4,9 @@ const BECH_TYPES = {
   consensus: 'cons'
 };
 
-module.exports = (key_name, type) => `
-  $DAEMON_NAME keys show ${key_name} \\
+module.exports = data => `
+  $DAEMON_NAME keys show ${data.key_name} \\
     --keyring-backend test \\
     --address \\
-    --bech ${BECH_TYPES[type] || BECH_TYPES.account}
+    --bech ${BECH_TYPES[data.key_type] || BECH_TYPES.account}
 `;

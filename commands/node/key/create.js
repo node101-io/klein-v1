@@ -1,5 +1,5 @@
-module.exports = key_name => `
-  $DAEMON_NAME keys add ${key_name} \\
+module.exports = data => `
+  $DAEMON_NAME keys add ${data.key_name} \\
     --keyring-backend test \\
     --output json \\
   <<< y

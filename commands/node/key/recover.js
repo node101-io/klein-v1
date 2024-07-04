@@ -1,8 +1,8 @@
-module.exports = (key_name, mnemonic) => `
-  $DAEMON_NAME keys add ${key_name} \\
+module.exports = data => `
+  $DAEMON_NAME keys add ${data.key_name} \\
     --keyring-backend test \\
     --output json \\
     --recover \\
     <<< y \\
-    <<< "${mnemonic}"
+    <<< "${data.mnemonic}"
 `;
