@@ -9,7 +9,7 @@ const INCLUDES = {
     'partials/header'
   ],
   js: [
-    'index/home', 'index/login',
+    'index/home', 'index/login', 'index/header',
     'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/jsonify'
   ]
 };

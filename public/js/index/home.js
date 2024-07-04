@@ -1,7 +1,23 @@
 window.addEventListener('load', _ => {
   document.addEventListener('click', event => {
+    if (event.target.closest('.index-home-header-each-button')) {
+      const clickedButton = event.target.closest('.index-home-header-each-button');
+
+      if (clickedButton.classList.contains('index-home-header-each-button-active')) return;
+
+      document.querySelector('.index-home-header-each-button-active').classList.remove('index-home-header-each-button-active');
+      clickedButton.classList.add('index-home-header-each-button-active');
+
+      const pageToDisplay = clickedButton.id.replace('index-home-header-each-button-', '');
+
+      document.getElementById(`index-home-content-${pageToDisplay}-wrapper`).classList.toggle('display-none');
+      document.getElementById(`index-home-content-${pageToDisplay == 'mainnet' ? 'testnet' : 'mainnet'}-wrapper`).classList.add('display-none');
+    };
+
     if (event.target.closest('.index-general-each-project-install-button')) {
-      console.log('install button clicked');
+      const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
+
+      console.log('installing project:', projectIdToInstall);
       // localhostRequest('/login?is_json=true', 'GET', {}, (err, res) => {
       //   // if (res.err) return;
       //   console.log(err, res);

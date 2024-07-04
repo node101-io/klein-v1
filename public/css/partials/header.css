@@ -7,6 +7,7 @@
   --partials-header-navbar-horizontal-padding: 24px;
   --partials-header-navbar-curvature: 12px;
   --partials-header-navbar-spacing: 10px;
+  --partials-header-navbar-wrapper-margin-right: 20px;
 
   --partials-header-resize-button-size: 32px;
   --partials-header-resize-button-curvature: 8px;
@@ -19,8 +20,6 @@
   --partials-header-each-button-icon-height: 15px;
   --partials-header-each-button-text-font-size: 15px;
   --partials-header-each-button-shortcut-font-size: 12px;
-
-  --partials-header-content-wrapper-margin-left: 20px;
 }
 
 .partials-all-wrapper {
@@ -30,7 +29,7 @@
   min-width: 100vw;
   padding: var(--content-gap);
   background-color: var(--background-all-color);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .partials-all-inner-wrapper {
   height: 100%;
@@ -39,7 +38,7 @@
   min-width: 100%;
   padding-right: calc(max(0, 100vw - var(--content-max-width)));
   background-color: var(--background-all-color);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .partials-header-navbar-wrapper {
@@ -50,8 +49,17 @@
   flex-direction: column;
   align-items: flex-start;
   padding: var(--partials-header-navbar-vertical-padding) var(--partials-header-navbar-horizontal-padding);
+  margin-right: var(--partials-header-navbar-wrapper-margin-right);
   background: var(--background-box-color);
   border-radius: var(--partials-header-navbar-curvature);
+  transition: all 0.3s;
+}
+.partials-header-navbar-wrapper-hidden {
+  width: 0;
+  min-width: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .partials-header-resize-button-wrapper {
@@ -75,6 +83,7 @@
   border-radius: var(--partials-header-resize-button-curvature);
   box-shadow: 0 0 4px var(--background-shadow-color);
   cursor: pointer;
+  transition: right 0.3s;
 }
 .partials-header-resize-button-icon {
   height: var(--partials-header-resize-button-icon-height);
@@ -82,6 +91,10 @@
   width: auto;
   min-width: auto;
   fill: var(--text-subtitle-color);
+}
+.partials-header-resize-button-reversed {
+  right: calc(-1 * var(--partials-header-resize-button-size) / 2);
+  transform: rotate(180deg);
 }
 
 .partials-header-each-subtitle {
@@ -135,6 +148,8 @@
   font-size: var(--partials-header-each-button-text-font-size);
   color: var(--text-subtitle-color);
   margin-right: auto;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .partials-header-each-button-shortcut {
   display: none;
@@ -153,6 +168,7 @@
   margin-top: auto;
   margin-left: var(--partials-header-navbar-spacing);
   cursor: pointer;
+  text-decoration: none;
 }
 .partials-header-help-button:hover .partials-header-help-text {
   font-weight: 500;
@@ -177,7 +193,6 @@
   height: 100%;
   min-height: 100%;
   flex: 1;
-  margin-left: var(--partials-header-content-wrapper-margin-left);
   overflow: hidden;
 }
 

@@ -38,7 +38,7 @@
   width: 100%;
   min-width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: var(--index-content-inner-gap);
   padding: 0 var(--index-content-padding);
   padding-top: calc(2 * var(--index-content-inner-gap));
@@ -46,10 +46,10 @@
 }
 
 .index-general-each-project-wrapper {
-  height: var(--index-general-project-height);
-  min-height: var(--index-general-project-height);
-  width: auto;
-  min-width: auto;
+  height: var(--index-general-each-project-height);
+  min-height: var(--index-general-each-project-height);
+  width: 100%;
+  min-width: 100%;
   flex-direction: column;
   padding: var(--index-content-inner-padding);
   border-radius: var(--index-general-each-project-curvature);
@@ -58,20 +58,20 @@
 }
 
 .index-general-each-project-inner-wrapper {
-  height: calc(var(--index-general-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
-  min-height: calc(var(--index-general-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  height: calc(var(--index-general-each-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-height: calc(var(--index-general-each-project-height) - 2 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
   width: 100%;
   min-width: 100%;
   padding-bottom: var(--index-content-inner-padding);
 }
 
 .index-general-each-project-image {
-  height: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
-  min-height: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
-  width: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
-  min-width: calc(var(--index-general-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  height: calc(var(--index-general-each-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-height: calc(var(--index-general-each-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  width: calc(var(--index-general-each-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
+  min-width: calc(var(--index-general-each-project-height) - 3 * var(--index-content-inner-padding) - var(--index-general-each-project-install-button-height));
   margin-right: var(--index-content-inner-padding);
-  border-radius: var(--index-general-project-image-curvature);
+  border-radius: var(--index-general-each-project-image-curvature);
 }
 
 .index-general-each-project-content-wrapper {
@@ -202,11 +202,11 @@
   justify-content: center;
   background-color: var(--button-background-color);
   border-radius: var(--index-general-each-project-install-button-curvature);
+  cursor: pointer;
 }
 .index-general-each-project-install-button-text {
   font-weight: 400;
   font-family: var(--font-family-anek-bangla);
   color: var(--button-text-color);
   font-size: var(--index-font-size-medium);
-  cursor: pointer;
 }
