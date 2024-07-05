@@ -8,6 +8,7 @@ const setRenderFrontData = require('../middleware/setRenderFrontData');
 const homeGetController = require('../controllers/index/home/get');
 const indexGetController = require('../controllers/index/index/get');
 const loginGetController = require('../controllers/index/login/get');
+const searchGetController = require('../controllers/index/search/get');
 
 router.get(
   '/',
@@ -27,5 +28,11 @@ router.get(
     setRenderFrontData,
     loginGetController
 )
+router.get(
+  '/search',
+    isAuth,
+    setRenderFrontData,
+    searchGetController
+);
 
 module.exports = router;

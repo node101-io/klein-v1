@@ -5,11 +5,11 @@ const DEFAULT_COLOR_THEME = 'light';
 const INCLUDES = {
   css: [
     'general/general',
-    'index/general', 'index/home', 'index/login',
+    'index/general', 'index/home', 'index/login', 'index/search',
     'partials/header'
   ],
   js: [
-    'index/home', 'index/login', 'index/header',
+    'index/home', 'index/login', 'index/header', 'index/search',
     'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/jsonify'
   ]
 };
@@ -20,7 +20,10 @@ module.exports = (req, res, next) => {
   res.locals.color_theme = req.session.color_theme && ALLOWED_COLOR_THEME_LIST.includes(req.session.color_theme) ? req.session.color_theme : DEFAULT_COLOR_THEME;
   res.locals.includes = INCLUDES;
   res.locals.projects = [];
-  res.locals.project = {};
+  res.locals.project = {
+    image: [{}],
+    urls: [{}],
+  };
   res.locals.node = {};
   res.locals.saved_ip_list = [];
   res.locals.short_input_list = [];

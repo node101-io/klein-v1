@@ -93,6 +93,7 @@
   font-weight: 500;
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-big);
+  line-height: 1.4;
   color: var(--text-title-color);
 }
 
@@ -105,6 +106,8 @@
   flex-direction: column;
   align-items: center;
   margin-left: var(--index-content-inner-padding);
+  margin-bottom: auto;
+  margin-top: calc(var(--index-content-inner-gap) / 5);
   cursor: default;
 }
 .index-general-each-project-help-wrapper:hover .index-general-each-project-help-text-wrapper {
@@ -118,6 +121,7 @@
   width: var(--index-general-each-project-help-content-width);
   min-width: var(--index-general-each-project-help-content-width);
   display: none;
+  gap: calc(var(--index-font-size-medium) / 2);
   align-items: center;
   padding: 0 var(--index-general-each-project-help-content-horizontal-padding);
   border-radius: var(--index-general-each-project-help-content-curvature);
@@ -171,6 +175,7 @@
   height: fit-content;
   min-height: fit-content;
   margin-left: auto;
+  margin-bottom: auto;
   cursor: pointer;
 }
 .index-general-each-project-link-icon {
@@ -178,6 +183,7 @@
   min-height: var(--index-general-each-project-link-icon-size);
   width: auto;
   min-width: auto;
+  margin-left: calc(var(--index-font-size-medium) / 2);
   fill: var(--main-color);
 }
 

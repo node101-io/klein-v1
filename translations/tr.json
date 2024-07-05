@@ -35,5 +35,6 @@
 	"index-login-right-each-input-placeholder-password": "••••••••••",
 	"index-login-right-remember-me-text": "Remember me!",
 	"index-login-right-button-text": "Install",
-	"node-general-title": "node-general-title"
+	"node-general-title": "node-general-title",
+	"index-search-input-placeholder": "index-search-input-placeholder"
 }

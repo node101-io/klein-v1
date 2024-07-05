@@ -1,0 +1,66 @@
+:root {
+  --index-search-header-input-wrapper-height: 40px;
+  --index-search-header-input-wrapper-width: 60%;
+  --index-search-header-input-curvature: 14px;
+  --index-search-header-input-icon-height: 16px;
+}
+
+.index-search-wrapper {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--index-content-padding) 0;
+  background-color: var(--background-box-color);
+  border-radius: var(--index-content-wrapper-curvature);
+  overflow: hidden;
+}
+
+.index-search-input-wrapper {
+  position: relative;
+  height: var(--index-search-header-input-wrapper-height);
+  min-height: var(--index-search-header-input-wrapper-height);
+  width: var(--index-search-header-input-wrapper-width);
+  min-width: var(--index-search-header-input-wrapper-width);
+  padding: 0 var(--index-content-padding);
+  margin: 0 auto;
+}
+
+.index-search-input {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  padding: 10px;
+  padding-right: var(--index-content-inner-padding);
+  padding-left: calc(3 * var(--index-content-inner-padding) + var(--index-search-header-input-icon-height));
+  font-weight: 400;
+  font-family: var(--font-family-anek-bangla);
+  font-size: var(--index-font-size-big);
+  color: var(--text-title-color);
+  border: none;
+  border-radius: var(--index-search-header-input-curvature);
+  outline: none;
+}
+.index-search-input-icon {
+  position: absolute;
+  top: calc(var(--index-search-header-input-wrapper-height) / 2 - var(--index-search-header-input-icon-height) / 2);
+  left: calc(var(--index-content-padding) + var(--index-search-header-input-wrapper-height) / 2 - var(--index-search-header-input-icon-height) / 2);
+  height: var(--index-search-header-input-icon-height);
+  min-height: var(--index-search-header-input-icon-height);
+  width: auto;
+  min-width: auto;
+  margin-right: var(--index-content-inner-padding);
+  fill: var(--button-background-color);
+}
+
+.index-search-content-wrapper {
+  flex: 1;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  align-items: center;
+  justify-content: center;
+}
