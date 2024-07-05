@@ -1,9 +1,17 @@
 window.addEventListener('load', () => {
   document.addEventListener('click', event => {
     if (event.target.closest('.partials-header-each-button')) {
-      const clickedButton = event.target.closest('.partials-header-each-button');
+      const page = event.target.closest('.partials-header-each-button').id.replace('partials-header-each-button-', '')
 
-      console.log('heading to:', clickedButton.id.replace('partials-header-each-button-', ''));
+      if (page == 'home') {
+        window.location.href = `/${page}?lang=tr`
+      } else if (page == 'search') {
+        window.location.href = `/${page}?lang=tr`
+      } else if (page == 'new-node') {
+        window.location.href = `/login?lang=tr`
+      } else if (page == 'settings') {
+        window.location.href = `/${page}?lang=tr`
+      };
     };
 
     if (event.target.closest('.partials-header-help-button')) {
@@ -12,6 +20,7 @@ window.addEventListener('load', () => {
 
     if (event.target.closest('.partials-header-resize-button')) {
       document.querySelector('.partials-header-navbar-wrapper').classList.toggle('partials-header-navbar-wrapper-hidden');
+      document.querySelector('.partials-header-resize-button').classList.toggle('partials-header-resize-button-collapsed');
 
       event.target.closest('.partials-header-resize-button').classList.toggle('partials-header-resize-button-reversed');
     };
