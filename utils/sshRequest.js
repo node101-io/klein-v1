@@ -15,7 +15,7 @@ const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
 const END_EXPIRED_CONNECTIONS_EXPIRATION_TIME = 60 * 1000;
 const END_EXPIRED_CONNECTIONS_INTERVAL = 30 * 1000;
 const SSH_CONNECTION_EXPIRATION_TIME = 15 * 60 * 1000;
-const SSH_HANDSHAKE_TIMEOUT = 30 * 1000;
+const SSH_HANDSHAKE_TIMEOUT = 10 * 1000;
 const SSH_KEEP_ALIVE_INTERVAL = 10000;
 const SSH_KEEP_ALIVE_MAX_TRY = 3;
 
@@ -110,7 +110,7 @@ const makeConnections = _ => {
           if (err && err.level == 'client-timeout')
             return ws.send(JSON.stringify({
               id: id,
-              type: 'timed_out'
+              type: 'client_timeout'
             }));
 
           return ws.send(JSON.stringify({
@@ -227,8 +227,14 @@ const sshRequest = (type, data, callback) => {
   const ws = WebSocketServer.get();
 
   if (type == 'connect:password' || type == 'connect:key') {
-    if (connections.getByHost(data.host))
-      return callback('action_already_done');
+    if (connections.getByHost(data.host)) {
+      if (connections.getByHost(data.host).isReady())
+        return callback('already_connected');
+      else {
+        connections.removeByHost(data.host);
+        return sshRequest(type, data, callback);
+      };
+    };
 
     if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
       return callback('bad_request');

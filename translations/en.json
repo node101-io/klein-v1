@@ -38,5 +38,7 @@
 	"index-login-project-each-requirement-title-storage": "index-login-project-each-requirement-title-storage",
 	"index-login-project-each-requirement-title-os": "index-login-project-each-requirement-title-os",
 	"index-login-project-incentivized": "index-login-project-incentivized",
-	"index-search-input-placeholder": "index-search-input-placeholder"
+	"index-search-input-placeholder": "index-search-input-placeholder",
+	"index-login-right-button-install-text": "index-login-right-button-install-text",
+	"index-login-right-button-login-text": "index-login-right-button-login-text"
 }

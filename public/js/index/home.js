@@ -14,11 +14,10 @@ window.addEventListener('load', _ => {
       document.getElementById(`index-home-content-${pageToDisplay == 'mainnet' ? 'testnet' : 'mainnet'}-wrapper`).classList.add('display-none');
     };
 
-    if (event.target.closest('.index-general-each-project-install-button')) {
-      const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
+    // if (event.target.closest('.index-general-each-project-install-button')) {
+    //   const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
 
-      console.log('installing project:', projectIdToInstall);
-      window.location.href = `/login?project_id=${projectIdToInstall}`;
-    };
+    //   window.location.href = `/login?project_id=${projectIdToInstall}&install=true&lang=tr`;
+    // };
   });
 });

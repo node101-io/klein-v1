@@ -1,0 +1,14 @@
+:root {
+
+}
+
+.index-installation-wrapper {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  padding: var(--index-content-padding);
+  background-color: var(--background-box-color);
+  border-radius: var(--index-content-wrapper-curvature);
+  overflow: hidden;
+}

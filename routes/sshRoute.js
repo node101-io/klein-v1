@@ -5,8 +5,7 @@ const router = express.Router();
 const isAuth = require('../middleware/isAuth');
 
 const endConnectionPostController = require('../controllers/ssh/connection/end/post');
-const connectKeyPostController = require('../controllers/ssh/connection/key/post');
-const connectPasswordPostController = require('../controllers/ssh/connection/password/post');
+const startConnectionPostController = require('../controllers/ssh/connection/start/post');
 
 const checkDockerPostController = require('../controllers/ssh/docker/check/post');
 const installDockerPostController = require('../controllers/ssh/docker/install/post');
@@ -62,14 +61,9 @@ router.post(
     endConnectionPostController
 );
 router.post(
-  '/connection/key',
+  '/connection/start',
     isAuth,
-    connectKeyPostController
-);
-router.post(
-  '/connection/password',
-    isAuth,
-    connectPasswordPostController
+    startConnectionPostController
 );
 
 router.post(

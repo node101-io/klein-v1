@@ -208,6 +208,7 @@
   justify-content: center;
   background-color: var(--button-background-color);
   border-radius: var(--index-general-each-project-install-button-curvature);
+  text-decoration: none;
   cursor: pointer;
 }
 .index-general-each-project-install-button-text {

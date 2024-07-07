@@ -63,7 +63,7 @@ const makeServerManager = _ => {
           return callback(null);
         });
 
-        return stream.id;
+        return stream;
       };
 
       return callback('server_listener_already_running');
@@ -87,11 +87,10 @@ const makeServerManager = _ => {
   };
 
   return {
-    connectWithPassword: (data, onData, callback) => {
+    connect: (data, onData, callback) => {
       const stream = makeStream(onData);
 
-      localhostRequest('/ssh/connection/password', 'POST', {
-        host: window.host,
+      localhostRequest('/ssh/connection/start', 'POST', {
         id: stream.id,
         ...data
       }, (err, res) => {
@@ -100,17 +99,8 @@ const makeServerManager = _ => {
 
         return callback(null);
       });
-    },
-    connectWithKey: (data, callback) => {
-      localhostRequest('/ssh/connection/key', 'POST', {
-        host: window.host,
-        ...data
-      }, (err, res) => {
-        if (err)
-          return callback(err);
 
-        return callback(null);
-      });
+      return stream;
     },
     disconnect: callback => {
       localhostRequest('/ssh/connection/end', 'POST', {
@@ -154,7 +144,7 @@ const makeServerManager = _ => {
           return callback(null);
         });
 
-        return stream.id;
+        return stream;
       });
     },
     checkAvailabilityForNodeInstallation: callback => {

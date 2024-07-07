@@ -5,7 +5,7 @@ const DEFAULT_COLOR_THEME = 'light';
 const INCLUDES = {
   css: [
     'general/general',
-    'index/general', 'index/home', 'index/login', 'index/search',
+    'index/general', 'index/home', 'index/login', 'index/search', 'index/install',
     'partials/header'
   ],
   js: [
@@ -23,6 +23,7 @@ module.exports = (req, res, next) => {
   res.locals.project = {
     image: [{}],
     urls: [{}],
+    system_requirements: {}
   };
   res.locals.node = {};
   res.locals.saved_ip_list = [];
