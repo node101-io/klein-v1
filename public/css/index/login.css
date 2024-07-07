@@ -12,7 +12,7 @@
 
   --index-login-right-inner-wrapper-max-width: 400px;
   --index-login-right-each-input-height: 48px;
-  --index-login-right-each-input-icon-height: 6px;
+  --index-login-right-each-input-icon-width: 18px;
   --index-login-right-remember-me-icon-wrapper-size: 15px;
   --index-login-right-remember-me-icon-height: 12px;
   --index-login-right-button-height: 39px;
@@ -280,7 +280,8 @@
   width: 100%;
   min-width: 100%;
   flex-direction: column;
-  border: 1px solid var(--input-title-color);
+  border: 0.5px solid var(--input-title-color);
+  border-radius: 8px;
 }
 
 .index-login-right-each-input-inner-content-wrapper {
@@ -290,6 +291,8 @@
   min-width: 100%;
   align-items: center;
   padding: 0 var(--index-content-inner-padding);
+  padding-right: calc(var(--index-login-right-each-input-icon-width) * 3/4);
+  padding-left: calc(var(--index-login-right-each-input-icon-width) * 3/4);
 }
 .index-login-right-each-input {
   height: var(--index-login-right-each-input-height);
@@ -309,10 +312,10 @@
   color: var(--input-placeholder-color);
 }
 .index-login-right-each-input-icon {
-  height: var(--index-login-right-each-input-icon-height);
-  min-height: var(--index-login-right-each-input-icon-height);
-  width: auto;
-  min-width: auto;
+  width: var(--index-login-right-each-input-icon-width);
+  min-width: var(--index-login-right-each-input-icon-width);
+  height: auto;
+  min-height: auto;
 }
 
 .index-login-right-each-input-inner-list-wrapper {
@@ -374,6 +377,10 @@
   border-radius: 1px;
 }
 .index-login-right-remember-me-icon {
+  height: 80%;
+  min-height: 80%;
+  width: auto;
+  min-width: auto;
   font-weight: 400;
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
@@ -395,7 +402,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--index-content-inner-padding);
+  padding-left: calc(var(--index-login-right-button-icon-height) * 3/4);
+  padding-right: calc(var(--index-login-right-button-icon-height) * 3/4);
   background-color: var(--button-background-color);
+  border-radius: 8px;
 }
 .index-login-right-button-text {
   font-weight: 400;
