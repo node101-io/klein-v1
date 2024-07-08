@@ -37,5 +37,9 @@
 	"node-general-title": "node-general-title",
 	"index-search-input-placeholder": "index-search-input-placeholder",
 	"index-login-right-button-install-text": "Install",
-	"index-login-right-button-login-text": "Login"
+	"index-login-right-button-login-text": "Login",
+	"index-installation-project-image-alt": "index-installation-project-image-alt",
+	"index-installation-warning-text": "index-installation-warning-text",
+	"index-installation-info-title": "index-installation-info-title",
+	"index-installation-info-percentage": "index-installation-info-percentage"
 }

@@ -40,5 +40,9 @@
 	"index-login-project-incentivized": "index-login-project-incentivized",
 	"index-search-input-placeholder": "index-search-input-placeholder",
 	"index-login-right-button-install-text": "index-login-right-button-install-text",
-	"index-login-right-button-login-text": "index-login-right-button-login-text"
+	"index-login-right-button-login-text": "index-login-right-button-login-text",
+	"index-installation-project-image-alt": "index-installation-project-image-alt",
+	"index-installation-warning-text": "index-installation-warning-text",
+	"index-installation-info-title": "index-installation-info-title",
+	"index-installation-info-percentage": "index-installation-info-percentage"
 }

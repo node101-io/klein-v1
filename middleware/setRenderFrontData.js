@@ -10,7 +10,7 @@ const INCLUDES = {
   ],
   js: [
     'index/home', 'index/login', 'index/header', 'index/search',
-    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/jsonify'
+    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/jsonify'
   ]
 };
 

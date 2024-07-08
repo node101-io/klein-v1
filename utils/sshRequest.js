@@ -229,7 +229,7 @@ const sshRequest = (type, data, callback) => {
   if (type == 'connect:password' || type == 'connect:key') {
     if (connections.getByHost(data.host)) {
       if (connections.getByHost(data.host).isReady())
-        return callback('already_connected');
+        return callback(null);
       else {
         connections.removeByHost(data.host);
         return sshRequest(type, data, callback);

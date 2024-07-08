@@ -238,7 +238,7 @@ window.addEventListener('load', _ => {
           return console.log(res);
         });
 
-        return console.log(stream);
+        return stream;
       });
     };
 
