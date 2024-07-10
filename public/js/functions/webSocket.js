@@ -27,4 +27,4 @@ function makeStream(onStreamData) {
   };
 };
 
-window.addEventListener('beforeunload', webSocket.close);
+// window.addEventListener('beforeunload', webSocket.close);

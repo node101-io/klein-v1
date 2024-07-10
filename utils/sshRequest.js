@@ -153,6 +153,7 @@ const makeConnections = _ => {
 
       connections[host] = {
         client: client,
+        id: id,
         markAsSeen: _ => lastSeenAt = Date.now(),
         isExpired: _ => Date.now() - lastSeenAt > SSH_CONNECTION_EXPIRATION_TIME,
         isReady: _ => client._sock && !client._sock.destroyed
@@ -228,9 +229,9 @@ const sshRequest = (type, data, callback) => {
 
   if (type == 'connect:password' || type == 'connect:key') {
     if (connections.getByHost(data.host)) {
-      if (connections.getByHost(data.host).isReady())
-        return callback(null);
-      else {
+      if (connections.getByHost(data.host).isReady()) {
+        return callback('already_connected');
+      } else {
         connections.removeByHost(data.host);
         return sshRequest(type, data, callback);
       };

@@ -37,7 +37,7 @@
   min-height: 100%;
   flex: 1;
   align-items: center;
-  padding-right: calc(var(--index-content-padding) / 2);
+  padding-right: var(--index-content-padding);
 }
 .index-login-left-inner-wrapper {
   height: fit-content;
@@ -82,20 +82,22 @@
   width: var(--index-login-project-image-size);
   min-width: var(--index-login-project-image-size);
   margin-right: var(--index-content-inner-padding);
+  border-radius: calc(var(--index-login-project-image-size) / 10);
 }
 
 .index-login-project-header-content-wrapper {
   height: 100%;
   min-height: 100%;
-  width: fit-content;
-  min-width: fit-content;
+  width: auto;
+  min-width: auto;
   flex-direction: column;
   align-items: stretch;
 }
 .index-login-project-title {
   font-weight: 500;
   font-family: var(--font-family-anek-bangla);
-  font-size: var(--index-font-size-big);
+  font-size: var(--index-font-size-huge);
+  line-height: 1;
   color: var(--text-title-color);
 }
 .index-login-project-description {
@@ -106,7 +108,8 @@
   text-overflow: ellipsis;
   font-weight: 200;
   font-family: var(--font-family-anek-bangla);
-  font-size: var(--index-font-size-medium);
+  font-size: var(--index-font-size-big);
+  line-height: 1.2;
   color: var(--text-title-color);
 }
 .index-login-project-incentivized {
@@ -129,6 +132,7 @@
   min-width: 100%;
   font-weight: 300;
   font-family: var(--font-family-anek-bangla);
+  line-height: 1.3;
   color: var(--text-title-color);
   margin-bottom: var(--index-content-inner-gap);
 }
@@ -159,11 +163,13 @@
   grid-template-columns: 1fr 1fr;
   grid-gap: var(--index-content-inner-padding);
 }
-.index-login-project-each-requirement {
+.index-login-project-each-requirement-wrapper {
+  display: flex;
   height: var(--index-login-project-each-requirement-height);
   min-height: var(--index-login-project-each-requirement-height);
   width: var(--index-login-project-each-requirement-width);
   min-width: var(--index-login-project-each-requirement-width);
+  justify-content: space-between;
   align-items: center;
   padding: var(--index-content-inner-padding);
   background-color: var(--background-highlight-color);
@@ -187,7 +193,7 @@
   font-weight: 400;
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
-  color: var(--text-title-color);
+  color: var(--text-subtitle-color);
   margin-bottom: var(--index-content-inner-gap);
 }
 
@@ -197,13 +203,14 @@
   width: 100%;
   min-width: 100%;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
 }
 .index-login-project-each-rent-server {
   font-weight: 300;
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-description-color);
+  text-decoration: none;
 }
 .index-login-project-each-rent-server-divider {
   height: var(--index-login-project-each-rent-server-divider-height);
@@ -235,6 +242,7 @@
   font-weight: 400;
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-huge);
+  line-height: 1.2;
   color: var(--text-title-color);
   margin-bottom: var(--index-content-inner-gap);
 }
@@ -285,6 +293,7 @@
 }
 
 .index-login-right-each-input-inner-content-wrapper {
+  position: relative;
   height: var(--index-login-right-each-input-height);
   min-height: var(--index-login-right-each-input-height);
   width: 100%;
@@ -316,6 +325,11 @@
   min-width: var(--index-login-right-each-input-icon-width);
   height: auto;
   min-height: auto;
+}
+#index-login-right-each-input-visibility-disabled {
+  position: absolute;
+  top: calc(50% - var(--index-login-right-each-input-icon-width) / 2);
+  right: calc(var(--index-login-right-each-input-icon-width) * 3/4);
 }
 
 .index-login-right-each-input-inner-list-wrapper {
@@ -360,6 +374,7 @@
   min-width: fit-content;
   align-items: center;
   margin-right: auto;
+  margin-bottom: var(--index-content-inner-gap);
   cursor: pointer;
 }
 .index-login-right-remember-me-input {
@@ -406,6 +421,7 @@
   padding-right: calc(var(--index-login-right-button-icon-height) * 3/4);
   background-color: var(--button-background-color);
   border-radius: 8px;
+  cursor: pointer;
 }
 .index-login-right-button-text {
   font-weight: 400;
@@ -419,4 +435,15 @@
   width: auto;
   min-width: auto;
   fill: var(--button-text-color);
+}
+.index-login-right-button-loading-icon {
+  height: calc(2 * var(--index-login-right-button-icon-height));
+  min-height: calc(2 * var(--index-login-right-button-icon-height));
+  width: auto;
+  min-width: auto;
+}
+.index-login-right-button-loading-icon circle {
+  fill: var(--button-text-color);
+  stroke: var(--button-text-color);
+  stroke-width: 15;
 }
