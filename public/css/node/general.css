@@ -1,0 +1,139 @@
+:root {
+  --node-content-padding: 40px;
+  --node-content-inner-gap: 20px;
+  --node-content-inner-padding: 8px;
+
+  --node-font-size-big: 32px;
+  --node-font-size-medium: 15px;
+  --node-font-size-small: 13px;
+  
+  --node-general-navbar-width: 230px;
+  --node-general-navbar-margin-left: 5px;
+  --node-general-navbar-vertical-padding: 30px;
+  --node-general-navbar-horizontal-padding: 15px;
+  --node-general-navbar-curvature: 12px;
+  --node-general-navbar-inner-gap: 15px;
+
+  --node-general-navbar-header-image-size: 72px;
+  --node-general-navbar-header-image-curvature: 10px;
+  
+  --node-general-navbar-each-node-operation-margin-bottom: 5px;
+
+  --node-general-input-height: 48px;
+  --node-general-input-curvature: 1px;
+  --node-general-short-input-max-width: 370px;
+  --node-general-long-input-max-width: 770px;
+
+  --node-general-save-button-height: 39px;
+  --node-general-save-button-width: 190px;
+  --node-general-save-button-horizontal-padding: 25px;
+  --node-general-save-button-curvature: 4px;
+  --node-general-save-button-icon-height: 16px;
+}
+
+.node-wrapper {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  overflow: hidden;
+}
+
+.node-general-navbar-wrapper {
+  height: 100%;
+  min-height: 100%;
+  width: var(--node-general-navbar-width);
+  min-width: var(--node-general-navbar-width);
+  flex-direction: column;
+  margin-left: var(--node-general-navbar-margin-left);
+  padding: var(--node-general-navbar-vertical-padding) var(--node-general-navbar-horizontal-padding);
+  background-color: var(--background-box-color);
+  border-radius: var(--node-general-navbar-curvature);
+}
+
+.node-general-navbar-header-wrapper {
+  height: var(--node-general-navbar-header-image-size);
+  min-height: var(--node-general-navbar-header-image-size);
+  width: 100%;
+  min-width: 100%;
+  margin-bottom: var(--node-general-navbar-inner-gap);
+}
+
+.node-general-navbar-header-image {
+  height: var(--node-general-navbar-header-image-size);
+  min-height: var(--node-general-navbar-header-image-size);
+  width: var(--node-general-navbar-header-image-size);
+  min-width: var(--node-general-navbar-header-image-size);
+  margin-right: var(--node-general-navbar-inner-gap);
+  border-radius: var(--node-general-navbar-header-image-curvature);
+}
+
+.node-general-navbar-header-content-wrapper {
+  height: 100%;
+  min-height: 100%;
+  flex: 1;
+  flex-direction: column;
+}
+.node-general-navbar-header-title {
+  font-weight: 500;
+}
+.node-general-navbar-header-description {
+
+}
+
+.node-general-navbar-content-wrapper {
+
+}
+.node-general-navbar-each-node-operation {
+
+}
+.node-general-navbar-each-node-operation-selected {
+
+}
+
+.node-general-content-wrapper {
+
+}
+
+.node-general-title-wrapper {
+
+}
+.node-general-title {
+
+}
+
+.node-general-each-short-input-wrapper {
+
+}
+.node-general-each-short-input-title {
+
+}
+.node-general-each-short-input {
+
+}
+.node-general-each-short-input-error {
+
+}
+
+.node-general-each-long-input-wrapper {
+
+}
+.node-general-each-long-input-title {
+
+}
+.node-general-each-long-input {
+
+}
+.node-general-each-long-input-error {
+
+}
+
+.node-general-save-button {
+
+}
+.node-general-save-button-text {
+
+}
+.node-general-save-button-icon {
+
+}

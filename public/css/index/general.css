@@ -91,7 +91,6 @@
 }
 .index-general-each-project-name {
   font-weight: 500;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-big);
   line-height: 1.4;
   color: var(--text-title-color);
@@ -148,7 +147,6 @@
   white-space: nowrap;
   overflow: hidden;
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--help-button-text-color);
   font-size: var(--index-font-size-medium);
 }
@@ -156,7 +154,6 @@
   width: fit-content;
   min-width: fit-content;
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--help-button-text-color);
   font-size: var(--index-font-size-medium);
   text-decoration: underline;
@@ -194,7 +191,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--text-description-color);
   font-size: var(--index-font-size-medium);
 }
@@ -213,7 +209,6 @@
 }
 .index-general-each-project-install-button-text {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   color: var(--button-text-color);
   font-size: var(--index-font-size-medium);
 }

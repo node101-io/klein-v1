@@ -38,7 +38,6 @@
   padding-right: var(--index-content-inner-padding);
   padding-left: calc(3 * var(--index-content-inner-padding) + var(--index-search-header-input-icon-height));
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-big);
   color: var(--text-title-color);
   border: none;

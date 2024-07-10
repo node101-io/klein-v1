@@ -32,7 +32,6 @@
   padding-left: calc(2 * var(--index-content-inner-padding));
   margin-right: var(--index-content-inner-gap);
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-description-color);
   border-bottom: 1px solid transparent;

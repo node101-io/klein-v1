@@ -5,7 +5,8 @@ const DEFAULT_COLOR_THEME = 'light';
 const INCLUDES = {
   css: [
     'general/general',
-    'index/general', 'index/home', 'index/login', 'index/search', 'index/install',
+    'index/general', 'index/home', 'index/install', 'index/login', 'index/search',
+    'node/general', 'node/index',
     'partials/header'
   ],
   js: [
@@ -25,8 +26,58 @@ module.exports = (req, res, next) => {
     urls: [{}],
     system_requirements: {}
   };
-  res.locals.node = {};
   res.locals.saved_ip_list = [];
+  res.locals.node = {};
+  res.locals.node_operations_list = [
+    {
+      title: 'Validator List',
+      url: 'list-validators'
+    },
+    {
+      title: 'Edit Validator',
+      url: '/edit-validator'
+    },
+    {
+      title: 'Withdraw Rewards',
+      url: 'withdraw-rewards'
+    },
+    {
+      title: 'Delegate',
+      url: 'delegate'
+    },
+    {
+      title: 'Redelegate',
+      url: 'redelegate'
+    },
+    {
+      title: 'Undelegate',
+      url: 'undelegate'
+    },
+    {
+      title: 'Vote',
+      url: 'vote'
+    },
+    {
+      title: 'Unjail',
+      url: 'unjail'
+    },
+    {
+      title: 'Send Token',
+      url: 'send-token'
+    },
+    {
+      title: 'Wallet',
+      url: 'wallet'
+    },
+    {
+      title: 'Logs',
+      url: 'logs'
+    },
+    {
+      title: 'Node Information',
+      url: 'information'
+    }
+  ];
   res.locals.short_input_list = [];
   res.locals.long_input_list = [];
 
