@@ -32,7 +32,7 @@ module.exports = (req, res, next) => {
       system_requirements: {}
     };
     res.locals.node = {};
-    res.locals.saved_ip_list = saved_servers;
+    res.locals.saved_server_list = saved_servers;
     res.locals.short_input_list = [];
     res.locals.long_input_list = [];
 

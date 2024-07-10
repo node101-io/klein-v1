@@ -134,12 +134,13 @@ function addServerToSavedServersIfNotExists(data, callback) {
 }
 
 window.addEventListener('load', _ => {
+  const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');
   const loginRightPasswordInput = document.getElementById('index-login-right-password-input');
 
   document.addEventListener('click', event => {
     if (event.target.closest('.index-login-right-button-wrapper')) {
-      const ipAddress = document.getElementById('index-login-right-ip-address-input').value;
-      const password = document.getElementById('index-login-right-password-input').value;
+      const ipAddress = loginRightIpAddressInput.value;
+      const password = loginRightPasswordInput.value;
 
       setLoginStyleAsLoading();
 
@@ -255,6 +256,17 @@ window.addEventListener('load', _ => {
       document.getElementById('index-login-right-each-input-visibility-disabled').classList.toggle('display-none');
 
       loginRightPasswordInput.type = loginRightPasswordInput.type == 'password' ? 'text' : 'password';
+    };
+
+    if (event.target.closest('.index-login-right-each-input-inner-list-each-item')) {
+      const value = event.target.closest('.index-login-right-each-input-inner-list-each-item').id.replace('index-login-right-each-input-list-each-item-', '');
+
+      loginRightIpAddressInput.value = value;
+
+      loginRightPasswordInput.focus();
+
+
+      // setTimeout(_ => loginRightPasswordInput.focus(), 100);
     };
   });
 });
