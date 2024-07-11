@@ -39,7 +39,7 @@
 	"index-login-right-button-install-text": "Install",
 	"index-login-right-button-login-text": "Login",
 	"index-installation-project-image-alt": "index-installation-project-image-alt",
-	"index-installation-warning-text": "index-installation-warning-text",
-	"index-installation-info-title": "index-installation-info-title",
-	"index-installation-info-percentage": "index-installation-info-percentage"
+	"index-installation-warning-text": "The installation process might take a while.",
+	"index-installation-info-title": "Installing...",
+	"index-installation-info-percentage": "0%"
 }

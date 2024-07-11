@@ -40,6 +40,7 @@ const notificationRouteController = require('./routes/notificationRoute');
 const preferenceRouteController = require('./routes/preferenceRoute');
 const projectRouteController = require('./routes/projectRoute');
 const sshRouteController = require('./routes/sshRoute');
+const savedServerRouteController = require('./routes/savedServerRoute');
 
 i18n.configure({
   locales: ['en', 'tr'],
@@ -69,8 +70,9 @@ expressApp.use('/notification', notificationRouteController);
 expressApp.use('/preference', preferenceRouteController);
 expressApp.use('/project', projectRouteController);
 expressApp.use('/ssh', sshRouteController);
+expressApp.use('/saved-server', savedServerRouteController);
 expressApp.all('*', (req, res) => {
-  res.redirect('/');
+  return res.redirect('/');
 });
 
 const setupTrayMenu = _ => {

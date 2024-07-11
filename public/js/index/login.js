@@ -3,10 +3,19 @@ function setLoginRightErrorMessage(message) {
 
   loginRightErrorElement.innerText = message;
 
-  if (message)
+  if (message) {
+    document.querySelector('.index-login-right-button-icon').classList.remove('display-none');
+    document.querySelector('.index-login-right-button-loading-icon').classList.add('display-none');
+
     loginRightErrorElement.classList.remove('display-none');
-  else
+  } else {
     loginRightErrorElement.classList.add('display-none');
+  };
+};
+
+function setLoginStyleAsLoading() {
+  document.querySelector('.index-login-right-button-icon').classList.add('display-none');
+  document.querySelector('.index-login-right-button-loading-icon').classList.remove('display-none');
 };
 
 function installNode(callback) {
@@ -62,6 +71,17 @@ function installNode(callback) {
       let completedStepCount = 0;
 
       const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
+      const progressText = document.getElementById('index-installation-info-percentage');
+
+      script.dockerfile_content = `
+ARG GO_VERSION
+FROM golang:$GO_VERSION
+
+WORKDIR /root
+
+EXPOSE 26656 26657 1317 9090
+
+CMD [ "bash" ]`;
 
       const stream = nodeManager.installNode({
         docker_compose_content: script.docker_compose_content,
@@ -73,13 +93,17 @@ function installNode(callback) {
         if (eachBuildLog && eachBuildLog.vertexes && Array.isArray(eachBuildLog.vertexes) && eachBuildLog.vertexes.length > 0 && eachBuildLog.vertexes.find(vertex => vertex.completed)) {
           completedStepCount++;
 
-          for (let i = 0; i < Math.floor(completedStepCount * 100 / script.steps_count); i++)
+          const percentage = Math.floor(completedStepCount * 100 / script.steps_count);
+
+          progressText.innerText = progressText.innerText.startsWith('%') ? `%${percentage}` : `${percentage}%`;
+
+          for (let i = 0; i < percentage; i++)
             progressParts[i].classList.add('index-installation-progress-each-part-colored');
         };
 
         console.log(`Progress: ${Math.floor(completedStepCount * 100 / script.steps_count)}%`, eachBuildLog);
       }, (err, res) => {
-        stream.end();
+        // stream.end();
 
         if (err)
           return callback(err);
@@ -90,11 +114,35 @@ function installNode(callback) {
   });
 };
 
+function addServerToSavedServersIfNotExists(data, callback) {
+  savedServersManager.getByHost(data.host, (err, saved_server) => {
+    if (err && err != 'document_not_found')
+      return callback(err);
+
+    if (err)
+      savedServersManager.save({
+        host: data.host,
+      }, (err, saved_servers) => {
+        if (err)
+          return callback(err);
+
+        return callback(null);
+      });
+    else
+      return callback(null);
+  });
+}
+
 window.addEventListener('load', _ => {
+  const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');
+  const loginRightPasswordInput = document.getElementById('index-login-right-password-input');
+
   document.addEventListener('click', event => {
     if (event.target.closest('.index-login-right-button-wrapper')) {
-      const ipAddress = document.getElementById('index-login-right-ip-address-input').value;
-      const password = document.getElementById('index-login-right-password-input').value;
+      const ipAddress = loginRightIpAddressInput.value;
+      const password = loginRightPasswordInput.value;
+
+      setLoginStyleAsLoading();
 
       const stream = serverManager.connect({
         host: ipAddress,
@@ -105,31 +153,38 @@ window.addEventListener('load', _ => {
         if (data.type == 'ready') {
           window.host = ipAddress.trim();
 
-          setLoginRightErrorMessage('');
+          addServerToSavedServersIfNotExists({
+            host: window.host
+          }, err => {
+            if (err)
+              return setLoginRightErrorMessage(err);
 
-          const queryParams = new URLSearchParams(window.location.search);
+            setLoginRightErrorMessage('');
 
-          serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-            if (queryParams.get('install')) {
-              if (err == 'running_node_instance') {
-                alert('Another node is already running on this server, please remove it first');
-                return window.location.href = '/node?lang=tr';
+            serverManager.checkAvailabilityForNodeInstallation((err, res) => {
+              const queryParams = new URLSearchParams(window.location.search);
+
+              if (queryParams.get('install')) {
+                if (err == 'running_node_instance') {
+                  alert('Another node is already running on this server, please remove it first');
+                  return window.location.href = '/node?lang=tr';
+                };
+
+                installNode((err, res) => {
+                  if (err)
+                    return setLoginRightErrorMessage(err);
+
+                  console.log('Node installed successfully');
+                  window.location.href = '/node?lang=tr';
+                });
+              } else {
+                if (err == 'running_node_instance')
+                  return window.location.href = '/node?lang=tr';
+
+                alert('No node is running on this server, please install one first');
+                return window.location.href = '/home?lang=tr';
               };
-
-              installNode((err, res) => {
-                if (err)
-                  return setLoginRightErrorMessage(err);
-
-                console.log('Node installed successfully');
-                window.location.href = '/node?lang=tr';
-              });
-            } else {
-              if (err == 'running_node_instance')
-                return window.location.href = '/node?lang=tr';
-
-              alert('No node is running on this server, please install one first');
-              return window.location.href = '/home?lang=tr';
-            };
+            });
           });
         };
 
@@ -185,9 +240,9 @@ window.addEventListener('load', _ => {
         };
       }, (err, data) => {
         if (err)
-          return console.error(err);
+          return setLoginRightErrorMessage(err);
 
-        console.log(data);
+        setLoginRightErrorMessage('');
       });
     };
 
@@ -195,6 +250,23 @@ window.addEventListener('load', _ => {
       document.querySelector('.index-login-right-remember-me-icon').classList.toggle('display-none');
 
       console.log(document.querySelector('.index-login-right-remember-me-input').checked);
+    };
+
+    if (event.target.closest('#index-login-right-each-input-visibility-show-button') || event.target.closest('#index-login-right-each-input-visibility-disabled')) {
+      document.getElementById('index-login-right-each-input-visibility-disabled').classList.toggle('display-none');
+
+      loginRightPasswordInput.type = loginRightPasswordInput.type == 'password' ? 'text' : 'password';
+    };
+
+    if (event.target.closest('.index-login-right-each-input-inner-list-each-item')) {
+      const value = event.target.closest('.index-login-right-each-input-inner-list-each-item').id.replace('index-login-right-each-input-list-each-item-', '');
+
+      loginRightIpAddressInput.value = value;
+
+      loginRightPasswordInput.focus();
+
+
+      // setTimeout(_ => loginRightPasswordInput.focus(), 100);
     };
   });
 });

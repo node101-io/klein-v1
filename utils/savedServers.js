@@ -37,19 +37,42 @@ const SavedServers = {
       return callback(null, savedServers);
     });
   },
-  saveServer: (server, callback) => {
+  getAll: callback => {
+    getLocalSavedServers((err, saved_servers) => {
+      if (err) return callback(err);
+
+      return callback(null, saved_servers);
+    });
+  },
+  getByHost: (host, callback) => {
+    if (!host || typeof host != 'string' || !host.trim().length || host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
+      return callback('bad_request');
+
+    getLocalSavedServers((err, saved_servers) => {
+      if (err) return callback(err);
+
+      const server = saved_servers.find(saved_server => saved_server.host == host);
+
+      if (!server)
+        return callback('document_not_found');
+
+      return callback(null, server);
+    });
+  },
+  save: (server, callback) => {
     if (!server || typeof server != 'object')
       return callback('bad_request');
 
     if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
       return callback('bad_request');
 
-    getLocalSavedServers((err, savedServers) => {
+    getLocalSavedServers((err, saved_servers) => {
       if (err) return callback(err);
-      if (savedServers.find(savedServer => savedServer.host == server.host))
-        return callback('duplicated_unique_field');
 
-      savedServers.push({
+      if (saved_servers.find(saved_server => saved_server.host == server.host))
+        saved_servers = saved_servers.filter(saved_server => saved_server.host != server.host);
+
+      saved_servers.push({
         host: server.host,
         username: server.username && typeof server.username == 'string' ? server.username.trim() : DEFAULT_USERNAME,
         preferred_login_type: server.preferred_login_type && typeof server.preferred_login_type == 'string' && LOGIN_TYPES.includes(server.preferred_login_type) ? server.preferred_login_type : LOGIN_TYPES[0],
@@ -61,69 +84,36 @@ const SavedServers = {
         ]
       });
 
-      fs.writeFile(savedServersPath, JSON.stringify(savedServers, null, 2), err => {
+      fs.writeFile(savedServersPath, JSON.stringify(saved_servers, null, 2), err => {
         if (err && err.code != 'ENOENT') return callback('error_writing_file');
         if (err) return callback(err);
 
-        return callback(null, savedServers);
+        return callback(null, saved_servers);
       });
     });
   },
-  editServer: (server, callback) => {
-    if (!server || typeof server != 'object')
+  deleteByHost: (host, callback) => {
+    if (!host || typeof host != 'object')
       return callback('bad_request');
 
-    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
+    if (!host.host || typeof host.host != 'string' || !host.host.trim().length || host.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
       return callback('bad_request');
 
-    getLocalSavedServers((err, savedServers) => {
+    getLocalSavedServers((err, saved_servers) => {
       if (err) return callback(err);
 
-      const serverIndex = savedServers.findIndex(savedServer => savedServer.host == server.host);
+      const serverIndex = saved_servers.findIndex(saved_server => saved_server.host == server.host);
 
       if (serverIndex == -1)
-        return callback('document_not_found');
+        return callback(null, saved_servers);
 
-      savedServers[serverIndex] = {
-        host: server.host,
-        username: server.username && typeof server.username == 'string' ? server.username.trim() : DEFAULT_USERNAME,
-        preferred_login_type: server.preferred_login_type && typeof server.preferred_login_type == 'string' && LOGIN_TYPES.includes(server.preferred_login_type) ? server.preferred_login_type : LOGIN_TYPES[0],
-        installed_projects: {
-          name: server.project && server.project.name && typeof server.project.name == 'string' ? server.project.name.trim() : '',
-          image: server.project && server.project.image && typeof server.project.image == 'string' ? server.project.image.trim() : '',
-        }
-      };
+      saved_servers.splice(serverIndex, 1);
 
-      fs.writeFile(savedServersPath, JSON.stringify(savedServers, null, 2), err => {
+      fs.writeFile(savedServersPath, JSON.stringify(saved_servers, null, 2), err => {
         if (err && err.code != 'ENOENT') return callback('error_writing_file');
         if (err) return callback(err);
 
-        return callback(null, savedServers);
-      });
-    });
-  },
-  deleteServer: (server, callback) => {
-    if (!server || typeof server != 'object')
-      return callback('bad_request');
-
-    if (!server.host || typeof server.host != 'string' || !server.host.trim().length || server.host.trim().length > DEFAULT_MAX_TEXT_FIELD_LENGTH)
-      return callback('bad_request');
-
-    getLocalSavedServers((err, savedServers) => {
-      if (err) return callback(err);
-
-      const serverIndex = savedServers.findIndex(savedServer => savedServer.host == server.host);
-
-      if (serverIndex == -1)
-        return callback('document_not_found');
-
-      savedServers.splice(serverIndex, 1);
-
-      fs.writeFile(savedServersPath, JSON.stringify(savedServers, null, 2), err => {
-        if (err && err.code != 'ENOENT') return callback('error_writing_file');
-        if (err) return callback(err);
-
-        return callback(null, savedServers);
+        return callback(null, saved_servers);
       });
     });
   }
