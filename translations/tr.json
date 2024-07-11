@@ -41,5 +41,21 @@
 	"index-installation-project-image-alt": "index-installation-project-image-alt",
 	"index-installation-warning-text": "The installation process might take a while.",
 	"index-installation-info-title": "Installing...",
-	"index-installation-info-percentage": "0%"
+	"index-installation-info-percentage": "0%",
+	"node-navbar-header-image-alt": "node-navbar-header-image-alt",
+	"node-navbar-header-description-testnet": "node-navbar-header-description-testnet",
+	"node-general-title-list-validators": "node-general-title-list-validators",
+	"node-general-title-create-validator": "node-general-title-create-validator",
+	"node-general-save-button-text": "node-general-save-button-text",
+	"node-general-title-edit-validator": "node-general-title-edit-validator",
+	"node-general-title-withdraw-rewards": "node-general-title-withdraw-rewards",
+	"node-general-title-delegate": "node-general-title-delegate",
+	"node-general-title-redelegate": "node-general-title-redelegate",
+	"node-general-title-undelegate": "node-general-title-undelegate",
+	"node-general-title-vote": "node-general-title-vote",
+	"node-general-title-unjail": "node-general-title-unjail",
+	"node-general-title-send-tokens": "node-general-title-send-tokens",
+	"node-general-title-wallets": "node-general-title-wallets",
+	"node-general-title-logs": "node-general-title-logs",
+	"node-general-title-information": "node-general-title-information"
 }

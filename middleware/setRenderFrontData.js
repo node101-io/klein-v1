@@ -32,7 +32,12 @@ module.exports = (req, res, next) => {
       urls: [{}],
       system_requirements: {}
     };
-    res.locals.node = {};
+    res.locals.node = {
+      name: 'Cosmos Hub',
+      image: [{}],
+      urls: [{}],
+      system_requirements: {}
+    };
     res.locals.saved_server_list = saved_servers;
     res.locals.node_operations_list = [
       {

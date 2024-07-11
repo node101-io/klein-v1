@@ -154,7 +154,6 @@ block main
                     path(d='M1.80506 0.528758C1.54471 0.268409 1.1226 0.268409 0.862254 0.528758C0.601905 0.789108 0.601905 1.21122 0.862254 1.47157L4.86225 5.47157C5.1226 5.73192 5.54471 5.73192 5.80506 5.47157L9.80506 1.47157C10.0654 1.21122 10.0654 0.789108 9.80506 0.528758C9.54471 0.268409 9.1226 0.268409 8.86225 0.528758L5.33366 4.05735L1.80506 0.528758Z')
                 label.index-login-right-each-input-inner-list-wrapper
                   each server in saved_server_list
-                    - console.log(server);
                     .index-login-right-each-input-inner-list-each-item(id=`index-login-right-each-input-list-each-item-${server.host}`)= server.host
                     .index-login-right-each-input-inner-list-each-item(id=`index-login-right-each-input-list-each-item-${server.host}`)= server.host
                     .index-login-right-each-input-inner-list-each-item(id=`index-login-right-each-input-list-each-item-${server.host}`)= server.host
@@ -226,6 +225,7 @@ block main
       .node-general-navbar-header-wrapper
         img.node-general-navbar-header-image(src=node.image[node.image.length - 1].url alt=`${__('node-navbar-header-image-alt')} ${node.name}`)
         .node-general-navbar-header-content-wrapper
+          - console.log(node.name)
           .node-general-navbar-header-title= node.name
           .node-general-navbar-header-description= node.is_mainnet ? __('node-navbar-header-description-mainnet') : __('node-navbar-header-description-testnet')
       .node-general-navbar-content-wrapper

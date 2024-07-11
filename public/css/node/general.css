@@ -3,10 +3,10 @@
   --node-content-inner-gap: 20px;
   --node-content-inner-padding: 8px;
 
-  --node-font-size-big: 32px;
+  --node-font-size-big: 18px;
   --node-font-size-medium: 15px;
   --node-font-size-small: 13px;
-  
+
   --node-general-navbar-width: 230px;
   --node-general-navbar-margin-left: 5px;
   --node-general-navbar-vertical-padding: 30px;
@@ -16,7 +16,7 @@
 
   --node-general-navbar-header-image-size: 72px;
   --node-general-navbar-header-image-curvature: 10px;
-  
+
   --node-general-navbar-each-node-operation-margin-bottom: 5px;
 
   --node-general-input-height: 48px;
@@ -75,10 +75,14 @@
   flex-direction: column;
 }
 .node-general-navbar-header-title {
-  font-weight: 500;
+  font-weight: 400;
+  color: var(--text-color);
+  font-size: var(--node-font-size-big);
 }
 .node-general-navbar-header-description {
-
+  font-weight: 200;
+  color: var(--text-light-color);
+  font-size: var(--node-font-size-mid);
 }
 
 .node-general-navbar-content-wrapper {
