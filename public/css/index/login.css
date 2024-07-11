@@ -96,6 +96,7 @@
 }
 .index-login-project-title {
   font-weight: 500;
+  font-size: var(--index-font-size-big);
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-huge);
   line-height: 1;
@@ -108,6 +109,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 200;
+  font-size: var(--index-font-size-medium);
   font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-big);
   line-height: 1.2;
@@ -121,7 +123,6 @@
   border: 0.5px solid var(--button-background-color);
   border-radius: var(--index-login-project-incentivized-curvature);
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-small);
   color: var(--button-background-color);
 }
@@ -149,7 +150,6 @@
 }
 .index-login-project-requirements-title {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--main-color);
   margin-bottom: var(--index-content-inner-gap);
@@ -178,21 +178,18 @@
 }
 .index-login-project-each-requirement-title {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-title-color);
   margin-right: var(--index-content-inner-padding);
 }
 .index-login-project-each-requirement-text {
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--main-color);
 }
 
 .index-login-project-rent-server-title {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-subtitle-color);
   margin-bottom: var(--index-content-inner-gap);
@@ -208,7 +205,6 @@
 }
 .index-login-project-each-rent-server {
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-description-color);
   text-decoration: none;
@@ -241,7 +237,6 @@
 
 .index-login-right-title {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-huge);
   line-height: 1.2;
   color: var(--text-title-color);
@@ -259,7 +254,6 @@
 
 .index-login-right-each-input-title {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-small);
   color: var(--input-title-color);
   margin-bottom: var(--index-content-inner-padding);
@@ -313,7 +307,6 @@
   padding: 0;
   padding-left: calc(2 * var(--index-content-inner-padding));
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-title-color);
 }
@@ -354,7 +347,6 @@
   align-items: center;
   padding: 0 var(--index-content-inner-padding);;
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   /* background-color: var(--background-box-color-contrast); */
   color: var(--text-title-color);
@@ -370,7 +362,6 @@
   width: 100%;
   min-width: 100%;
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--warning-color);
   margin-bottom: var(--index-content-inner-gap);
@@ -406,14 +397,12 @@
   width: auto;
   min-width: auto;
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--background-box-color);
 }
 
 .index-login-right-remember-me-text {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--text-title-color);
 }
@@ -434,7 +423,6 @@
 }
 .index-login-right-button-text {
   font-weight: 400;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-medium);
   color: var(--button-text-color);
 }

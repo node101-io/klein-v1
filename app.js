@@ -35,10 +35,11 @@ const localServer = http.createServer(expressApp);
 
 const authRouteController = require('./routes/authRoute');
 const indexRouteController = require('./routes/indexRoute');
-const sshRouteController = require('./routes/sshRoute');
+const nodeRouteController = require('./routes/nodeRoute');
 const notificationRouteController = require('./routes/notificationRoute');
 const preferenceRouteController = require('./routes/preferenceRoute');
 const projectRouteController = require('./routes/projectRoute');
+const sshRouteController = require('./routes/sshRoute');
 const savedServerRouteController = require('./routes/savedServerRoute');
 
 i18n.configure({
@@ -64,10 +65,11 @@ expressApp.use(session({
 }));
 expressApp.use('/', indexRouteController);
 expressApp.use('/auth', authRouteController);
-expressApp.use('/ssh', sshRouteController);
+expressApp.use('/node', nodeRouteController);
 expressApp.use('/notification', notificationRouteController);
 expressApp.use('/preference', preferenceRouteController);
 expressApp.use('/project', projectRouteController);
+expressApp.use('/ssh', sshRouteController);
 expressApp.use('/saved-server', savedServerRouteController);
 expressApp.all('*', (req, res) => {
   return res.redirect('/');

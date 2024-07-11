@@ -51,7 +51,6 @@
 }
 .index-installation-project-name {
   font-weight: 700;
-  font-family: var(--font-family-anek-bangla);
   font-size: var(--index-font-size-huge);
   line-height: 1;
   color: var(--text-title-color);
@@ -79,7 +78,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--text-title-color);
   font-size: var(--index-font-size-big);
 }
@@ -99,7 +97,6 @@
 }
 .index-installation-warning-text {
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--text-title-color);
   font-size: var(--index-font-size-big);
 }
@@ -109,7 +106,6 @@
 }
 .index-installation-info-text {
   font-weight: 300;
-  font-family: var(--font-family-anek-bangla);
   color: var(--text-description-color);
   font-size: var(--index-font-size-big);
 }
