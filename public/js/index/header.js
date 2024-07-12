@@ -4,13 +4,13 @@ window.addEventListener('load', () => {
       const page = event.target.closest('.partials-header-each-button').id.replace('partials-header-each-button-', '')
 
       if (page == 'home') {
-        window.location.href = `/${page}?lang=tr`;
+        window.location.href = `/${page}`;
       } else if (page == 'search') {
-        window.location.href = `/${page}?lang=tr`;
+        window.location.href = `/${page}`;
       } else if (page == 'new-node') {
-        window.location.href = '/home?lang=tr';
+        window.location.href = '/home';
       } else if (page == 'settings') {
-        window.location.href = `/${page}?lang=tr`;
+        window.location.href = `/${page}`;
       };
     };
 

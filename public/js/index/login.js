@@ -73,15 +73,15 @@ function installNode(callback) {
       const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
       const progressText = document.getElementById('index-installation-info-percentage');
 
-      script.dockerfile_content = `
-ARG GO_VERSION
-FROM golang:$GO_VERSION
+//       script.dockerfile_content = `
+// ARG GO_VERSION
+// FROM golang:$GO_VERSION
 
-WORKDIR /root
+// WORKDIR /root
 
-EXPOSE 26656 26657 1317 9090
+// EXPOSE 26656 26657 1317 9090
 
-CMD [ "bash" ]`;
+// CMD [ "bash" ]`;
 
       const stream = nodeManager.installNode({
         docker_compose_content: script.docker_compose_content,
@@ -167,7 +167,7 @@ window.addEventListener('load', _ => {
               if (queryParams.get('install')) {
                 if (err == 'running_node_instance') {
                   alert('Another node is already running on this server, please remove it first');
-                  return window.location.href = '/node?lang=tr';
+                  return window.location.href = '/node?host=' + window.host;
                 };
 
                 installNode((err, res) => {
@@ -175,14 +175,14 @@ window.addEventListener('load', _ => {
                     return setLoginRightErrorMessage(err);
 
                   console.log('Node installed successfully');
-                  window.location.href = '/node?lang=tr';
+                  window.location.href = '/node?host=' + window.host;
                 });
               } else {
                 if (err == 'running_node_instance')
-                  return window.location.href = '/node?lang=tr';
+                  return window.location.href = '/node?host=' + window.host;
 
                 alert('No node is running on this server, please install one first');
-                return window.location.href = '/home?lang=tr';
+                return window.location.href = '/home?host=' + window.host;ar
               };
             });
           });

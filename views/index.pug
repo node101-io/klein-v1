@@ -48,7 +48,7 @@ block main
                         path(d='M12.394 11.7999L11.3168 5.28297L12.2032 4.39657L11.4038 3.5972L10.5174 4.48359L4.23676 3.56988L3.0893 4.71734L10.2453 5.72928L9.98853 5.46035L11.204 12.9899L12.394 11.7999Z')
                         rect(x='10.6045' y='5.99512' width='8.7613' height='1.13049' transform='rotate(135 10.6045 5.99512)')
                   .index-general-each-project-description
-              a.index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}` href=`/login?project_id=${project._id}&install=true&lang=tr`)
+              a.index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}` href=`/login?project_id=${project._id}&install=true`)
                 .index-general-each-project-install-button-text= __('index-general-each-project-install-button-text')
       .index-home-content-wrapper#index-home-content-mainnet-wrapper.display-none Soon...
     .index-search-wrapper#index-search-wrapper(class=setFrontDisplayStyle(page, 'index/search'))
@@ -97,7 +97,7 @@ block main
                         path(d='M12.394 11.7999L11.3168 5.28297L12.2032 4.39657L11.4038 3.5972L10.5174 4.48359L4.23676 3.56988L3.0893 4.71734L10.2453 5.72928L9.98853 5.46035L11.204 12.9899L12.394 11.7999Z')
                         rect(x='10.6045' y='5.99512' width='8.7613' height='1.13049' transform='rotate(135 10.6045 5.99512)')
                   .index-general-each-project-description
-              a.index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}` href=`/login?project_id=${project._id}&install=true&lang=tr`)
+              a.index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}` href=`/login?project_id=${project._id}&install=true`)
                 .index-general-each-project-install-button-text= __('index-general-each-project-install-button-text')
       .index-search-content-wrapper#index-search-content-mainnet-wrapper.display-none
     .index-login-wrapper#index-login-wrapper(class=setFrontDisplayStyle(page, 'index/login'))
@@ -152,7 +152,7 @@ block main
                   input.index-login-right-each-input#index-login-right-ip-address-input(type='text' placeholder=__('index-login-right-each-input-placeholder-ip'))
                   svg.index-login-right-each-input-icon(viewBox='-2 -1.5 15 9' xmlns='http://www.w3.org/2000/svg')
                     path(d='M1.80506 0.528758C1.54471 0.268409 1.1226 0.268409 0.862254 0.528758C0.601905 0.789108 0.601905 1.21122 0.862254 1.47157L4.86225 5.47157C5.1226 5.73192 5.54471 5.73192 5.80506 5.47157L9.80506 1.47157C10.0654 1.21122 10.0654 0.789108 9.80506 0.528758C9.54471 0.268409 9.1226 0.268409 8.86225 0.528758L5.33366 4.05735L1.80506 0.528758Z')
-                label.index-login-right-each-input-inner-list-wrapper
+                label.index-login-right-each-input-inner-list-wrapper(tabindex='1')
                   each server in saved_server_list
                     .index-login-right-each-input-inner-list-each-item(id=`index-login-right-each-input-list-each-item-${server.host}`)= server.host
                     .index-login-right-each-input-inner-list-each-item(id=`index-login-right-each-input-list-each-item-${server.host}`)= server.host
@@ -215,7 +215,7 @@ block main
           .index-installation-warning-text= __('index-installation-warning-text')
         .index-installation-info-wrapper
           .index-installation-info-text= __('index-installation-info-title')
-          .index-installation-info-text#index-installation-info-percentage= __('index-installation-info-percentage')
+          .index-installation-info-text#index-installation-info-percentage= __('index-installation-info-percentage', { percentage: 0 })
         .index-installation-progress-wrapper
           - for (let i = 0; i < 100; i++)
             svg.index-installation-progress-each-part(viewBox='0 0 6 8' xmlns='http://www.w3.org/2000/svg')
@@ -223,27 +223,145 @@ block main
   .node-wrapper#node-wrapper(class=setFrontDisplayStyle(page, 'node/*'))
     .node-general-navbar-wrapper
       .node-general-navbar-header-wrapper
-        img.node-general-navbar-header-image(src=node.image[node.image.length - 1].url alt=`${__('node-navbar-header-image-alt')} ${node.name}`)
+        img.node-general-navbar-header-image(src=node.image[node.image.length - 1].url alt=`${__('node-navbar-header-image-alt')} ${node.title}`)
         .node-general-navbar-header-content-wrapper
-          - console.log(node.name)
-          .node-general-navbar-header-title= node.name
+          .node-general-navbar-header-title= node.title
           .node-general-navbar-header-description= node.is_mainnet ? __('node-navbar-header-description-mainnet') : __('node-navbar-header-description-testnet')
       .node-general-navbar-content-wrapper
         each operation in node_operations_list
-          if page == operation.url
+          if page.includes(operation.url)
             .node-general-navbar-each-node-operation.node-general-navbar-each-node-operation-selected= operation.title
           else
-            a.node-general-navbar-each-node-operation(href=`/node/${operation.url}`)= operation.title
+            a.node-general-navbar-each-node-operation(href=`/node${operation.url}`)= operation.title
     .node-general-content-wrapper#node-general-content-wrapper-index(class=setFrontDisplayStyle(page, 'node/index'))
-    .node-general-content-wrapper#node-general-content-wrapper-list-validators(class=setFrontDisplayStyle(page, 'node/list-validators'))
       .node-general-title-wrapper
-        .node-general-title= __('node-general-title-list-validators')
+        .node-general-title= __('node-general-title-index')
+      .node-index-panel-wrapper
+        .node-index-each-panel-wrapper.node-index-sync-status-panel
+          .node-index-each-panel-title= __('node-index-each-panel-title-sync-status')
+          .node-index-each-panel-content#node-index-sync-status-content 950.34k
+        .node-index-each-panel-wrapper.node-index-cpu-panel
+          .node-index-each-panel-title= __('node-index-each-panel-title-cpu')
+          .node-index-each-panel-content#node-index-cpu-content 0%
+          .node-index-each-panel-bar-wrapper
+            .node-index-each-panel-bar#node-index-cpu-bar
+        .node-index-each-panel-wrapper.node-index-memory-panel
+          .node-index-each-panel-title= __('node-index-each-panel-title-memory')
+          .node-index-each-panel-content#node-index-memory-content 0%
+          .node-index-each-panel-bar-wrapper
+            .node-index-each-panel-bar#node-index-memory-bar
+      .node-index-operations-wrapper
+        each operation in ['start', 'stop', 'restart', 'delete']
+          .node-index-each-operation-wrapper(class=(operation == 'delete' ? 'node-index-delete-operation-wrapper' : ''))
+            .node-index-each-operation-title= __('node-index-each-operation-title-' + operation)
+    .node-general-content-wrapper#node-general-content-wrapper-create-wallet(class=setFrontDisplayStyle(page, 'node/create-wallet'))
+      .node-general-title-wrapper
+        .node-general-title= __('node-general-title-create-wallet')
         //- .node-general-title-help-wrapper
         //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
         //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')
         //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
         //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
         //-   .node-general-title-help-text= node.help
+      - for (let i = 0; i < short_input_list.length; i += 2)
+        .node-general-each-input-line-wrapper
+          .node-general-each-short-input-wrapper
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-error.display-none= __('node-general-each-short-input-error')
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
+        .node-general-each-long-input-wrapper
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+          .node-general-each-long-input-error.display-none
+      .node-general-save-button#node-general-save-button-create-wallet
+        .node-general-save-button-text= __('node-general-save-button-text')
+        svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
+          path(d='M9.96875 13.5C10.521 13.5 10.9688 13.0523 10.9688 12.5C10.9688 11.9477 10.521 11.5 9.96875 11.5C9.41646 11.5 8.96875 11.9477 8.96875 12.5C8.96875 13.0523 9.41646 13.5 9.96875 13.5Z')
+          path(d='M9.96875 3.5C10.521 3.5 10.9688 3.05229 10.9688 2.5C10.9688 1.94772 10.521 1.5 9.96875 1.5C9.41646 1.5 8.96875 1.94772 8.96875 2.5C8.96875 3.05229 9.41646 3.5 9.96875 3.5Z')
+          path(d='M1.46875 8.5C2.02103 8.5 2.46875 8.05229 2.46875 7.5C2.46875 6.94772 2.02103 6.5 1.46875 6.5C0.916465 6.5 0.46875 6.94772 0.46875 7.5C0.46875 8.05229 0.916465 8.5 1.46875 8.5Z')
+          path(d='M13.4688 5.5C13.0266 5.50134 12.5973 5.64933 12.2483 5.92077C11.8992 6.19221 11.65 6.57178 11.5398 7H9.3977C9.32691 6.718 9.19496 6.45501 9.01121 6.22968C8.82745 6.00435 8.59639 5.82219 8.33439 5.69611C8.07239 5.57003 7.78587 5.50312 7.49513 5.50011C7.20439 5.4971 6.91655 5.55807 6.652 5.6787L5.06375 3.6936C5.32508 3.35043 5.46728 2.93135 5.46875 2.5C5.46875 2.10444 5.35145 1.71776 5.13169 1.38886C4.91193 1.05996 4.59957 0.803617 4.23412 0.652242C3.86866 0.500867 3.46653 0.46126 3.07857 0.53843C2.69061 0.615601 2.33424 0.806082 2.05454 1.08579C1.77483 1.36549 1.58435 1.72186 1.50718 2.10982C1.43001 2.49778 1.46962 2.89992 1.62099 3.26537C1.77237 3.63082 2.02871 3.94318 2.35761 4.16294C2.68651 4.3827 3.07319 4.5 3.46875 4.5C3.75067 4.49927 4.02918 4.43834 4.28565 4.3213L5.87365 6.3063C5.6111 6.64881 5.4688 7.06834 5.4688 7.4999C5.4688 7.93147 5.6111 8.35099 5.87365 8.6935L4.28575 10.6785C4.02923 10.5615 3.75069 10.5007 3.46875 10.5C3.07319 10.5 2.68651 10.6173 2.35761 10.8371C2.02871 11.0568 1.77237 11.3692 1.62099 11.7346C1.46962 12.1001 1.43001 12.5022 1.50718 12.8902C1.58435 13.2781 1.77483 13.6345 2.05454 13.9142C2.33424 14.1939 2.69061 14.3844 3.07857 14.4616C3.46653 14.5387 3.86866 14.4991 4.23412 14.3478C4.59957 14.1964 4.91193 13.94 5.13169 13.6111C5.35145 13.2822 5.46875 12.8956 5.46875 12.5C5.46729 12.0687 5.32509 11.6496 5.06375 11.3064L6.65165 9.3214C6.91623 9.44207 7.20411 9.50306 7.49489 9.50007C7.78567 9.49707 8.07223 9.43016 8.33426 9.30406C8.5963 9.17797 8.82739 8.99579 9.01117 8.77043C9.19495 8.54507 9.32691 8.28205 9.3977 8H11.5398C11.6339 8.36135 11.8275 8.68907 12.0985 8.94593C12.3695 9.2028 12.7072 9.37851 13.073 9.45313C13.4389 9.52774 13.8184 9.49827 14.1684 9.36805C14.5183 9.23782 14.8248 9.01208 15.0529 8.71644C15.281 8.4208 15.4216 8.06713 15.4588 7.69557C15.496 7.32402 15.4282 6.94949 15.2633 6.6145C15.0983 6.27952 14.8427 5.99751 14.5255 5.8005C14.2083 5.6035 13.8422 5.49939 13.4688 5.5ZM2.46875 2.5C2.46875 2.30222 2.5274 2.10888 2.63728 1.94443C2.74716 1.77998 2.90334 1.65181 3.08607 1.57612C3.26879 1.50043 3.46986 1.48063 3.66384 1.51922C3.85782 1.5578 4.036 1.65304 4.17586 1.79289C4.31571 1.93275 4.41095 2.11093 4.44954 2.30491C4.48812 2.49889 4.46832 2.69996 4.39263 2.88268C4.31694 3.06541 4.18877 3.22159 4.02432 3.33147C3.85987 3.44135 3.66653 3.5 3.46875 3.5C3.20363 3.4997 2.94945 3.39424 2.76198 3.20677C2.57451 3.0193 2.46905 2.76512 2.46875 2.5ZM3.46875 13.5C3.27097 13.5 3.07763 13.4414 2.91318 13.3315C2.74873 13.2216 2.62056 13.0654 2.54487 12.8827C2.46918 12.7 2.44938 12.4989 2.48796 12.3049C2.52655 12.1109 2.62179 11.9327 2.76164 11.7929C2.9015 11.653 3.07968 11.5578 3.27366 11.5192C3.46764 11.4806 3.66871 11.5004 3.85143 11.5761C4.03416 11.6518 4.19034 11.78 4.30022 11.9444C4.4101 12.1089 4.46875 12.3022 4.46875 12.5C4.46845 12.7651 4.36299 13.0193 4.17552 13.2068C3.98805 13.3942 3.73387 13.4997 3.46875 13.5ZM7.46875 8.5C7.27097 8.5 7.07763 8.44135 6.91318 8.33147C6.74873 8.22159 6.62056 8.06541 6.54487 7.88268C6.46918 7.69996 6.44938 7.49889 6.48796 7.30491C6.52655 7.11093 6.62179 6.93275 6.76164 6.79289C6.9015 6.65304 7.07968 6.5578 7.27366 6.51922C7.46764 6.48063 7.66871 6.50043 7.85143 6.57612C8.03416 6.65181 8.19034 6.77998 8.30022 6.94443C8.4101 7.10888 8.46875 7.30222 8.46875 7.5C8.46845 7.76512 8.36299 8.0193 8.17552 8.20677C7.98805 8.39424 7.73387 8.4997 7.46875 8.5ZM13.4688 8.5C13.271 8.5 13.0776 8.44135 12.9132 8.33147C12.7487 8.22159 12.6206 8.06541 12.5449 7.88268C12.4692 7.69996 12.4494 7.49889 12.488 7.30491C12.5266 7.11093 12.6218 6.93275 12.7616 6.79289C12.9015 6.65304 13.0797 6.5578 13.2737 6.51922C13.4676 6.48063 13.6687 6.50043 13.8514 6.57612C14.0342 6.65181 14.1903 6.77998 14.3002 6.94443C14.4101 7.10888 14.4688 7.30222 14.4688 7.5C14.4684 7.76512 14.363 8.0193 14.1755 8.20677C13.9881 8.39424 13.7339 8.4997 13.4688 8.5Z')
+      //- .node-wallets-mnemonic-input-wrapper
+      //-   - for (let i = 0; i < 24; i++)
+      //-     .node-wallets-mnemonic-input-each-wrapper
+      //-       .node-wallets-mnemonic-input-each-title= __('node-wallets-mnemonic-input-each-title', { number: i + 1 })
+      //-       input.node-wallets-mnemonic-input-each(id=`node-wallets-mnemonic-input-each-${i + 1}`)
+      //-       .node-wallets-mnemonic-input-each-error.display-none
+    .node-general-content-wrapper#node-general-content-wrapper-wallets(class=setFrontDisplayStyle(page, 'node/wallets'))
+      .node-general-title-wrapper
+        .node-general-title= __('node-general-title-wallets')
+        //- .node-general-title-help-wrapper
+        //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
+        //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')
+        //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
+        //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
+        //-   .node-general-title-help-text= node.help
+      - for (let i = 0; i < short_input_list.length; i += 2)
+        .node-general-each-input-line-wrapper
+          .node-general-each-short-input-wrapper
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-error.display-none
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
+        .node-general-each-long-input-wrapper
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+          .node-general-each-long-input-error.display-none
+      .node-general-save-button#node-general-save-button-wallets
+        .node-general-save-button-text= __('node-general-save-button-text')
+        svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
+          path(d='M9.96875 13.5C10.521 13.5 10.9688 13.0523 10.9688 12.5C10.9688 11.9477 10.521 11.5 9.96875 11.5C9.41646 11.5 8.96875 11.9477 8.96875 12.5C8.96875 13.0523 9.41646 13.5 9.96875 13.5Z')
+          path(d='M9.96875 3.5C10.521 3.5 10.9688 3.05229 10.9688 2.5C10.9688 1.94772 10.521 1.5 9.96875 1.5C9.41646 1.5 8.96875 1.94772 8.96875 2.5C8.96875 3.05229 9.41646 3.5 9.96875 3.5Z')
+          path(d='M1.46875 8.5C2.02103 8.5 2.46875 8.05229 2.46875 7.5C2.46875 6.94772 2.02103 6.5 1.46875 6.5C0.916465 6.5 0.46875 6.94772 0.46875 7.5C0.46875 8.05229 0.916465 8.5 1.46875 8.5Z')
+          path(d='M13.4688 5.5C13.0266 5.50134 12.5973 5.64933 12.2483 5.92077C11.8992 6.19221 11.65 6.57178 11.5398 7H9.3977C9.32691 6.718 9.19496 6.45501 9.01121 6.22968C8.82745 6.00435 8.59639 5.82219 8.33439 5.69611C8.07239 5.57003 7.78587 5.50312 7.49513 5.50011C7.20439 5.4971 6.91655 5.55807 6.652 5.6787L5.06375 3.6936C5.32508 3.35043 5.46728 2.93135 5.46875 2.5C5.46875 2.10444 5.35145 1.71776 5.13169 1.38886C4.91193 1.05996 4.59957 0.803617 4.23412 0.652242C3.86866 0.500867 3.46653 0.46126 3.07857 0.53843C2.69061 0.615601 2.33424 0.806082 2.05454 1.08579C1.77483 1.36549 1.58435 1.72186 1.50718 2.10982C1.43001 2.49778 1.46962 2.89992 1.62099 3.26537C1.77237 3.63082 2.02871 3.94318 2.35761 4.16294C2.68651 4.3827 3.07319 4.5 3.46875 4.5C3.75067 4.49927 4.02918 4.43834 4.28565 4.3213L5.87365 6.3063C5.6111 6.64881 5.4688 7.06834 5.4688 7.4999C5.4688 7.93147 5.6111 8.35099 5.87365 8.6935L4.28575 10.6785C4.02923 10.5615 3.75069 10.5007 3.46875 10.5C3.07319 10.5 2.68651 10.6173 2.35761 10.8371C2.02871 11.0568 1.77237 11.3692 1.62099 11.7346C1.46962 12.1001 1.43001 12.5022 1.50718 12.8902C1.58435 13.2781 1.77483 13.6345 2.05454 13.9142C2.33424 14.1939 2.69061 14.3844 3.07857 14.4616C3.46653 14.5387 3.86866 14.4991 4.23412 14.3478C4.59957 14.1964 4.91193 13.94 5.13169 13.6111C5.35145 13.2822 5.46875 12.8956 5.46875 12.5C5.46729 12.0687 5.32509 11.6496 5.06375 11.3064L6.65165 9.3214C6.91623 9.44207 7.20411 9.50306 7.49489 9.50007C7.78567 9.49707 8.07223 9.43016 8.33426 9.30406C8.5963 9.17797 8.82739 8.99579 9.01117 8.77043C9.19495 8.54507 9.32691 8.28205 9.3977 8H11.5398C11.6339 8.36135 11.8275 8.68907 12.0985 8.94593C12.3695 9.2028 12.7072 9.37851 13.073 9.45313C13.4389 9.52774 13.8184 9.49827 14.1684 9.36805C14.5183 9.23782 14.8248 9.01208 15.0529 8.71644C15.281 8.4208 15.4216 8.06713 15.4588 7.69557C15.496 7.32402 15.4282 6.94949 15.2633 6.6145C15.0983 6.27952 14.8427 5.99751 14.5255 5.8005C14.2083 5.6035 13.8422 5.49939 13.4688 5.5ZM2.46875 2.5C2.46875 2.30222 2.5274 2.10888 2.63728 1.94443C2.74716 1.77998 2.90334 1.65181 3.08607 1.57612C3.26879 1.50043 3.46986 1.48063 3.66384 1.51922C3.85782 1.5578 4.036 1.65304 4.17586 1.79289C4.31571 1.93275 4.41095 2.11093 4.44954 2.30491C4.48812 2.49889 4.46832 2.69996 4.39263 2.88268C4.31694 3.06541 4.18877 3.22159 4.02432 3.33147C3.85987 3.44135 3.66653 3.5 3.46875 3.5C3.20363 3.4997 2.94945 3.39424 2.76198 3.20677C2.57451 3.0193 2.46905 2.76512 2.46875 2.5ZM3.46875 13.5C3.27097 13.5 3.07763 13.4414 2.91318 13.3315C2.74873 13.2216 2.62056 13.0654 2.54487 12.8827C2.46918 12.7 2.44938 12.4989 2.48796 12.3049C2.52655 12.1109 2.62179 11.9327 2.76164 11.7929C2.9015 11.653 3.07968 11.5578 3.27366 11.5192C3.46764 11.4806 3.66871 11.5004 3.85143 11.5761C4.03416 11.6518 4.19034 11.78 4.30022 11.9444C4.4101 12.1089 4.46875 12.3022 4.46875 12.5C4.46845 12.7651 4.36299 13.0193 4.17552 13.2068C3.98805 13.3942 3.73387 13.4997 3.46875 13.5ZM7.46875 8.5C7.27097 8.5 7.07763 8.44135 6.91318 8.33147C6.74873 8.22159 6.62056 8.06541 6.54487 7.88268C6.46918 7.69996 6.44938 7.49889 6.48796 7.30491C6.52655 7.11093 6.62179 6.93275 6.76164 6.79289C6.9015 6.65304 7.07968 6.5578 7.27366 6.51922C7.46764 6.48063 7.66871 6.50043 7.85143 6.57612C8.03416 6.65181 8.19034 6.77998 8.30022 6.94443C8.4101 7.10888 8.46875 7.30222 8.46875 7.5C8.46845 7.76512 8.36299 8.0193 8.17552 8.20677C7.98805 8.39424 7.73387 8.4997 7.46875 8.5ZM13.4688 8.5C13.271 8.5 13.0776 8.44135 12.9132 8.33147C12.7487 8.22159 12.6206 8.06541 12.5449 7.88268C12.4692 7.69996 12.4494 7.49889 12.488 7.30491C12.5266 7.11093 12.6218 6.93275 12.7616 6.79289C12.9015 6.65304 13.0797 6.5578 13.2737 6.51922C13.4676 6.48063 13.6687 6.50043 13.8514 6.57612C14.0342 6.65181 14.1903 6.77998 14.3002 6.94443C14.4101 7.10888 14.4688 7.30222 14.4688 7.5C14.4684 7.76512 14.363 8.0193 14.1755 8.20677C13.9881 8.39424 13.7339 8.4997 13.4688 8.5Z')
+    .node-general-content-wrapper#node-general-content-wrapper-recover-wallet(class=setFrontDisplayStyle(page, 'node/recover-wallet'))
+      .node-general-title-wrapper
+        .node-general-title= __('node-general-title-recover-wallet')
+        //- .node-general-title-help-wrapper
+        //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
+        //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')
+        //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
+        //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
+        //-   .node-general-title-help-text= node.help
+      - for (let i = 0; i < short_input_list.length; i += 2)
+        .node-general-each-input-line-wrapper
+          .node-general-each-short-input-wrapper
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-error.display-none
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
+        .node-general-each-long-input-wrapper
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+          .node-general-each-long-input-error.display-none
+      .node-general-save-button#node-general-save-button-recover-wallet
+        .node-general-save-button-text= __('node-general-save-button-text')
+        svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
+          path(d='M9.96875 13.5C10.521 13.5 10.9688 13.0523 10.9688 12.5C10.9688 11.9477 10.521 11.5 9.96875 11.5C9.41646 11.5 8.96875 11.9477 8.96875 12.5C8.96875 13.0523 9.41646 13.5 9.96875 13.5Z')
+          path(d='M9.96875 3.5C10.521 3.5 10.9688 3.05229 10.9688 2.5C10.9688 1.94772 10.521 1.5 9.96875 1.5C9.41646 1.5 8.96875 1.94772 8.96875 2.5C8.96875 3.05229 9.41646 3.5 9.96875 3.5Z')
+          path(d='M1.46875 8.5C2.02103 8.5 2.46875 8.05229 2.46875 7.5C2.46875 6.94772 2.02103 6.5 1.46875 6.5C0.916465 6.5 0.46875 6.94772 0.46875 7.5C0.46875 8.05229 0.916465 8.5 1.46875 8.5Z')
+          path(d='M13.4688 5.5C13.0266 5.50134 12.5973 5.64933 12.2483 5.92077C11.8992 6.19221 11.65 6.57178 11.5398 7H9.3977C9.32691 6.718 9.19496 6.45501 9.01121 6.22968C8.82745 6.00435 8.59639 5.82219 8.33439 5.69611C8.07239 5.57003 7.78587 5.50312 7.49513 5.50011C7.20439 5.4971 6.91655 5.55807 6.652 5.6787L5.06375 3.6936C5.32508 3.35043 5.46728 2.93135 5.46875 2.5C5.46875 2.10444 5.35145 1.71776 5.13169 1.38886C4.91193 1.05996 4.59957 0.803617 4.23412 0.652242C3.86866 0.500867 3.46653 0.46126 3.07857 0.53843C2.69061 0.615601 2.33424 0.806082 2.05454 1.08579C1.77483 1.36549 1.58435 1.72186 1.50718 2.10982C1.43001 2.49778 1.46962 2.89992 1.62099 3.26537C1.77237 3.63082 2.02871 3.94318 2.35761 4.16294C2.68651 4.3827 3.07319 4.5 3.46875 4.5C3.75067 4.49927 4.02918 4.43834 4.28565 4.3213L5.87365 6.3063C5.6111 6.64881 5.4688 7.06834 5.4688 7.4999C5.4688 7.93147 5.6111 8.35099 5.87365 8.6935L4.28575 10.6785C4.02923 10.5615 3.75069 10.5007 3.46875 10.5C3.07319 10.5 2.68651 10.6173 2.35761 10.8371C2.02871 11.0568 1.77237 11.3692 1.62099 11.7346C1.46962 12.1001 1.43001 12.5022 1.50718 12.8902C1.58435 13.2781 1.77483 13.6345 2.05454 13.9142C2.33424 14.1939 2.69061 14.3844 3.07857 14.4616C3.46653 14.5387 3.86866 14.4991 4.23412 14.3478C4.59957 14.1964 4.91193 13.94 5.13169 13.6111C5.35145 13.2822 5.46875 12.8956 5.46875 12.5C5.46729 12.0687 5.32509 11.6496 5.06375 11.3064L6.65165 9.3214C6.91623 9.44207 7.20411 9.50306 7.49489 9.50007C7.78567 9.49707 8.07223 9.43016 8.33426 9.30406C8.5963 9.17797 8.82739 8.99579 9.01117 8.77043C9.19495 8.54507 9.32691 8.28205 9.3977 8H11.5398C11.6339 8.36135 11.8275 8.68907 12.0985 8.94593C12.3695 9.2028 12.7072 9.37851 13.073 9.45313C13.4389 9.52774 13.8184 9.49827 14.1684 9.36805C14.5183 9.23782 14.8248 9.01208 15.0529 8.71644C15.281 8.4208 15.4216 8.06713 15.4588 7.69557C15.496 7.32402 15.4282 6.94949 15.2633 6.6145C15.0983 6.27952 14.8427 5.99751 14.5255 5.8005C14.2083 5.6035 13.8422 5.49939 13.4688 5.5ZM2.46875 2.5C2.46875 2.30222 2.5274 2.10888 2.63728 1.94443C2.74716 1.77998 2.90334 1.65181 3.08607 1.57612C3.26879 1.50043 3.46986 1.48063 3.66384 1.51922C3.85782 1.5578 4.036 1.65304 4.17586 1.79289C4.31571 1.93275 4.41095 2.11093 4.44954 2.30491C4.48812 2.49889 4.46832 2.69996 4.39263 2.88268C4.31694 3.06541 4.18877 3.22159 4.02432 3.33147C3.85987 3.44135 3.66653 3.5 3.46875 3.5C3.20363 3.4997 2.94945 3.39424 2.76198 3.20677C2.57451 3.0193 2.46905 2.76512 2.46875 2.5ZM3.46875 13.5C3.27097 13.5 3.07763 13.4414 2.91318 13.3315C2.74873 13.2216 2.62056 13.0654 2.54487 12.8827C2.46918 12.7 2.44938 12.4989 2.48796 12.3049C2.52655 12.1109 2.62179 11.9327 2.76164 11.7929C2.9015 11.653 3.07968 11.5578 3.27366 11.5192C3.46764 11.4806 3.66871 11.5004 3.85143 11.5761C4.03416 11.6518 4.19034 11.78 4.30022 11.9444C4.4101 12.1089 4.46875 12.3022 4.46875 12.5C4.46845 12.7651 4.36299 13.0193 4.17552 13.2068C3.98805 13.3942 3.73387 13.4997 3.46875 13.5ZM7.46875 8.5C7.27097 8.5 7.07763 8.44135 6.91318 8.33147C6.74873 8.22159 6.62056 8.06541 6.54487 7.88268C6.46918 7.69996 6.44938 7.49889 6.48796 7.30491C6.52655 7.11093 6.62179 6.93275 6.76164 6.79289C6.9015 6.65304 7.07968 6.5578 7.27366 6.51922C7.46764 6.48063 7.66871 6.50043 7.85143 6.57612C8.03416 6.65181 8.19034 6.77998 8.30022 6.94443C8.4101 7.10888 8.46875 7.30222 8.46875 7.5C8.46845 7.76512 8.36299 8.0193 8.17552 8.20677C7.98805 8.39424 7.73387 8.4997 7.46875 8.5ZM13.4688 8.5C13.271 8.5 13.0776 8.44135 12.9132 8.33147C12.7487 8.22159 12.6206 8.06541 12.5449 7.88268C12.4692 7.69996 12.4494 7.49889 12.488 7.30491C12.5266 7.11093 12.6218 6.93275 12.7616 6.79289C12.9015 6.65304 13.0797 6.5578 13.2737 6.51922C13.4676 6.48063 13.6687 6.50043 13.8514 6.57612C14.0342 6.65181 14.1903 6.77998 14.3002 6.94443C14.4101 7.10888 14.4688 7.30222 14.4688 7.5C14.4684 7.76512 14.363 8.0193 14.1755 8.20677C13.9881 8.39424 13.7339 8.4997 13.4688 8.5Z')
+      //- .node-wallets-mnemonic-input-wrapper
+      //-   - for (let i = 0; i < 24; i++)
+      //-     .node-wallets-mnemonic-input-each-wrapper
+      //-       .node-wallets-mnemonic-input-each-title= __('node-wallets-mnemonic-input-each-title', { number: i + 1 })
+      //-       input.node-wallets-mnemonic-input-each(id=`node-wallets-mnemonic-input-each-${i + 1}`)
+      //-       .node-wallets-mnemonic-input-each-error.display-none
     .node-general-content-wrapper#node-general-content-wrapper-create-validator(class=setFrontDisplayStyle(page, 'node/create-validator'))
       .node-general-title-wrapper
         .node-general-title= __('node-general-title-create-validator')
@@ -256,13 +374,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-create-validator
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -283,13 +406,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-edit-validator
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -310,13 +438,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-withdraw-rewards
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -337,13 +470,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-delegate
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -364,13 +502,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-redelegate
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -388,17 +531,22 @@ block main
         //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
         //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
         //-   .node-general-title-help-text= node.help
-        - for (let i = 0; i < short_input_list.length; i += 2)
-          .node-general-each-input-line-wrapper
+      - for (let i = 0; i < short_input_list.length; i += 2)
+        .node-general-each-input-line-wrapper
+          .node-general-each-short-input-wrapper
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-error.display-none
+          if short_input_list[i + 1]
             .node-general-each-short-input-wrapper
-              .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-              input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
               .node-general-each-short-input-error.display-none
-        each input in long_input_list
-          .node-general-each-long-input-wrapper
-            .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-            input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
-            .node-general-each-long-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
+        .node-general-each-long-input-wrapper
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
+          .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-undelegate
         .node-general-save-button-text= __('node-general-save-button-text')
         svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
@@ -418,13 +566,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-vote
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -445,13 +598,18 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-unjail
         .node-general-save-button-text= __('node-general-save-button-text')
@@ -472,42 +630,20 @@ block main
       - for (let i = 0; i < short_input_list.length; i += 2)
         .node-general-each-input-line-wrapper
           .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
+            .node-general-each-short-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+            input.node-general-each-short-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
             .node-general-each-short-input-error.display-none
-      each input in long_input_list
+          if short_input_list[i + 1]
+            .node-general-each-short-input-wrapper
+              .node-general-each-short-input-title(class=(short_input_list[i + 1] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i + 1].title
+              input.node-general-each-short-input(id=short_input_list[i + 1].id type=short_input_list[i + 1].type placeholder=short_input_list[i + 1].placeholder)
+              .node-general-each-short-input-error.display-none
+      - for (let i = 0; i < long_input_list.length; i++)
         .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
+          .node-general-each-long-input-title(class=(short_input_list[i] ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
+          input.node-general-each-long-input(id=short_input_list[i].id type=short_input_list[i].type placeholder=short_input_list[i].placeholder)
           .node-general-each-long-input-error.display-none
       .node-general-save-button#node-general-save-button-send-tokens
-        .node-general-save-button-text= __('node-general-save-button-text')
-        svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
-          path(d='M9.96875 13.5C10.521 13.5 10.9688 13.0523 10.9688 12.5C10.9688 11.9477 10.521 11.5 9.96875 11.5C9.41646 11.5 8.96875 11.9477 8.96875 12.5C8.96875 13.0523 9.41646 13.5 9.96875 13.5Z')
-          path(d='M9.96875 3.5C10.521 3.5 10.9688 3.05229 10.9688 2.5C10.9688 1.94772 10.521 1.5 9.96875 1.5C9.41646 1.5 8.96875 1.94772 8.96875 2.5C8.96875 3.05229 9.41646 3.5 9.96875 3.5Z')
-          path(d='M1.46875 8.5C2.02103 8.5 2.46875 8.05229 2.46875 7.5C2.46875 6.94772 2.02103 6.5 1.46875 6.5C0.916465 6.5 0.46875 6.94772 0.46875 7.5C0.46875 8.05229 0.916465 8.5 1.46875 8.5Z')
-          path(d='M13.4688 5.5C13.0266 5.50134 12.5973 5.64933 12.2483 5.92077C11.8992 6.19221 11.65 6.57178 11.5398 7H9.3977C9.32691 6.718 9.19496 6.45501 9.01121 6.22968C8.82745 6.00435 8.59639 5.82219 8.33439 5.69611C8.07239 5.57003 7.78587 5.50312 7.49513 5.50011C7.20439 5.4971 6.91655 5.55807 6.652 5.6787L5.06375 3.6936C5.32508 3.35043 5.46728 2.93135 5.46875 2.5C5.46875 2.10444 5.35145 1.71776 5.13169 1.38886C4.91193 1.05996 4.59957 0.803617 4.23412 0.652242C3.86866 0.500867 3.46653 0.46126 3.07857 0.53843C2.69061 0.615601 2.33424 0.806082 2.05454 1.08579C1.77483 1.36549 1.58435 1.72186 1.50718 2.10982C1.43001 2.49778 1.46962 2.89992 1.62099 3.26537C1.77237 3.63082 2.02871 3.94318 2.35761 4.16294C2.68651 4.3827 3.07319 4.5 3.46875 4.5C3.75067 4.49927 4.02918 4.43834 4.28565 4.3213L5.87365 6.3063C5.6111 6.64881 5.4688 7.06834 5.4688 7.4999C5.4688 7.93147 5.6111 8.35099 5.87365 8.6935L4.28575 10.6785C4.02923 10.5615 3.75069 10.5007 3.46875 10.5C3.07319 10.5 2.68651 10.6173 2.35761 10.8371C2.02871 11.0568 1.77237 11.3692 1.62099 11.7346C1.46962 12.1001 1.43001 12.5022 1.50718 12.8902C1.58435 13.2781 1.77483 13.6345 2.05454 13.9142C2.33424 14.1939 2.69061 14.3844 3.07857 14.4616C3.46653 14.5387 3.86866 14.4991 4.23412 14.3478C4.59957 14.1964 4.91193 13.94 5.13169 13.6111C5.35145 13.2822 5.46875 12.8956 5.46875 12.5C5.46729 12.0687 5.32509 11.6496 5.06375 11.3064L6.65165 9.3214C6.91623 9.44207 7.20411 9.50306 7.49489 9.50007C7.78567 9.49707 8.07223 9.43016 8.33426 9.30406C8.5963 9.17797 8.82739 8.99579 9.01117 8.77043C9.19495 8.54507 9.32691 8.28205 9.3977 8H11.5398C11.6339 8.36135 11.8275 8.68907 12.0985 8.94593C12.3695 9.2028 12.7072 9.37851 13.073 9.45313C13.4389 9.52774 13.8184 9.49827 14.1684 9.36805C14.5183 9.23782 14.8248 9.01208 15.0529 8.71644C15.281 8.4208 15.4216 8.06713 15.4588 7.69557C15.496 7.32402 15.4282 6.94949 15.2633 6.6145C15.0983 6.27952 14.8427 5.99751 14.5255 5.8005C14.2083 5.6035 13.8422 5.49939 13.4688 5.5ZM2.46875 2.5C2.46875 2.30222 2.5274 2.10888 2.63728 1.94443C2.74716 1.77998 2.90334 1.65181 3.08607 1.57612C3.26879 1.50043 3.46986 1.48063 3.66384 1.51922C3.85782 1.5578 4.036 1.65304 4.17586 1.79289C4.31571 1.93275 4.41095 2.11093 4.44954 2.30491C4.48812 2.49889 4.46832 2.69996 4.39263 2.88268C4.31694 3.06541 4.18877 3.22159 4.02432 3.33147C3.85987 3.44135 3.66653 3.5 3.46875 3.5C3.20363 3.4997 2.94945 3.39424 2.76198 3.20677C2.57451 3.0193 2.46905 2.76512 2.46875 2.5ZM3.46875 13.5C3.27097 13.5 3.07763 13.4414 2.91318 13.3315C2.74873 13.2216 2.62056 13.0654 2.54487 12.8827C2.46918 12.7 2.44938 12.4989 2.48796 12.3049C2.52655 12.1109 2.62179 11.9327 2.76164 11.7929C2.9015 11.653 3.07968 11.5578 3.27366 11.5192C3.46764 11.4806 3.66871 11.5004 3.85143 11.5761C4.03416 11.6518 4.19034 11.78 4.30022 11.9444C4.4101 12.1089 4.46875 12.3022 4.46875 12.5C4.46845 12.7651 4.36299 13.0193 4.17552 13.2068C3.98805 13.3942 3.73387 13.4997 3.46875 13.5ZM7.46875 8.5C7.27097 8.5 7.07763 8.44135 6.91318 8.33147C6.74873 8.22159 6.62056 8.06541 6.54487 7.88268C6.46918 7.69996 6.44938 7.49889 6.48796 7.30491C6.52655 7.11093 6.62179 6.93275 6.76164 6.79289C6.9015 6.65304 7.07968 6.5578 7.27366 6.51922C7.46764 6.48063 7.66871 6.50043 7.85143 6.57612C8.03416 6.65181 8.19034 6.77998 8.30022 6.94443C8.4101 7.10888 8.46875 7.30222 8.46875 7.5C8.46845 7.76512 8.36299 8.0193 8.17552 8.20677C7.98805 8.39424 7.73387 8.4997 7.46875 8.5ZM13.4688 8.5C13.271 8.5 13.0776 8.44135 12.9132 8.33147C12.7487 8.22159 12.6206 8.06541 12.5449 7.88268C12.4692 7.69996 12.4494 7.49889 12.488 7.30491C12.5266 7.11093 12.6218 6.93275 12.7616 6.79289C12.9015 6.65304 13.0797 6.5578 13.2737 6.51922C13.4676 6.48063 13.6687 6.50043 13.8514 6.57612C14.0342 6.65181 14.1903 6.77998 14.3002 6.94443C14.4101 7.10888 14.4688 7.30222 14.4688 7.5C14.4684 7.76512 14.363 8.0193 14.1755 8.20677C13.9881 8.39424 13.7339 8.4997 13.4688 8.5Z')
-    .node-general-content-wrapper#node-general-content-wrapper-wallets(class=setFrontDisplayStyle(page, 'node/wallets'))
-      .node-general-title-wrapper
-        .node-general-title= __('node-general-title-wallets')
-        //- .node-general-title-help-wrapper
-        //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
-        //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')
-        //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
-        //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
-        //-   .node-general-title-help-text= node.help
-      - for (let i = 0; i < short_input_list.length; i += 2)
-        .node-general-each-input-line-wrapper
-          .node-general-each-short-input-wrapper
-            .node-general-each-short-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= short_input_list[i].title
-            input.node-general-each-short-input(id=input.id type=input.type placeholder=short_input_list[i].placeholder)
-            .node-general-each-short-input-error.display-none
-      each input in long_input_list
-        .node-general-each-long-input-wrapper
-          .node-general-each-long-input-title(class=(input.is_required ? 'node-general-each-long-input-title-required' : ''))= input.title
-          input.node-general-each-long-input(id=input.id type=input.type placeholder=input.placeholder)
-          .node-general-each-long-input-error.display-none
-      .node-general-save-button#node-general-save-button-wallets
         .node-general-save-button-text= __('node-general-save-button-text')
         svg.node-general-save-button-icon(viewBox='0 0 16 15' fill='none' xmlns='http://www.w3.org/2000/svg')
           path(d='M9.96875 13.5C10.521 13.5 10.9688 13.0523 10.9688 12.5C10.9688 11.9477 10.521 11.5 9.96875 11.5C9.41646 11.5 8.96875 11.9477 8.96875 12.5C8.96875 13.0523 9.41646 13.5 9.96875 13.5Z')
@@ -517,15 +653,6 @@ block main
     .node-general-content-wrapper#node-general-content-wrapper-logs(class=setFrontDisplayStyle(page, 'node/logs'))
       .node-general-title-wrapper
         .node-general-title= __('node-general-title-logs')
-        //- .node-general-title-help-wrapper
-        //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
-        //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')
-        //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
-        //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
-        //-   .node-general-title-help-text= node.help
-    .node-general-content-wrapper#node-general-content-wrapper-information(class=setFrontDisplayStyle(page, 'node/information'))
-      .node-general-title-wrapper
-        .node-general-title= __('node-general-title-information')
         //- .node-general-title-help-wrapper
         //-   svg.node-general-title-help-icon(viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg')
         //-     path(d='M11.2582 7.02434C10.7927 6.94449 10.314 7.03197 9.90675 7.27129C9.49955 7.5106 9.19019 7.88631 9.03345 8.33187C8.85018 8.85286 8.27926 9.12663 7.75827 8.94336C7.23728 8.76008 6.96351 8.18917 7.14678 7.66818C7.46025 6.77707 8.07898 6.02565 8.89339 5.54702C9.70779 5.06839 10.6653 4.89343 11.5963 5.05313C12.5274 5.21283 13.3719 5.69688 13.9802 6.41955C14.5884 7.14207 14.9214 8.0565 14.9201 9.00093C14.9197 10.5313 13.7851 11.5419 12.9748 12.0821C12.5392 12.3725 12.1107 12.586 11.795 12.7263C11.6358 12.7971 11.5016 12.8508 11.405 12.8876C11.3566 12.9061 11.3174 12.9204 11.2888 12.9305L11.2541 12.9427L11.243 12.9465L11.2391 12.9478L11.2376 12.9483C11.2376 12.9483 11.2363 12.9487 10.9201 12L11.2363 12.9487C10.7124 13.1234 10.1461 12.8402 9.97143 12.3162C9.7969 11.7927 10.0796 11.2267 10.6028 11.0517L10.6188 11.0461C10.6342 11.0406 10.6594 11.0315 10.693 11.0187C10.7605 10.993 10.8607 10.9529 10.9827 10.8987C11.2296 10.789 11.551 10.6276 11.8654 10.418C12.555 9.95824 12.9201 9.46916 12.9201 9.00002L12.9201 8.99853C12.9208 8.52621 12.7543 8.06889 12.4502 7.70755C12.146 7.34622 11.7238 7.10419 11.2582 7.02434Z')

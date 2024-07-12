@@ -3,15 +3,23 @@ module.exports = (req, res) => {
     page: 'node/wallets',
     title: 'Wallets',
     node: {
-      title: 'Agoric',
-      description: 'Agoric is a platform for building smart contracts and decentralized applications.',
+      title: 'Celestia',
+      description: 'Celestia is a modular chain.',
       image: [{
-        url: '/images/logo.png',
+        url: 'https://node101.s3.eu-central-1.amazonaws.com/klein-project-celestiatestnet3-200w-200h',
         alt: 'Agoric Logo'
       }],
       link: 'https://node101.io'
     },
-    short_input_list: [],
+    short_input_list: [
+      {
+        id: 'key-name',
+        type: 'string',
+        title: 'Wallet Name',
+        placeholder: 'Input placeholder',
+        is_required: true
+      },
+    ],
     long_input_list: []
   });
 };

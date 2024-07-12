@@ -1,7 +1,7 @@
 module.exports = (req, res) => {
   return res.render('index', {
-    page: 'node/index',
-    title: 'Celestia',
+    page: 'node/create-wallet',
+    title: 'Create Wallet',
     node: {
       title: 'Celestia',
       description: 'Celestia is a modular chain.',
@@ -10,6 +10,16 @@ module.exports = (req, res) => {
         alt: 'Agoric Logo'
       }],
       link: 'https://node101.io'
-    }
+    },
+    short_input_list: [
+      {
+        id: 'key-name',
+        type: 'string',
+        title: 'Wallet Name',
+        placeholder: 'Input placeholder',
+        is_required: true
+      },
+    ],
+    long_input_list: []
   });
 };

@@ -12,7 +12,7 @@ const INCLUDES = {
     'partials/header'
   ],
   js: [
-    'index/home', 'index/login', 'index/header', 'index/search',
+    'index/home', 'index/login', 'index/header', 'index/search', 'index/node',
     'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/jsonify'
   ]
 };
@@ -33,7 +33,6 @@ module.exports = (req, res, next) => {
       system_requirements: {}
     };
     res.locals.node = {
-      name: 'Cosmos Hub',
       image: [{}],
       urls: [{}],
       system_requirements: {}
@@ -41,8 +40,20 @@ module.exports = (req, res, next) => {
     res.locals.saved_server_list = saved_servers;
     res.locals.node_operations_list = [
       {
-        title: 'Validator List',
-        url: 'list-validators'
+        title: 'Create Wallet',
+        url: '/create-wallet'
+      },
+      {
+        title: 'Wallets',
+        url: '/wallets'
+      },
+      {
+        title: 'Recover Wallet',
+        url: '/recover-wallet'
+      },
+      {
+        title: 'Create Validator',
+        url: '/create-validator'
       },
       {
         title: 'Edit Validator',
@@ -50,43 +61,35 @@ module.exports = (req, res, next) => {
       },
       {
         title: 'Withdraw Rewards',
-        url: 'withdraw-rewards'
+        url: '/withdraw-rewards'
       },
       {
         title: 'Delegate',
-        url: 'delegate'
+        url: '/delegate'
       },
       {
         title: 'Redelegate',
-        url: 'redelegate'
+        url: '/redelegate'
       },
       {
         title: 'Undelegate',
-        url: 'undelegate'
+        url: '/undelegate'
       },
       {
         title: 'Vote',
-        url: 'vote'
+        url: '/vote'
       },
       {
         title: 'Unjail',
-        url: 'unjail'
+        url: '/unjail'
       },
       {
         title: 'Send Token',
-        url: 'send-token'
-      },
-      {
-        title: 'Wallet',
-        url: 'wallet'
+        url: '/send-token'
       },
       {
         title: 'Logs',
-        url: 'logs'
-      },
-      {
-        title: 'Node Information',
-        url: 'information'
+        url: '/logs'
       }
     ];
     res.locals.short_input_list = [];
