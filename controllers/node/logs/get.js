@@ -10,6 +10,7 @@ module.exports = (req, res) => {
         alt: 'Agoric Logo'
       }],
       link: 'https://node101.io'
-    }
+    },
+    host: req.query.host
   });
 };

@@ -11,6 +11,7 @@ module.exports = (req, res) => {
       }],
       link: 'https://node101.io'
     },
+    host: req.query.host,
     short_input_list: [
       {
         id: 'amount',

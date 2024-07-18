@@ -145,6 +145,7 @@
   margin-bottom: var(--partials-header-navbar-spacing);
   background-color: var(--background-box-color);
   border-radius: var(--partials-header-each-button-curvature);
+  text-decoration: none;
   cursor: pointer;
 }
 .partials-header-each-button:hover {

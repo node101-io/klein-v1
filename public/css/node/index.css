@@ -5,6 +5,9 @@
   --node-index-each-operation-button-height: 40px;
   --node-index-each-operation-button-max-width: 150px;
   --node-index-each-operation-button-curvature: 4px;
+
+  --node-wallets-each-wallet-height: 40px;
+  --node-wallets-each-wallet-curvature: 4px;
 }
 
 .node-index-panel-wrapper {
@@ -79,6 +82,57 @@
 .node-index-delete-operation-wrapper {
   background-color: var(--warning-color);
   /* color: var(--warning-text-color); */
+}
+
+.node-wallets-list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 100%;
+  height: fit-content;
+  min-height: fit-content;
+  margin-top: var(--node-content-padding);
+  gap: var(--node-content-inner-gap);
+}
+.node-wallets-each-wallet-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--node-wallets-each-wallet-height);
+  min-height: var(--node-wallets-each-wallet-height);
+  width: calc(50% - var(--node-content-inner-gap) / 2);
+  min-width: calc(50% - var(--node-content-inner-gap) / 2);
+  padding: var(--node-content-inner-padding);
+  background-color: var(--background-all-color);
+  border-radius: var(--node-wallets-each-wallet-curvature);
+}
+.node-wallets-each-wallet-address {
+  display: flex;
+  width: auto;
+  min-width: auto;
+  color: var(--input-placeholder-color);
+}
+.node-wallets-each-wallet-buttons-wrapper {
+  position: absolute;
+  display: flex;;
+  top: calc(.25 * var(--node-wallets-each-wallet-height));
+  right: calc(.25 * var(--node-wallets-each-wallet-height));
+  height: calc(.5 * var(--node-wallets-each-wallet-height));
+  min-height: calc(.5 * var(--node-wallets-each-wallet-height));
+  width: fit-content;
+  min-width: fit-content;
+  gap: var(--node-content-inner-gap);
+}
+.node-wallets-each-wallet-copy-button {
+  cursor: pointer;
+}
+.node-wallets-each-wallet-copy-button path {
+  stroke: var(--input-placeholder-color);
+}
+.node-wallets-each-wallet-delete-button {
+  fill: var(--warning-color);
+  cursor: pointer;
 }
 
 .node-wallets-mnemonic-input-wrapper {

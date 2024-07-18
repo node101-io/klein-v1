@@ -182,7 +182,7 @@ window.addEventListener('load', _ => {
                   return window.location.href = '/node?host=' + window.host;
 
                 alert('No node is running on this server, please install one first');
-                return window.location.href = '/home?host=' + window.host;ar
+                return window.location.href = '/home?host=' + window.host;
               };
             });
           });

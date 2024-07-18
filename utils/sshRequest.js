@@ -23,6 +23,7 @@ const TYPE_VALUES = [
   'connect:key',
   'connect:password',
   'disconnect',
+  'check_connection',
   'exec',
   'exec:stream',
   'sftp:read_file',
@@ -315,6 +316,16 @@ const sshRequest = (type, data, callback) => {
     connection.client.end();
 
     return callback(null);
+  } else if (type == 'check_connection') {
+    const connection = connections.getByHost(data.host);
+
+    if (!connection)
+      return callback(null, false);
+
+    if (!connection.isReady())
+      return callback(null, false);
+
+    return callback(null, true);
   } else if (type == 'exec' || type == 'exec:stream') {
     if (!data.command || typeof data.command != 'string' || !data.command.trim().length)
       return callback('bad_request');
@@ -322,10 +333,10 @@ const sshRequest = (type, data, callback) => {
     const connection = connections.getByHost(data.host);
 
     if (!connection)
-      return callback('bad_request');
+      return callback('not_connected');
 
     if (!connection.isReady())
-      return callback('network_error');
+      return callback('connection_lost');
 
     performPreExecActions(data, (err, data) => {
       if (err)

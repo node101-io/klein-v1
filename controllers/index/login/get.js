@@ -12,7 +12,8 @@ module.exports = (req, res) => {
       page: 'index/login',
       title: 'Login',
       project: data.project,
-      will_install: req.query.install
+      will_install: req.query.install,
+      host: req.query.host
     });
   });
 };
