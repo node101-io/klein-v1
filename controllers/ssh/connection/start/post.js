@@ -8,15 +8,17 @@ module.exports = (req, res) => {
 
   if (!req.body.password || typeof req.body.password != 'string')
     sshRequest('connect:key', req.body, (err, data) => {
-      if (err)
-        return res.json({ err: err });
+      if (err) return res.json({ err: err });
+
+      req.session.host = req.body.host;
 
       return res.json({});
     });
   else if (!req.body.filename || typeof req.body.filename != 'string')
     sshRequest('connect:password', req.body, (err, data) => {
-      if (err)
-        return res.json({ err: err });
+      if (err) return res.json({ err: err });
+
+      req.session.host = req.body.host;
 
       return res.json({});
     });

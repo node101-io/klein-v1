@@ -27,7 +27,7 @@ router.get(
     isAuth,
     setRenderFrontData,
     loginGetController
-)
+);
 router.get(
   '/search',
     isAuth,
