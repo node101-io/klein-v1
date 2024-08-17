@@ -25,7 +25,7 @@ module.exports = (req, res) => {
         return res.json({ err: 'document_not_found' });
 
       sshRequest('sftp:append_file', {
-        host: req.body.host,
+        host: req.session.host,
         path: '.ssh/authorized_keys',
         content: pubkey
       }, (err, data) => {

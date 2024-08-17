@@ -28,12 +28,12 @@ const createFolderIfNotExists = (host, path, callback) => {
 };
 
 module.exports = (req, res) => {
-  createFolderIfNotExists(req.body.host, 'klein-node-volume', err => {
+  createFolderIfNotExists(req.session.host, 'klein-node-volume', err => {
     if (err)
       return callback(err);
 
     sshRequest('exec:stream', {
-      host: req.body.host,
+      host: req.session.host,
       id: req.body.id,
       command: installServerListenerCommand(versions.serverListener)
     }, (err, install_server_listener_response) => {

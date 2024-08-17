@@ -203,14 +203,12 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('.index-login-right-each-input-inner-list-each-item')) {
+      loginRightPasswordInput.focus();
       const value = event.target.closest('.index-login-right-each-input-inner-list-each-item').id.replace('index-login-right-each-input-list-each-item-', '');
 
       loginRightIpAddressInput.value = value;
 
       loginRightPasswordInput.focus();
-
-
-      // setTimeout(_ => loginRightPasswordInput.focus(), 100);
     };
   });
 });

@@ -1,6 +1,6 @@
 extends ./partials/header
 block main
-  - console.log(page)
+  input.display-none#last-connected-host(value=last_connected_host)
   .index-wrapper#index-wrapper(class=setFrontDisplayStyle(page, 'index/*'))
     template.index-general-each-project-wrapper.display-none
       .index-general-each-project-inner-wrapper
@@ -54,7 +54,7 @@ block main
       .index-home-content-wrapper#index-home-content-mainnet-wrapper.display-none Soon...
     .index-search-wrapper#index-search-wrapper(class=setFrontDisplayStyle(page, 'index/search'))
       .index-search-input-wrapper
-        input.index-search-input(type='text' placeholder=__('index-search-input-placeholder') value=index_search_input)
+        input.index-search-input(type='text' placeholder=__('index-search-input-placeholder') value=index_search_input name='index_search_input' autocomplete='off')
         svg.index-search-input-icon(viewBox='0 -0.5 16 16' xmlns='http://www.w3.org/2000/svg')
           path(d='M17.9837 16.5907L13.2162 11.8233C14.3618 10.448 14.9331 8.68398 14.8112 6.89821C14.6893 5.11244 13.8836 3.44241 12.5617 2.23554C11.2399 1.02868 9.50361 0.377881 7.71414 0.418545C5.92468 0.459209 4.21978 1.1882 2.95411 2.45387C1.68844 3.71954 0.959453 5.42444 0.918789 7.2139C0.878125 9.00336 1.52892 10.7396 2.73579 12.0615C3.94266 13.3833 5.61268 14.189 7.39845 14.3109C9.18422 14.4328 10.9482 13.8616 12.3236 12.716L17.091 17.4834L17.9837 16.5907ZM2.20188 7.38307C2.20188 6.25939 2.53509 5.16094 3.15937 4.22663C3.78366 3.29233 4.67098 2.56412 5.70913 2.13411C6.74727 1.70409 7.88962 1.59158 8.99171 1.8108C10.0938 2.03002 11.1061 2.57112 11.9007 3.36569C12.6953 4.16025 13.2364 5.17259 13.4556 6.27468C13.6748 7.37677 13.5623 8.51912 13.1323 9.55727C12.7023 10.5954 11.9741 11.4827 11.0398 12.107C10.1055 12.7313 9.007 13.0645 7.88332 13.0645C6.37702 13.0628 4.93289 12.4637 3.86778 11.3986C2.80266 10.3335 2.20355 8.88937 2.20188 7.38307Z')
           //- .index-search-category-button-wrapper
@@ -143,14 +143,14 @@ block main
               .index-login-project-each-rent-server-divider
               a.index-login-project-each-rent-server(href='https://node101.io' target='_blank') Digital Ocean
       .index-login-right-wrapper
-        .index-login-right-inner-wrapper
+        form.index-login-right-inner-wrapper
           .index-login-right-title= __('index-login-right-title')
           .index-login-right-each-input-outer-wrapper
             .index-login-right-each-input-title= __('index-login-right-each-input-title-ip')
             .index-login-right-each-input-wrapper(style='z-index: 2;')
-              label.index-login-right-each-input-inner-wrapper
+              label.index-login-right-each-input-inner-wrapper(for='index-login-right-ip-address-input')
                 .index-login-right-each-input-inner-content-wrapper#index-login-right-each-input-inner-content-wrapper-focus-selector
-                  input.index-login-right-each-input#index-login-right-ip-address-input(type='text' placeholder=__('index-login-right-each-input-placeholder-ip') value=(host || ''))
+                  input.index-login-right-each-input#index-login-right-ip-address-input(type='text' placeholder=__('index-login-right-each-input-placeholder-ip') value=(host || '') name='host' autocomplete='off')
                   svg.index-login-right-each-input-icon(viewBox='-2 -1.5 15 9' xmlns='http://www.w3.org/2000/svg')
                     path(d='M1.80506 0.528758C1.54471 0.268409 1.1226 0.268409 0.862254 0.528758C0.601905 0.789108 0.601905 1.21122 0.862254 1.47157L4.86225 5.47157C5.1226 5.73192 5.54471 5.73192 5.80506 5.47157L9.80506 1.47157C10.0654 1.21122 10.0654 0.789108 9.80506 0.528758C9.54471 0.268409 9.1226 0.268409 8.86225 0.528758L5.33366 4.05735L1.80506 0.528758Z')
                 label.index-login-right-each-input-inner-list-wrapper(tabindex='1')
@@ -161,7 +161,7 @@ block main
             label.index-login-right-each-input-wrapper
               .index-login-right-each-input-inner-wrapper
                 .index-login-right-each-input-inner-content-wrapper
-                  input.index-login-right-each-input#index-login-right-password-input(type='password' placeholder=__('index-login-right-each-input-placeholder-password'))
+                  input.index-login-right-each-input#index-login-right-password-input(type='password' placeholder=__('index-login-right-each-input-placeholder-password') name='new-password' autocomplete='new-password')
                   svg.index-login-right-each-input-icon#index-login-right-each-input-visibility-show-button(viewBox='0 0 16 12' xmlns='http://www.w3.org/2000/svg')
                     path(d='M15.4698 5.83C14.8817 4.30882 13.8608 2.99331 12.5332 2.04604C11.2056 1.09878 9.62953 0.561286 7.99979 0.5C6.37005 0.561286 4.79398 1.09878 3.46639 2.04604C2.1388 2.99331 1.11787 4.30882 0.529787 5.83C0.490071 5.93985 0.490071 6.06015 0.529787 6.17C1.11787 7.69118 2.1388 9.00669 3.46639 9.95396C4.79398 10.9012 6.37005 11.4387 7.99979 11.5C9.62953 11.4387 11.2056 10.9012 12.5332 9.95396C13.8608 9.00669 14.8817 7.69118 15.4698 6.17C15.5095 6.06015 15.5095 5.93985 15.4698 5.83ZM7.99979 10.5C5.34979 10.5 2.54979 8.535 1.53479 6C2.54979 3.465 5.34979 1.5 7.99979 1.5C10.6498 1.5 13.4498 3.465 14.4648 6C13.4498 8.535 10.6498 10.5 7.99979 10.5Z')
                     path(d='M7.99979 3C7.40644 3 6.82642 3.17595 6.33308 3.50559C5.83973 3.83524 5.45521 4.30377 5.22815 4.85195C5.00109 5.40013 4.94168 6.00333 5.05743 6.58527C5.17319 7.16721 5.45891 7.70176 5.87847 8.12132C6.29802 8.54088 6.83257 8.8266 7.41452 8.94236C7.99646 9.05811 8.59966 8.9987 9.14784 8.77164C9.69602 8.54458 10.1646 8.16006 10.4942 7.66671C10.8238 7.17336 10.9998 6.59334 10.9998 6C10.9998 5.20435 10.6837 4.44129 10.1211 3.87868C9.5585 3.31607 8.79544 3 7.99979 3ZM7.99979 8C7.60422 8 7.21755 7.8827 6.88865 7.66294C6.55975 7.44318 6.3034 7.13082 6.15203 6.76537C6.00065 6.39991 5.96105 5.99778 6.03822 5.60982C6.11539 5.22186 6.30587 4.86549 6.58557 4.58579C6.86528 4.30608 7.22164 4.1156 7.60961 4.03843C7.99757 3.96126 8.3997 4.00087 8.76515 4.15224C9.13061 4.30362 9.44296 4.55996 9.66273 4.88886C9.88249 5.21776 9.99979 5.60444 9.99979 6C9.99979 6.53043 9.78907 7.03914 9.414 7.41421C9.03893 7.78929 8.53022 8 7.99979 8Z')
@@ -169,7 +169,7 @@ block main
                     path(d='M 0 40 L 40 0' stroke='black' stroke-width='3')
           .index-login-right-error.display-none= 'ERROR: error'
           label.index-login-right-remember-me-wrapper
-            input.index-login-right-remember-me-input(type='checkbox' checked)
+            input.index-login-right-remember-me-input(type='checkbox' checked name='remember-me')
             .index-login-right-remember-me-icon-wrapper
               svg.index-login-right-remember-me-icon(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512')
                 path(d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z')

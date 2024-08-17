@@ -32,7 +32,6 @@ const makeSSHKeyManager = _ => {
     },
     showKeysRemote: (data, callback) => {
       localhostRequest('/ssh/key/remote/show', 'POST', {
-        host: window.host,
         ...data
       }, (err, remote_keys) => {
         if (err)
@@ -43,7 +42,6 @@ const makeSSHKeyManager = _ => {
     },
     addKeyRemote: (data, callback) => {
       localhostRequest('/ssh/key/remote/add', 'POST', {
-        host: window.host,
         ...data
       }, (err, res) => {
         if (err)
@@ -54,7 +52,6 @@ const makeSSHKeyManager = _ => {
     },
     removeKeyRemote: (data, callback) => {
       localhostRequest('/ssh/key/remote/remove', 'POST', {
-        host: window.host,
         ...data
       }, (err, res) => {
         if (err)

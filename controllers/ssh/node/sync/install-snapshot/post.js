@@ -8,21 +8,21 @@ const DATA_FOLDER_PATH = '$HOME/klein-node-volume/data';
 
 module.exports = (req, res) => {
   sshRequest('sftp:read_file', {
-    host: req.body.host,
+    host: req.session.host,
     path: path.join(DATA_FOLDER_PATH, 'priv_validator_state.json')
   }, (err, priv_validator_state) => {
     if (err)
       return res.json({ err: err });
 
     sshRequest('exec', {
-      host: req.body.host,
+      host: req.session.host,
       command: removeDataFolderCommand()
     }, (err, remove_data_folder_response) => {
       if (err)
         return res.json({ err: err });
 
       sshRequest('sftp:write_file', {
-        host: req.body.host,
+        host: req.session.host,
         path: path.join(DATA_FOLDER_PATH, 'priv_validator_state.json'),
         content: priv_validator_state
       }, (err, data) => {
@@ -30,7 +30,7 @@ module.exports = (req, res) => {
           return res.json({ err: err });
 
         sshRequest('exec:stream', {
-          host: req.body.host,
+          host: req.session.host,
           id: req.body.id,
           command: installSnapshotCommand(),
           in_container: true

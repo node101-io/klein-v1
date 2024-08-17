@@ -7,7 +7,7 @@ const NO_UPGRADE_SCHEDULED_MESSAGE_REGEX = /Error: no upgrade scheduled/;
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: getUpgradePlanCommand(),
     in_container: true
   }, (err, get_upgrade_plan_response) => {

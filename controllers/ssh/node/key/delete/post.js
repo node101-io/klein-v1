@@ -10,7 +10,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: deleteKeyInNodeCommand({
       key_name: req.body.key_name
     }),

@@ -5,7 +5,7 @@ const checkDockerSetupCommand = require('../../../../commands/docker/checkSetup'
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: checkDockerExistentCommand()
   }, (err, check_docker_existent_response) => {
     if (err)
@@ -15,7 +15,7 @@ module.exports = (req, res) => {
       return res.json({ err: 'docker_not_installed' });
 
     sshRequest('exec', {
-      host: req.body.host,
+      host: req.session.host,
       command: checkDockerSetupCommand()
     }, (err, check_docker_setup_response) => {
       if (err)

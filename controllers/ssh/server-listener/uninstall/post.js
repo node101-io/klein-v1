@@ -4,7 +4,7 @@ const uninstallServerListenerCommand = require('../../../../commands/server-list
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: uninstallServerListenerCommand()
   }, (err, uninstall_server_listener_response) => {
     if (err)

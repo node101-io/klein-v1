@@ -4,7 +4,7 @@ const startNodeCommand = require('../../../../commands/node/start');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: startNodeCommand()
   }, (err, start_node_response) => {
     if (err)

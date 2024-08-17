@@ -7,7 +7,7 @@ const NO_RECORDS_FOUND_MESSAGE_REGEX = /No records were found in keyring/
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: listKeysInNodeCommand(),
     in_container: true
   }, (err, list_keys_in_node_response) => {

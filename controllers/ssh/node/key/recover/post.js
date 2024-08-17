@@ -18,7 +18,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: listKeysInNodeCommand(),
     in_container: true
   }, (err, list_keys_in_node_response) => {
@@ -32,7 +32,7 @@ module.exports = (req, res) => {
         return res.json({ err: 'key_name_already_exists' });
 
     sshRequest('exec', {
-      host: req.body.host,
+      host: req.session.host,
       command: recoverKeyInNodeCommand({
         key_name: req.body.key_name,
         mnemonic: req.body.mnemonic

@@ -43,7 +43,7 @@ module.exports = (req, res) => {
   };
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command,
     in_container: true
   }, (err, undelegate_token_response) => {

@@ -4,7 +4,7 @@ const getDockerContainerListCommand = require('../../../../commands/docker/getCo
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: getDockerContainerListCommand()
   }, (err, get_container_list_response) => {
     if (err)

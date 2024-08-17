@@ -4,7 +4,7 @@ const uninstallNodeCommand = require('../../../../commands/node/uninstall');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: uninstallNodeCommand()
   }, (err, uninstall_node_response) => {
     if (err)

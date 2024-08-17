@@ -2,11 +2,11 @@ extends ./head
 block content
   .partials-all-wrapper
     .partials-all-inner-wrapper
-      .partials-header-resize-button-wrapper
-        .partials-header-resize-button#partials-header-resize-button
-          svg.partials-header-resize-button-icon(viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg')
-            path(d='M5.47124 1.47132C5.73159 1.21097 5.73159 0.788864 5.47124 0.528514C5.21089 0.268165 4.78878 0.268164 4.52843 0.528514L0.528432 4.52851C0.268083 4.78886 0.268083 5.21097 0.528432 5.47132L4.52843 9.47132C4.78878 9.73167 5.21089 9.73167 5.47124 9.47132C5.73159 9.21097 5.73159 8.78886 5.47124 8.52851L1.94265 4.99992L5.47124 1.47132Z')
-      .partials-header-navbar-wrapper
+      .partials-header-navbar-wrapper(class=navbar_collapsed ? 'partials-header-navbar-wrapper-collapsed' : '')
+        .partials-header-resize-button-wrapper
+          .partials-header-resize-button#partials-header-resize-button
+            svg.partials-header-resize-button-icon(viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg')
+              path(d='M5.47124 1.47132C5.73159 1.21097 5.73159 0.788864 5.47124 0.528514C5.21089 0.268165 4.78878 0.268164 4.52843 0.528514L0.528432 4.52851C0.268083 4.78886 0.268083 5.21097 0.528432 5.47132L4.52843 9.47132C4.78878 9.73167 5.21089 9.73167 5.47124 9.47132C5.73159 9.21097 5.73159 8.78886 5.47124 8.52851L1.94265 4.99992L5.47124 1.47132Z')
         .partials-header-each-subtitle= __('partials-header-subtitle-main')
         .partials-header-each-buttons-wrapper
           .partials-header-each-button#partials-header-each-button-home
@@ -22,8 +22,8 @@ block content
         .partials-header-each-subtitle= __('partials-header-subtitle-nodes')
         .partials-header-each-buttons-wrapper
           each server, i in saved_server_list
-            a.partials-header-each-button(href=`/login?project_id=${server.installed_projects[0].id}`)
-              img.partials-header-each-button-icon(src=server.installed_projects[0].image style='border-radius: 30%;')
+            a.partials-header-each-button(href=`/login?project_id=${server.project_id}`)
+              img.partials-header-each-button-icon(src=server.project_image style='border-radius: 30%;')
               .partials-header-each-button-text= server.host
               .partials-header-each-button-shortcut= 'Ctrl+' + (i + 1)
           .partials-header-each-button#partials-header-each-button-new-node

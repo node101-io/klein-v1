@@ -12,7 +12,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: checkTxResultCommand({
       tx_hash: req.body.tx_hash
     })

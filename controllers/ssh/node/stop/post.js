@@ -4,7 +4,7 @@ const stopNodeCommand = require('../../../../commands/node/stop');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: stopNodeCommand()
   }, (err, stop_node_response) => {
     if (err)

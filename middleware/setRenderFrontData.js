@@ -13,7 +13,17 @@ const INCLUDES = {
   ],
   js: [
     'index/home', 'index/login', 'index/header', 'index/search', 'index/node',
-    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/jsonify'
+    'functions/localhostRequest',
+    'functions/generateRandomHEX',
+    'functions/webSocket',
+    'functions/nodeManager',
+    'functions/serverManager',
+    'functions/SSHKeyManager',
+    'functions/walletManager',
+    'functions/preferenceManager',
+    'functions/savedServersManager',
+    'functions/preventMultiTab',
+    'functions/jsonify'
   ]
 };
 
@@ -95,6 +105,7 @@ module.exports = (req, res, next) => {
     res.locals.short_input_list = [];
     res.locals.long_input_list = [];
     res.locals.navbar_collapsed = req.session.navbar_collapsed;
+    res.locals.last_connected_host = req.session.last_connected_host;
 
     return next();
   });

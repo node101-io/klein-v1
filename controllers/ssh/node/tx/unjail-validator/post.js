@@ -34,7 +34,7 @@ module.exports = (req, res) => {
   };
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command,
     in_container: true
   }, (err, unjail_validator_response) => {

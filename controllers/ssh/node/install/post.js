@@ -94,12 +94,12 @@ module.exports = (req, res) => {
   if (!req.body.project_route || typeof req.body.project_route != 'string')
     return res.json({ err: 'bad_request' });
 
-  createNecessaryNodeFolders(req.body.host, err => {
+  createNecessaryNodeFolders(req.session.host, err => {
     if (err)
       return res.json({ err: err });
 
     installNode({
-      host: req.body.host,
+      host: req.session.host,
       id: req.body.id,
       docker_compose_content: req.body.docker_compose_content,
       dockerfile_content: req.body.dockerfile_content,

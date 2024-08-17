@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.host,
     command: setNodeConfigVariableCommand('seeds', req.body.seeds.join(','))
   }, (err, set_node_config_variable_response) => {
     if (err)
