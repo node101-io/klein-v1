@@ -19,7 +19,11 @@
 .index-home-header-wrapper {
   height: var(--index-home-header-each-button-height);
   min-height: var(--index-home-header-each-button-height);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
   min-width: fit-content;
   padding: 0 var(--index-content-padding);
 }

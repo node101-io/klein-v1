@@ -78,86 +78,22 @@ const makeConnections = _ => {
 
   return {
     create(id, host) {
-      const ws = WebSocketServer.get();
-
       let lastSeenAt = Date.now();
 
-      const client = new ssh2.Client()
-        .on('connect', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'connect'
-          }));
-        })
-        .on('handshake', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'handshake'
-          }));
-        })
-        .on('error', err => {
-          if (err && err.level == 'client-authentication')
-            return ws.send(JSON.stringify({
-              id: id,
-              type: 'authentication_failed'
-            }));
-
-          if (err && err.level == 'client-socket')
-            return ws.send(JSON.stringify({
-              id: id,
-              type: 'network_error'
-            }));
-
-          if (err && err.level == 'client-timeout')
-            return ws.send(JSON.stringify({
-              id: id,
-              type: 'client_timeout'
-            }));
-
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'unknown_error'
-          }));
-        })
-        .on('change password', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'change_password'
-          }));
-        })
-        .on('ready', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'ready'
-          }));
-        })
-        .on('timeout', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'timed_out'
-          }));
-        })
-        .on('end', _ => {
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'end'
-          }));
-        })
-        .on('close', _ => {
-          this.removeByHost(host); // TODO: check usage of this
-
-          return ws.send(JSON.stringify({
-            id: id,
-            type: 'close'
-          }));
-        });
+      const client = new ssh2.Client();
 
       connections[host] = {
         client: client,
         id: id,
         markAsSeen: _ => lastSeenAt = Date.now(),
         isExpired: _ => Date.now() - lastSeenAt > SSH_CONNECTION_EXPIRATION_TIME,
-        isReady: _ => client._sock && !client._sock.destroyed
+        isReady: _ => client._sock && !client._sock.destroyed,
+        end: _ => {
+          if (connections[host].isReady())
+            connections[host].client.end();
+
+          delete connections[host];
+        }
       };
 
       return connections[host];
@@ -179,7 +115,7 @@ const makeConnections = _ => {
 
       for (const host in connections)
         if (connections[host].isExpired())
-          connections[host].client.end();
+          connections[host].end();
 
       return setTimeout(this.endExpiredConnections, END_EXPIRED_CONNECTIONS_INTERVAL); // TODO: check usage of this
     }
@@ -231,18 +167,12 @@ const sshRequest = (type, data, callback) => {
   if (type == 'connect:password' || type == 'connect:key') {
     if (connections.getByHost(data.host)) {
       if (connections.getByHost(data.host).isReady()) {
-        return callback('already_connected');
+        return callback(null);
       } else {
         connections.removeByHost(data.host);
         return sshRequest(type, data, callback);
       };
     };
-
-    if (!data.id || typeof data.id != 'string' || !data.id.trim().length)
-      return callback('bad_request');
-
-    if (!ws || !ws.isReady())
-      return callback('websocket_error');
 
     const connectData = {
       username: data.username && typeof data.username == 'string' && data.username.trim().length ? data.username.trim() : 'root',
@@ -287,23 +217,117 @@ const sshRequest = (type, data, callback) => {
 
     const connection = connections.create(data.id, data.host);
 
+    let isCallbackCalled = false;
+    let isConnectEventFired = false;
+    let isHandshakeEventFired = false;
+    let isReadyEventFired = false;
+    let isTimeoutEventFired = false;
+    let isEndEventFired = false;
+    let isCloseEventFired = false;
+
+    connection.client
+      .on('connect', _ => {
+        console.log('connect');
+        isConnectEventFired = true;
+      })
+      .on('handshake', _ => {
+        console.log('handshake');
+        isHandshakeEventFired = true;
+      })
+      .on('error', err => {
+        console.error('error', err.level);
+        isCallbackCalled = true;
+
+        connection.end();
+
+        if (err && err.level == 'client-authentication')
+          return callback('authentication_failed');
+        if (err && err.level == 'client-socket')
+          return callback('network_error');
+        if (err && err.level == 'client-timeout')
+          return callback('client_timeout');
+
+        return callback('unknown_error');
+      })
+      .on('change password', _ => {
+        console.log('change password');
+        isCallbackCalled = true;
+
+        connection.end();
+
+        return callback('change_password');
+      })
+      .on('ready', _ => {
+        console.log('ready');
+        isReadyEventFired = true;
+
+        if (isCallbackCalled) return;
+
+        isCallbackCalled = true;
+
+        return callback(null);
+      })
+      .on('timeout', _ => {
+        console.log('timeout');
+        isTimeoutEventFired = true;
+
+        if (isCallbackCalled) return;
+
+        isCallbackCalled = true;
+
+        connection.end();
+
+        return callback('timed_out');
+      })
+      .on('end', _ => {
+        console.log('end');
+        isEndEventFired = true;
+
+        if (isCallbackCalled) return;
+
+        isCallbackCalled = true;
+
+        connection.end();
+
+        return callback('connection_end');
+      })
+      .on('close', _ => {
+        console.log('close');
+        isCloseEventFired = true;
+
+        if (isCallbackCalled) return;
+
+        isCallbackCalled = true;
+
+        connection.end();
+
+        return callback('connection_closed');
+      });
+
     try {
       connection.client.connect(connectData);
+
+      setTimeout(_ => {
+        if (isCallbackCalled) return;
+
+        isCallbackCalled = true;
+
+        connection.end();
+
+        if (!isConnectEventFired)
+          return callback('connection_error');
+
+        if (!isHandshakeEventFired)
+          return callback('handshake_error');
+
+        return callback('unknown_error');
+      }, SSH_HANDSHAKE_TIMEOUT);
     } catch (err) {
-      console.error(err);
       if (err && err.message && typeof err.message == 'string' && err.message.includes(ERROR_MESSAGE_BAD_PASSPHRASE))
-        return ws.send(JSON.stringify({
-          id: data.id,
-          type: 'bad_passphrase'
-        }));
+        return callback('bad_passphrase');
 
-      return ws.send(JSON.stringify({
-        id: data.id,
-        type: 'unknown_error'
-      }));
+      return callback('unknown_error');
     };
-
-    return callback(null);
   } else if (type == 'disconnect') {
     const connection = connections.getByHost(data.host);
 
@@ -313,7 +337,7 @@ const sshRequest = (type, data, callback) => {
     if (!connection.isReady())
       return callback('network_error');
 
-    connection.client.end();
+    connection.end();
 
     return callback(null);
   } else if (type == 'check_connection') {

@@ -3,6 +3,7 @@ const path = require('path');
 const { app } = require('electron');
 
 const savedServersPath = path.join(app.getPath('userData'), 'savedServers.json');
+console.log(savedServersPath);
 
 const DEFAULT_MAX_TEXT_FIELD_LENGTH = 1e4;
 const DEFAULT_USERNAME = 'root';
@@ -76,12 +77,8 @@ const SavedServers = {
         host: server.host,
         username: server.username && typeof server.username == 'string' ? server.username.trim() : DEFAULT_USERNAME,
         preferred_login_type: server.preferred_login_type && typeof server.preferred_login_type == 'string' && LOGIN_TYPES.includes(server.preferred_login_type) ? server.preferred_login_type : LOGIN_TYPES[0],
-        installed_projects: [
-          {
-            name: server.project && server.project.name && typeof server.project.name == 'string' ? server.project.name.trim() : '',
-            image: server.project && server.project.image && typeof server.project.image == 'string' ? server.project.image.trim() : '',
-          }
-        ]
+        project_id: server.project_id && typeof server.project_id == 'string' ? server.project_id.trim() : '',
+        project_image: server.project_image && server.project_image && typeof server.project_image == 'string' ? server.project_image.trim() : '',
       });
 
       fs.writeFile(savedServersPath, JSON.stringify(saved_servers, null, 2), err => {
