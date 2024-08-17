@@ -187,7 +187,7 @@ block main
           if page.includes(operation.url)
             .node-general-navbar-each-node-operation.node-general-navbar-each-node-operation-selected= operation.title
           else
-            a.node-general-navbar-each-node-operation(href=`/node${operation.url}?host=${host}`)= operation.title
+            a.node-general-navbar-each-node-operation(href=`/node${operation.url}`)= operation.title
     .node-general-content-wrapper#node-general-content-wrapper-index(class=setFrontDisplayStyle(page, 'node/index'))
       .node-general-title-wrapper
         .node-general-title= __('node-general-title-index')

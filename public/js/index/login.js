@@ -124,6 +124,7 @@ function addServerToSavedServersIfNotExists(data, callback) {
     if (err)
       savedServersManager.save({
         host: data.host,
+        // project_id:
       }, (err, saved_servers) => {
         if (err)
           return callback(err);
@@ -133,7 +134,7 @@ function addServerToSavedServersIfNotExists(data, callback) {
     else
       return callback(null);
   });
-}
+};
 
 window.addEventListener('load', _ => {
   const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');
@@ -146,7 +147,7 @@ window.addEventListener('load', _ => {
 
       setLoginStyleAsLoading();
 
-      const stream = serverManager.connect({
+      serverManager.connect({
         host: ipAddress,
         password: password,
       }, (err, data) => {
@@ -154,8 +155,7 @@ window.addEventListener('load', _ => {
         if (err)
           return setLoginRightErrorMessage(err);
 
-        if (data.type == 'ready') {
-          window.host = ipAddress.trim();
+        setLoginRightErrorMessage('');
 
         addServerToSavedServersIfNotExists({
           host: ipAddress.trim()
@@ -164,7 +164,7 @@ window.addEventListener('load', _ => {
           if (err)
             return setLoginRightErrorMessage(err);
 
-            setLoginRightErrorMessage('');
+          setLoginRightErrorMessage('');
 
           serverManager.checkAvailabilityForNodeInstallation((err, res) => {
             console.log(3, err, res);
@@ -174,79 +174,22 @@ window.addEventListener('load', _ => {
                 return window.location.href = '/node';
               };
 
-                installNode((err, res) => {
-                  if (err)
-                    return setLoginRightErrorMessage(err);
+              installNode((err, res) => {
+                if (err)
+                  return setLoginRightErrorMessage(err);
 
-                  console.log('Node installed successfully');
-                  window.location.href = '/node?host=' + window.host;
-                });
-              } else {
-                if (err == 'running_node_instance')
-                  return window.location.href = '/node?host=' + window.host;
+                console.log('Node installed successfully');
+                return window.location.href = '/node';
+              });
+            } else {
+              if (err == 'running_node_instance')
+                return window.location.href = '/node';
 
-                alert('No node is running on this server, please install one first');
-                return window.location.href = '/home?host=' + window.host;
-              };
-            });
+              alert('No node is running on this server, please install one first');
+              return window.location.href = '/home';
+            };
           });
-        };
-
-        if (data.type == 'change_password') {
-          stream.end();
-
-          setLoginRightErrorMessage('Please change your password');
-        };
-
-        if (data.type == 'authentication_failed') {
-          stream.end();
-
-          setLoginRightErrorMessage('Authentication failed');
-        };
-
-        if (data.type == 'network_error') {
-          stream.end();
-
-          if (window.location.pathname == '/login') {
-            setLoginRightErrorMessage('Network error, please try again');
-          } else {
-            alert('Network error, please try again');
-            window.location.href = '/login';
-          };
-        };
-
-        if (data.type == 'client_timeout') {
-          stream.end();
-
-          setLoginRightErrorMessage('Server did not respond in time, please try again');
-        };
-
-        if (data.type == 'timed_out') {
-          stream.end();
-
-          if (window.location.pathname == '/login') {
-            setLoginRightErrorMessage('Server timed out, please try again');
-          } else {
-            alert('Server timed out, please try again');
-            window.location.href = '/login';
-          };
-        };
-
-        if (data.type == 'unknown_error') {
-          stream.end();
-
-          if (window.location.pathname == '/login') {
-            setLoginRightErrorMessage('Unknown error, please try again');
-          } else {
-            alert('Unknown error, please try again');
-            window.location.href = '/login';
-          };
-        };
-      }, (err, data) => {
-        if (err)
-          return setLoginRightErrorMessage(err);
-
-        setLoginRightErrorMessage('');
+        });
       });
     };
 

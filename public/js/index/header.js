@@ -1,4 +1,7 @@
 window.addEventListener('load', () => {
+  const navbarWrapper = document.querySelector('.partials-header-navbar-wrapper');
+  const navbarResizeButton = document.querySelector('.partials-header-resize-button');
+
   document.addEventListener('click', event => {
     if (event.target.closest('.partials-header-each-button')) {
       const page = event.target.closest('.partials-header-each-button').id.replace('partials-header-each-button-', '')
@@ -19,10 +22,15 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('.partials-header-resize-button')) {
-      document.querySelector('.partials-header-navbar-wrapper').classList.toggle('partials-header-navbar-wrapper-collapsed');
-      document.querySelector('.partials-header-resize-button').classList.toggle('partials-header-resize-button-collapsed');
+      navbarResizeButton.classList.toggle('partials-header-resize-button-collapsed');
+      navbarResizeButton.classList.toggle('partials-header-resize-button-reversed');
 
-      event.target.closest('.partials-header-resize-button').classList.toggle('partials-header-resize-button-reversed');
+      localhostRequest('/session/set', 'POST', {
+        navbar_collapsed: navbarWrapper.classList.toggle('partials-header-navbar-wrapper-collapsed') ? true : false
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
+      });
     };
   });
 });

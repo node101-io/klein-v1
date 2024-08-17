@@ -1,6 +1,9 @@
 const fetch = require("../../../utils/fetch");
 
 module.exports = (req, res) => {
+  if (!req.query.project_id || typeof req.query.project_id != 'string' || !req.query.project_id.trim().length)
+    return res.redirect('/home');
+
   fetch(`https://admin.klein.run/api/projects?id=${req.query.project_id}`, {}, (err, data) => {
     if (err)
       return res.json({ err: err });

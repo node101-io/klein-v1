@@ -87,11 +87,8 @@ const makeServerManager = _ => {
   };
 
   return {
-    connect: (data, onData, callback) => {
-      const stream = makeStream(onData);
-
+    connect: (data, callback) => {
       localhostRequest('/ssh/connection/start', 'POST', {
-        id: stream.id,
         ...data
       }, (err, res) => {
         if (err)
@@ -99,8 +96,6 @@ const makeServerManager = _ => {
 
         return callback(null);
       });
-
-      return stream;
     },
     disconnect: callback => {
       localhostRequest('/ssh/connection/end', 'POST', {

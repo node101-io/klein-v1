@@ -22,7 +22,7 @@ window.addEventListener('load', () => {
         if (err)
           return console.error(err);
 
-        return window.location.href = '/node/wallets?host=' + window.host;
+        return window.location.href = '/node/wallets';
       });
     };
 

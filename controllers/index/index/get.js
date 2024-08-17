@@ -1,3 +1,3 @@
 module.exports = (_, res) => {
-  return res.redirect('/home');
+  // return res.redirect('/home');
 }
