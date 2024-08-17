@@ -5,7 +5,7 @@ function getSessionDataFromBody(data, callback) {
   if (!data.key || typeof data.key != 'string' || !data.key.trim().length || data.key.length > MAX_SESSION_KEY_LENGTH)
     return callback('bad_request');
 
-  if (!data.value)
+  if (data.value == undefined)
     return callback('bad_request');
 
   const key = data.key.trim();
@@ -17,18 +17,18 @@ function getSessionDataFromBody(data, callback) {
     if (valueString.length > MAX_SESSION_VALUE_LENGTH)
       return callback('bad_request');
 
-    return callback(null, key, value);
+    return callback(null, { key, value });
   } catch (_) {
     return callback('bad_request');
   };
 };
 
 module.exports = (req, res) => {
-  getSessionDataFromBody(req.body, (err, key, value) => {
-    if (err) return res.json({ error: 'bad_request' });
+  getSessionDataFromBody(req.body, (err, data) => {
+    if (err) return res.json({ err: 'bad_request' });
 
-    req.session[key] = value;
+    req.session[data.key] = data.value;
 
-    res.json({});
+    return res.json({});
   });
 };

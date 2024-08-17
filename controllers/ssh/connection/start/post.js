@@ -10,7 +10,7 @@ module.exports = (req, res) => {
     sshRequest('connect:key', req.body, (err, data) => {
       if (err) return res.json({ err: err });
 
-      req.session.host = req.body.host;
+      req.session.last_connected_host = req.body.host;
 
       return res.json({});
     });
@@ -18,7 +18,7 @@ module.exports = (req, res) => {
     sshRequest('connect:password', req.body, (err, data) => {
       if (err) return res.json({ err: err });
 
-      req.session.host = req.body.host;
+      req.session.last_connected_host = req.body.host;
 
       return res.json({});
     });

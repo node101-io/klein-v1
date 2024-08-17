@@ -8,9 +8,9 @@ module.exports = (req, res, next) => {
     if (err)
       return res.redirect('/home');
 
-  //   if (!is_connected)
-  //     return res.redirect('/home');
+    if (!is_connected)
+      return res.redirect('/home');
 
     return next();
-  // });
+  });
 };

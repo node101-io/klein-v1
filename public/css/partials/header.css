@@ -43,6 +43,7 @@
 }
 
 .partials-header-navbar-wrapper {
+  position: relative;
   height: 100%;
   min-height: 100%;
   width: var(--partials-header-navbar-width);
@@ -53,7 +54,6 @@
   margin-right: var(--partials-header-navbar-wrapper-margin-right);
   background: var(--background-box-color);
   border-radius: var(--partials-header-navbar-curvature);
-  overflow: hidden;
   transition:
     width var(--partials-header-navbar-wrapper-collapse-duration),
     min-width var(--partials-header-navbar-wrapper-collapse-duration),
@@ -64,6 +64,11 @@
 .partials-header-navbar-wrapper-collapsed {
   width: calc(var(--partials-header-each-button-icon-width) + 2 * var(--partials-header-navbar-vertical-padding));
   min-width: calc(var(--partials-header-each-button-icon-width) + 2 * var(--partials-header-navbar-vertical-padding));
+}
+.partials-header-navbar-wrapper-collapsed .partials-header-resize-button {
+  left: calc(-1 * var(--partials-header-resize-button-size) / 2 + var(--partials-header-each-button-icon-width) + 2 * var(--partials-header-navbar-vertical-padding));
+  right: calc(-1 * var(--partials-header-resize-button-size) / 2);
+  transform: rotate(180deg);
 }
 .partials-header-navbar-wrapper-collapsed .partials-header-each-subtitle {
   display: none;
@@ -81,9 +86,6 @@
   display: none;
 }
 
-.partials-header-resize-button-wrapper {
-  position: relative;
-}
 .partials-header-resize-button {
   position: absolute;
   top: calc(var(--partials-header-resize-button-size));
@@ -101,19 +103,12 @@
   cursor: pointer;
   transition: left var(--partials-header-navbar-wrapper-collapse-duration);
 }
-.partials-header-resize-button-collapsed {
-  left: calc(-1 * var(--partials-header-resize-button-size) / 2 + var(--partials-header-each-button-icon-width) + 2 * var(--partials-header-navbar-vertical-padding));
-}
 .partials-header-resize-button-icon {
   height: var(--partials-header-resize-button-icon-height);
   min-height: var(--partials-header-resize-button-icon-height);
   width: auto;
   min-width: auto;
   fill: var(--text-subtitle-color);
-}
-.partials-header-resize-button-reversed {
-  right: calc(-1 * var(--partials-header-resize-button-size) / 2);
-  transform: rotate(180deg);
 }
 
 .partials-header-each-subtitle {

@@ -22,14 +22,14 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('.partials-header-resize-button')) {
-      navbarResizeButton.classList.toggle('partials-header-resize-button-collapsed');
-      navbarResizeButton.classList.toggle('partials-header-resize-button-reversed');
-
       localhostRequest('/session/set', 'POST', {
-        navbar_collapsed: navbarWrapper.classList.toggle('partials-header-navbar-wrapper-collapsed') ? true : false
+        key: 'navbar_collapsed',
+        value: navbarWrapper.classList.toggle('partials-header-navbar-wrapper-collapsed')
       }, (err, res) => {
         if (err)
           return console.error(err);
+
+        return console.log(res);
       });
     };
   });

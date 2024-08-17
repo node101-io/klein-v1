@@ -51,7 +51,7 @@ const voteProposalPostController = require('../controllers/ssh/node/tx/vote-prop
 const withdrawRewardsPostController = require('../controllers/ssh/node/tx/withdraw-rewards/post');
 
 const checkServerListenerPostController = require('../controllers/ssh/server-listener/check/post');
-const checkServerStatsPostController = require('../controllers/ssh/server-listener/stats/post');
+const getServerStatsPostController = require('../controllers/ssh/server-listener/stats/post');
 const installServerListenerPostController = require('../controllers/ssh/server-listener/install/post');
 const uninstallServerListenerPostController = require('../controllers/ssh/server-listener/uninstall/post');
 
@@ -279,7 +279,7 @@ router.post(
 router.post(
   '/server-listener/stats',
     isAuth,
-    checkServerStatsPostController
+    getServerStatsPostController
 );
 
 module.exports = router;

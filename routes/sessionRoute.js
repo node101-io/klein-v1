@@ -8,19 +8,19 @@ const getPostController = require('../controllers/session/get/post');
 const setPostController = require('../controllers/session/set/post');
 
 router.post(
-  'delete',
+  '/delete',
     deletePostController
 );
 router.post(
-  'destroy',
+  '/destroy',
     destroyPostController
 );
 router.post(
-  'get',
+  '/get',
     getPostController
 );
 router.post(
-  'set',
+  '/set',
     setPostController
 );
 

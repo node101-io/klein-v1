@@ -1,7 +1,7 @@
 const sshRequest = require('../../../../utils/sshRequest');
 const jsonify = require('../../../../utils/jsonify');
 
-const checkServerStats = require('../../../../commands/server-listener/checkServerStats');
+const getServerStats = require('../../../../commands/server-listener/getServerStats');
 
 const MAX_CPU_USAGE_PERCENTAGE = 50;
 const MAX_MEMORY_USAGE_PERCENTAGE = 80;
