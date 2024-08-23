@@ -70,9 +70,7 @@ expressApp.use('/preference', preferenceRouteController);
 expressApp.use('/project', projectRouteController);
 expressApp.use('/ssh', sshRouteController);
 expressApp.use('/saved-server', savedServerRouteController);
-expressApp.all('*', (req, res) => {
-  return res.redirect('/');
-});
+expressApp.all('*', (req, res) => res.redirect('/'));
 
 const setupTrayMenu = _ => {
   const image = nativeImage.createFromPath(path.join(__dirname, 'build/icon.png'));

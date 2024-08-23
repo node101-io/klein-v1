@@ -41,12 +41,14 @@ function installNode(callback) {
         });
       });
 
-    if (err == 'server_listener_not_running' || err == 'server_listener_not_running')
+    if (err == 'server_listener_not_running' || err == 'server_listener_version_mismatch')
       serverManager.uninstallServerListener((err, res) => {
+        console.log(4, err, res);
         if (err)
           return callback(err);
 
-        serverManager.installServerListener((err, res) => {
+        serverManager.installServerListener((err, res) => { // TODO: fix usage
+          console.log(5, err, res);
           if (err)
             return callback(err);
 
@@ -73,15 +75,15 @@ function installNode(callback) {
       const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
       const progressText = document.getElementById('index-installation-info-percentage');
 
-//       script.dockerfile_content = `
-// ARG GO_VERSION
-// FROM golang:$GO_VERSION
+      script.dockerfile_content = `
+ARG GO_VERSION
+FROM golang:$GO_VERSION
 
-// WORKDIR /root
+WORKDIR /root
 
-// EXPOSE 26656 26657 1317 9090
+EXPOSE 26656 26657 1317 9090
 
-// CMD [ "bash" ]`;
+CMD [ "bash" ]`;
 
       const stream = nodeManager.installNode({
         docker_compose_content: script.docker_compose_content,
@@ -103,7 +105,7 @@ function installNode(callback) {
 
         console.log(`Progress: ${Math.floor(completedStepCount * 100 / script.steps_count)}%`, eachBuildLog);
       }, (err, res) => {
-        // stream.end();
+        stream.end();
 
         if (err)
           return callback(err);
@@ -147,28 +149,30 @@ window.addEventListener('load', _ => {
       const stream = serverManager.connect({
         host: ipAddress,
         password: password,
-      }, data => {
-        console.log(data.type);
+      }, (err, data) => {
+        console.log(1, err, data);
+        if (err)
+          return setLoginRightErrorMessage(err);
 
         if (data.type == 'ready') {
           window.host = ipAddress.trim();
 
-          addServerToSavedServersIfNotExists({
-            host: window.host
-          }, err => {
-            if (err)
-              return setLoginRightErrorMessage(err);
+        addServerToSavedServersIfNotExists({
+          host: ipAddress.trim()
+        }, err => {
+          console.log(2, err);
+          if (err)
+            return setLoginRightErrorMessage(err);
 
             setLoginRightErrorMessage('');
 
-            serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-              const queryParams = new URLSearchParams(window.location.search);
-
-              if (queryParams.get('install')) {
-                if (err == 'running_node_instance') {
-                  alert('Another node is already running on this server, please remove it first');
-                  return window.location.href = '/node?host=' + window.host;
-                };
+          serverManager.checkAvailabilityForNodeInstallation((err, res) => {
+            console.log(3, err, res);
+            if (new URLSearchParams(window.location.search).has('install')) {
+              if (err == 'running_node_instance') {
+                alert('Another node is already running on this server, please remove it first');
+                return window.location.href = '/node';
+              };
 
                 installNode((err, res) => {
                   if (err)

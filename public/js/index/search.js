@@ -1,5 +1,3 @@
-// function
-
 window.addEventListener('load', _ => {
   document.addEventListener('keydown', event => {
     if (event.key == 'Enter') {

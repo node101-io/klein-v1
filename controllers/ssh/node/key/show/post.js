@@ -18,7 +18,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.last_connected_host,
     command: showKeyInNodeCommand({
       key_name: req.body.key_name,
       key_type: req.body.key_type

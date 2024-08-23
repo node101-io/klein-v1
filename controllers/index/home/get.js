@@ -15,6 +15,11 @@ module.exports = (req, res) => {
   //   });
   // });
 
+  if (true) {
+    console.log('true');
+  };
+
+
   return res.render('index', {
     page: 'index/home',
     title: 'Home',

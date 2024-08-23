@@ -25,7 +25,7 @@ module.exports = (req, res) => {
     fs.readFile(pubkeyPath, 'utf8', (err, pubkey) => {
 
       sshRequest('sftp:read_file', {
-        host: req.body.host,
+        host: req.session.last_connected_host,
         path: '.ssh/authorized_keys'
       }, (err, authorized_keys) => {
         if (err)
@@ -43,7 +43,7 @@ module.exports = (req, res) => {
             return res.json({ err: err });
 
           sshRequest('sftp:write_file', {
-            host: req.body.host,
+            host: req.session.last_connected_host,
             path: '.ssh/authorized_keys',
             content: newAuthorizedKeys
           }, (err, data) => {

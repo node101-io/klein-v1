@@ -95,6 +95,8 @@ module.exports = (req, res, next) => {
     res.locals.short_input_list = [];
     res.locals.long_input_list = [];
 
+    console.log('req.session', req.session);
+
     return next();
   });
 };

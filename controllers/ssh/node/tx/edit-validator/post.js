@@ -45,7 +45,7 @@ module.exports = (req, res) => {
   };
 
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.last_connected_host,
     command,
     in_container: true
   }, (err, edit_validator_response) => {
