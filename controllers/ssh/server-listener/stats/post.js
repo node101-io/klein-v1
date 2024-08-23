@@ -9,7 +9,7 @@ const MAX_DISK_USAGE_PERCENTAGE = 60;
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.session.host,
+    host: req.session.last_connected_host,
     command: getServerStats()
   }, (err, check_server_stats_response) => {
     if (err)

@@ -2,7 +2,7 @@ const sshRequest = require('../../../../../utils/sshRequest');
 
 module.exports = (req, res) => {
   sshRequest('sftp:read_file', {
-    host: req.session.host,
+    host: req.session.last_connected_host,
     path: '.ssh/authorized_keys'
   }, (err, authorized_keys) => {
     if (err)

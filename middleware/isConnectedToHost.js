@@ -2,7 +2,7 @@ const sshRequest = require('../utils/sshRequest');
 
 module.exports = (req, res, next) => {
   sshRequest('check_connection', {
-    host: req.session.host
+    host: req.session.last_connected_host
   }, (err, is_connected) => {
     console.log(err, is_connected);
     if (err)

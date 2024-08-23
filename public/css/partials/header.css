@@ -156,6 +156,7 @@
   min-width: var(--partials-header-each-button-icon-width);
   margin-right: var(--partials-header-navbar-spacing);
   fill: var(--text-subtitle-color);
+  color: var(--text-subtitle-color);
 }
 .partials-header-each-button-text {
   font-weight: 400;

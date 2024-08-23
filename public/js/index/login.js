@@ -41,7 +41,7 @@ function installNode(callback) {
         });
       });
 
-    if (err == 'server_listener_not_running' || err == 'server_listener_not_running')
+    if (err == 'server_listener_not_running' || err == 'server_listener_version_mismatch')
       serverManager.uninstallServerListener((err, res) => {
         if (err)
           return callback(err);
@@ -73,15 +73,15 @@ function installNode(callback) {
       const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
       const progressText = document.getElementById('index-installation-info-percentage');
 
-//       script.dockerfile_content = `
-// ARG GO_VERSION
-// FROM golang:$GO_VERSION
+       script.dockerfile_content = `
+ARG GO_VERSION
+FROM golang:$GO_VERSION
 
-// WORKDIR /root
+WORKDIR /root
 
-// EXPOSE 26656 26657 1317 9090
+EXPOSE 26656 26657 1317 9090
 
-// CMD [ "bash" ]`;
+CMD [ "bash" ]`;
 
       const stream = nodeManager.installNode({
         docker_compose_content: script.docker_compose_content,
@@ -103,7 +103,7 @@ function installNode(callback) {
 
         console.log(`Progress: ${Math.floor(completedStepCount * 100 / script.steps_count)}%`, eachBuildLog);
       }, (err, res) => {
-        // stream.end();
+        stream.end();
 
         if (err)
           return callback(err);
@@ -163,9 +163,7 @@ window.addEventListener('load', _ => {
           setLoginRightErrorMessage('');
 
           serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-            const queryParams = new URLSearchParams(window.location.search);
-
-            if (queryParams.has('install')) {
+            if (new URLSearchParams(window.location.search).has('install')) {
               if (err == 'running_node_instance') {
                 alert('Another node is already running on this server, please remove it first');
                 return window.location.href = '/node';

@@ -7,7 +7,7 @@ module.exports = (req, res) => {
     return res.json({ err: 'bad_request' });
 
   sshRequest('exec', {
-    host: req.session.host,
+    host: req.session.last_connected_host,
     command: setNodeConfigVariableCommand('persistent_peers', req.body.peers.join(','))
   }, (err, set_node_config_variable_response) => {
     if (err)

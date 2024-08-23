@@ -4,7 +4,7 @@ const checkContainerLogsCommand = require('../../../../commands/node/checkLogs')
 
 module.exports = (req, res) => {
   sshRequest('exec:stream', {
-    host: req.session.host,
+    host: req.session.last_connected_host,
     id: req.body.id,
     command: checkContainerLogsCommand()
   }, (err, output) => {

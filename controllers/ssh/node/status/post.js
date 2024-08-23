@@ -5,7 +5,7 @@ const jsonify = require('../../../../utils/jsonify');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.session.host,
+    host: req.session.last_connected_host,
     command: getNodeStatusCommand()
   }, (err, get_sync_status_response) => {
     if (err)
