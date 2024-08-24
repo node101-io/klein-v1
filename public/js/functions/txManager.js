@@ -2,7 +2,6 @@ const makeTxManager = _ => {
   return {
     checkTxResult: (data, callback) => {
       localhostRequest('/ssh/node/tx/check-tx-result', 'POST', {
-        host: window.host,
         tx_hash: data.tx_hash
       }, (err, res) => {
         if (err)
@@ -13,7 +12,6 @@ const makeTxManager = _ => {
     },
     createValidator: (data, callback) => {
       localhostRequest('/ssh/node/tx/create-validator', 'POST', {
-        host: window.host,
         amount: data.amount,
         chain_registry_identifier: data.chain_registry_identifier,
         commission_max_change_rate: data.commission_max_change_rate,
@@ -36,7 +34,6 @@ const makeTxManager = _ => {
     },
     delegateToken: (data, callback) => {
       localhostRequest('/ssh/node/tx/delegate-token', 'POST', {
-        host: window.host,
         amount: data.amount,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
@@ -52,7 +49,6 @@ const makeTxManager = _ => {
     },
     editValidator: (data, callback) => {
       localhostRequest('/ssh/node/tx/edit-validator', 'POST', {
-        host: window.host,
         chain_registry_identifier: data.chain_registry_identifier,
         commission_rate: data.commission_rate,
         details: data.details,
@@ -71,7 +67,6 @@ const makeTxManager = _ => {
     },
     redelegateToken: (data, callback) => {
       localhostRequest('/ssh/node/tx/redelegate-token', 'POST', {
-        host: window.host,
         amount: data.amount,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
@@ -88,7 +83,6 @@ const makeTxManager = _ => {
     },
     sendToken: (data, callback) => {
       localhostRequest('/ssh/node/tx/send-token', 'POST', {
-        host: window.host,
         amount: data.amount,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
@@ -104,7 +98,6 @@ const makeTxManager = _ => {
     },
     undelegateToken: (data, callback) => {
       localhostRequest('/ssh/node/tx/undelegate-token', 'POST', {
-        host: window.host,
         amount: data.amount,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
@@ -120,7 +113,6 @@ const makeTxManager = _ => {
     },
     unjailValidator: (data, callback) => {
       localhostRequest('/ssh/node/tx/unjail-validator', 'POST', {
-        host: window.host,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
         from_key_name: data.from_key_name,
@@ -134,7 +126,6 @@ const makeTxManager = _ => {
     },
     voteProposal: (data, callback) => {
       localhostRequest('/ssh/node/tx/vote-proposal', 'POST', {
-        host: window.host,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
         from_key_name: data.from_key_name,
@@ -150,7 +141,6 @@ const makeTxManager = _ => {
     },
     withdrawRewards: (data, callback) => {
       localhostRequest('/ssh/node/tx/withdraw-rewards', 'POST', {
-        host: window.host,
         chain_registry_identifier: data.chain_registry_identifier,
         fees: data.fees,
         from_key_name: data.from_key_name,

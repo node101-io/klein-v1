@@ -1,8 +1,6 @@
 const makeServerManager = _ => {
   const _checkDocker = callback => {
-    localhostRequest('/ssh/docker/check', 'POST', {
-      host: window.host,
-    }, (err, res) => {
+    localhostRequest('/ssh/docker/check', 'POST', {}, (err, res) => {
       if (err)
         return callback(err);
 
@@ -11,9 +9,7 @@ const makeServerManager = _ => {
   };
 
   const _checkServerListenerAndMatchVersion = callback => {
-    localhostRequest('/ssh/server-listener/check', 'POST', {
-      host: window.host,
-    }, (err, res) => {
+    localhostRequest('/ssh/server-listener/check', 'POST', {}, (err, res) => {
       if (err)
         return callback(err);
 
@@ -22,9 +18,7 @@ const makeServerManager = _ => {
   };
 
   const _checkRunningNodeInstance = callback => {
-    localhostRequest('/ssh/node/check', 'POST', {
-      host: window.host,
-    }, (err, res) => {
+    localhostRequest('/ssh/node/check', 'POST', {}, (err, res) => {
       if (err)
         return callback(err);
 
@@ -33,9 +27,7 @@ const makeServerManager = _ => {
   };
 
   const _checkAvailableResources = callback => {
-    localhostRequest('/ssh/server-listener/stats', 'POST', {
-      host: window.host,
-    }, (err, res) => {
+    localhostRequest('/ssh/server-listener/stats', 'POST', {}, (err, res) => {
       if (err)
         return callback(err);
 
@@ -52,7 +44,6 @@ const makeServerManager = _ => {
         const stream = makeStream(onData);
 
         localhostRequest('/ssh/server-listener/install', 'POST', {
-          host: window.host,
           id: stream.id
         }, (err, res) => {
           stream.end();
@@ -75,9 +66,7 @@ const makeServerManager = _ => {
       if (err)
         return callback(err);
 
-      localhostRequest('/ssh/server-listener/uninstall', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/server-listener/uninstall', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -87,11 +76,8 @@ const makeServerManager = _ => {
   };
 
   return {
-    connect: (data, onData, callback) => {
-      const stream = makeStream(onData);
-
+    connect: (data, callback) => {
       localhostRequest('/ssh/connection/start', 'POST', {
-        id: stream.id,
         ...data
       }, (err, res) => {
         if (err)
@@ -99,13 +85,9 @@ const makeServerManager = _ => {
 
         return callback(null);
       });
-
-      return stream;
     },
     disconnect: callback => {
-      localhostRequest('/ssh/connection/end', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/connection/end', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -113,9 +95,7 @@ const makeServerManager = _ => {
       });
     },
     uninstallDocker: callback => {
-      localhostRequest('/ssh/docker/uninstall', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/docker/uninstall', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -133,7 +113,6 @@ const makeServerManager = _ => {
         const stream = makeStream(onData);
 
         localhostRequest('/ssh/docker/install', 'POST', {
-          host: window.host,
           id: stream.id
         }, (err, res) => {
           stream.end();

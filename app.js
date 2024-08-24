@@ -40,6 +40,7 @@ const preferenceRouteController = require('./routes/preferenceRoute');
 const projectRouteController = require('./routes/projectRoute');
 const sshRouteController = require('./routes/sshRoute');
 const savedServerRouteController = require('./routes/savedServerRoute');
+const sessionRouteController = require('./routes/sessionRoute');
 
 i18n.configure({
   locales: ['en', 'tr'],
@@ -70,9 +71,8 @@ expressApp.use('/preference', preferenceRouteController);
 expressApp.use('/project', projectRouteController);
 expressApp.use('/ssh', sshRouteController);
 expressApp.use('/saved-server', savedServerRouteController);
-expressApp.all('*', (req, res) => {
-  return res.redirect('/');
-});
+expressApp.use('/session', sessionRouteController);
+expressApp.use((req, res) => res.redirect('/'));
 
 const setupTrayMenu = _ => {
   const image = nativeImage.createFromPath(path.join(__dirname, 'build/icon.png'));
@@ -144,7 +144,7 @@ electronApp
               setupTrayMenu();
               setupDeepLink();
             }).on('error', err => {
-              if (err.code == 'EADDRINUSE')
+              if (err && err.code == 'EADDRINUSE')
                 dialog.showMessageBoxSync({
                   type: 'warning',
                   message: `Port ${APP_PORT} is already in use by another application. System restart is recommended.`

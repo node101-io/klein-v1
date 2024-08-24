@@ -2,11 +2,11 @@ extends ./head
 block content
   .partials-all-wrapper
     .partials-all-inner-wrapper
-      .partials-header-resize-button-wrapper
-        .partials-header-resize-button#partials-header-resize-button
-          svg.partials-header-resize-button-icon(viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg')
-            path(d='M5.47124 1.47132C5.73159 1.21097 5.73159 0.788864 5.47124 0.528514C5.21089 0.268165 4.78878 0.268164 4.52843 0.528514L0.528432 4.52851C0.268083 4.78886 0.268083 5.21097 0.528432 5.47132L4.52843 9.47132C4.78878 9.73167 5.21089 9.73167 5.47124 9.47132C5.73159 9.21097 5.73159 8.78886 5.47124 8.52851L1.94265 4.99992L5.47124 1.47132Z')
-      .partials-header-navbar-wrapper
+      .partials-header-navbar-wrapper(class=navbar_collapsed ? 'partials-header-navbar-wrapper-collapsed' : '')
+        .partials-header-resize-button-wrapper
+          .partials-header-resize-button#partials-header-resize-button
+            svg.partials-header-resize-button-icon(viewBox='0 0 6 10' fill='none' xmlns='http://www.w3.org/2000/svg')
+              path(d='M5.47124 1.47132C5.73159 1.21097 5.73159 0.788864 5.47124 0.528514C5.21089 0.268165 4.78878 0.268164 4.52843 0.528514L0.528432 4.52851C0.268083 4.78886 0.268083 5.21097 0.528432 5.47132L4.52843 9.47132C4.78878 9.73167 5.21089 9.73167 5.47124 9.47132C5.73159 9.21097 5.73159 8.78886 5.47124 8.52851L1.94265 4.99992L5.47124 1.47132Z')
         .partials-header-each-subtitle= __('partials-header-subtitle-main')
         .partials-header-each-buttons-wrapper
           .partials-header-each-button#partials-header-each-button-home
@@ -22,8 +22,20 @@ block content
         .partials-header-each-subtitle= __('partials-header-subtitle-nodes')
         .partials-header-each-buttons-wrapper
           each server, i in saved_server_list
-            a.partials-header-each-button(href=`/login?project_id=${server.installed_projects[0].id}&host=${server.host}`)
-              img.partials-header-each-button-icon(src=server.installed_projects[0].image style='border-radius: 30%;')
+            a.partials-header-each-button(href=server.project_id ? `/login?project_id=${server.project_id}` : '/login')
+              if server.project_image
+                img.partials-header-each-button-icon(src=(server.project_image || '') style='border-radius: 30%;')
+              else
+                svg.partials-header-each-button-icon(viewbox='0 -2 17 17' xmlns='http://www.w3.org/2000/svg' stroke='currentColor')
+                  path(d='m.5 10.5v-2c0-1.1045695.8954305-2 2-2h12c1.1045695 0 2 .8954305 2 2v2c0 1.1045695-.8954305 2-2 2h-12c-1.1045695 0-2-.8954305-2-2z' fill='none')
+                  path(d='m4.5 9.5c0-.55228475-.44771525-1-1-1s-1 .44771525-1 1c0 .5522847.44771525 1 1 1s1-.4477153 1-1z' fill='none')
+                  path(d='m.5 4.49375668.00936503-2c.00344048-1.10212675.89785814-1.99375668 1.99999025-1.99375668h11.99057232c1.0543617 0 1.9181651.81587779 1.9945142 1.85073766l.005476.15550566-.009365 2c-.0034405 1.10212675-.8978582 1.99375668-1.9999903 1.99375668h-11.9905625c-1.05437154 0-1.91817487-.81587779-1.99452401-1.85073766z' fill='none')
+                  path(d='m4.5 3.5c0-.55228475-.44771525-1-1-1s-1 .44771525-1 1 .44771525 1 1 1 1-.44771525 1-1z' fill='none')
+                //- svg.partials-header-each-button-icon(viewbox='112 112 800 800' xmlns='http://www.w3.org/2000/svg')
+                //-   path(d='M852.9 147.8c4.9 0 9.1 4.2 9.1 9.1v167.8c0 4.9-4.2 9.1-9.1 9.1H171.1c-4.9 0-9.1-4.2-9.1-9.1V156.9c0-4.9 4.2-9.1 9.1-9.1h681.8m0-50H171.1c-32.5 0-59.1 26.6-59.1 59.1v167.8c0 32.5 26.6 59.1 59.1 59.1h681.8c32.5 0 59.1-26.6 59.1-59.1V156.9c0-32.5-26.6-59.1-59.1-59.1z')
+                //-   path(d='M290.5 214h-60v60h60v-60zM393.5 214h-60v60h60v-60zM806 214H591v60h215v-60zM852.9 417.8c4.9 0 9.1 4.2 9.1 9.1v167.8c0 4.9-4.2 9.1-9.1 9.1H171.1c-4.9 0-9.1-4.2-9.1-9.1V426.9c0-4.9 4.2-9.1 9.1-9.1h681.8m0-50H171.1c-32.5 0-59.1 26.6-59.1 59.1v167.8c0 32.5 26.6 59.1 59.1 59.1h681.8c32.5 0 59.1-26.6 59.1-59.1V426.9c0-32.5-26.6-59.1-59.1-59.1z')
+                //-   path(d='M290.5 484h-60v60h60v-60zM393.5 484h-60v60h60v-60zM806 484H591v60h215v-60zM852.9 687.8c4.9 0 9.1 4.2 9.1 9.1v167.8c0 4.9-4.2 9.1-9.1 9.1H171.1c-4.9 0-9.1-4.2-9.1-9.1V696.9c0-4.9 4.2-9.1 9.1-9.1h681.8m0-50H171.1c-32.5 0-59.1 26.6-59.1 59.1v167.8c0 32.5 26.6 59.1 59.1 59.1h681.8c32.5 0 59.1-26.6 59.1-59.1V696.9c0-32.5-26.6-59.1-59.1-59.1z')
+                //-   path(d='M290.5 754h-60v60h60v-60zM393.5 754h-60v60h60v-60zM806 754H591v60h215v-60z')
               .partials-header-each-button-text= server.host
               .partials-header-each-button-shortcut= 'Ctrl+' + (i + 1)
           .partials-header-each-button#partials-header-each-button-new-node

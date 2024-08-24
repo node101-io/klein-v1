@@ -17,7 +17,7 @@ window.addEventListener('load', _ => {
     // if (event.target.closest('.index-general-each-project-install-button')) {
     //   const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
 
-    //   window.location.href = `/login?project_id=${projectIdToInstall}&install=true`;
+    //   window.location.href = `/login?project_id=${projectIdToInstall}&install`;
     // };
   });
 });

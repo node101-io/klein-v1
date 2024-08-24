@@ -4,7 +4,7 @@ const uninstallDockerCommand = require('../../../../commands/docker/uninstall');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.last_connected_host,
     command: uninstallDockerCommand()
   }, (err, uninstall_docker_response) => {
     if (err)

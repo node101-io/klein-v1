@@ -1,6 +1,4 @@
 window.addEventListener('load', () => {
-  window.host = new URLSearchParams(window.location.search).get('host');
-
   document.addEventListener('click', event => {
     if (event.target.closest('#node-general-save-button-create-wallet')) {
       const createWalletPage = document.getElementById('node-general-content-wrapper-create-wallet');
@@ -22,7 +20,7 @@ window.addEventListener('load', () => {
         if (err)
           return console.error(err);
 
-        return window.location.href = '/node/wallets?host=' + window.host;
+        return window.location.href = '/node/wallets';
       });
     };
 

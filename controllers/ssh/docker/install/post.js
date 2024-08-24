@@ -4,7 +4,7 @@ const installDockerCommand = require('../../../../commands/docker/install');
 
 module.exports = (req, res) => {
   sshRequest('exec:stream', {
-    host: req.body.host,
+    host: req.session.last_connected_host,
     id: req.body.id,
     command: installDockerCommand()
   }, (err, install_docker_response) => {

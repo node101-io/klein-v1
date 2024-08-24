@@ -80,7 +80,6 @@ const makeNodeManager = _ => {
         return callback('bad_request');
 
       localhostRequest('/ssh/node/install', 'POST', {
-        host: window.host,
         id: stream.id,
         docker_compose_content: data.docker_compose_content,
         dockerfile_content: data.dockerfile_content,
@@ -97,9 +96,7 @@ const makeNodeManager = _ => {
       return stream;
     },
     uninstallRunningNode: callback => {
-      localhostRequest('/ssh/node/uninstall', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/node/uninstall', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -107,9 +104,7 @@ const makeNodeManager = _ => {
       });
     },
     startNode: callback => {
-      localhostRequest('/ssh/node/start', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/node/start', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -117,9 +112,7 @@ const makeNodeManager = _ => {
       });
     },
     stopNode: callback => {
-      localhostRequest('/ssh/node/stop', 'POST', {
-        host: window.host
-      }, (err, res) => {
+      localhostRequest('/ssh/node/stop', 'POST', {}, (err, res) => {
         if (err)
           return callback(err);
 
@@ -132,22 +125,18 @@ const makeNodeManager = _ => {
           return callback(err);
 
         localhostRequest('/ssh/node/sync/set-peers', 'POST', {
-          host: window.host,
           peers: chain_info.peers
         }, (err, res) => {
           if (err)
             return callback(err);
 
           localhostRequest('/ssh/node/sync/set-seeds', 'POST', {
-            host: window.host,
             seeds: chain_info.seeds
           }, (err, res) => {
             if (err)
               return callback(err);
 
-            localhostRequest('/ssh/node/restart', 'POST', {
-              host: window.host
-            }, (err, res) => {
+            localhostRequest('/ssh/node/restart', 'POST', {}, (err, res) => {
               if (err)
                 return callback(err);
 
@@ -161,7 +150,6 @@ const makeNodeManager = _ => {
       const stream = makeStream(onData);
 
       localhostRequest('/ssh/node/logs', 'POST', {
-        host: window.host,
         id: stream.id
       }, (err, res) => {
         stream.end();
@@ -178,7 +166,6 @@ const makeNodeManager = _ => {
       const stream = makeStream(onData);
 
       localhostRequest('/ssh/node/sync/install-snapshot', 'POST', {
-        host: window.host,
         id: stream.id
       }, (err, res) => {
         stream.end();

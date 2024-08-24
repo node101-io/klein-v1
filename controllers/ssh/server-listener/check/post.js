@@ -8,7 +8,7 @@ const versions = require('../../../../versions');
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
+    host: req.session.last_connected_host,
     command: checkServerListenerExistentCommand()
   }, (err, check_server_listener_response) => {
     if (err)
@@ -20,7 +20,7 @@ module.exports = (req, res) => {
       return res.json({ err: 'server_listener_not_running' });
 
     sshRequest('sftp:read_file', {
-      host: req.body.host,
+      host: req.session.last_connected_host,
       path: 'server-listener/package.json' // TODO: instead of looking at package.json, we should fetch the tag
     }, (err, package_json) => {
       if (err)

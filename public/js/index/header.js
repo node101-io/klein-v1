@@ -1,4 +1,7 @@
 window.addEventListener('load', () => {
+  const navbarWrapper = document.querySelector('.partials-header-navbar-wrapper');
+  const navbarResizeButton = document.querySelector('.partials-header-resize-button');
+
   document.addEventListener('click', event => {
     if (event.target.closest('.partials-header-each-button')) {
       const page = event.target.closest('.partials-header-each-button').id.replace('partials-header-each-button-', '')
@@ -19,10 +22,15 @@ window.addEventListener('load', () => {
     };
 
     if (event.target.closest('.partials-header-resize-button')) {
-      document.querySelector('.partials-header-navbar-wrapper').classList.toggle('partials-header-navbar-wrapper-collapsed');
-      document.querySelector('.partials-header-resize-button').classList.toggle('partials-header-resize-button-collapsed');
+      localhostRequest('/session/set', 'POST', {
+        key: 'navbar_collapsed',
+        value: navbarWrapper.classList.toggle('partials-header-navbar-wrapper-collapsed')
+      }, (err, res) => {
+        if (err)
+          return console.error(err);
 
-      event.target.closest('.partials-header-resize-button').classList.toggle('partials-header-resize-button-reversed');
+        return console.log(res);
+      });
     };
   });
 });

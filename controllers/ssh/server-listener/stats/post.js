@@ -1,7 +1,7 @@
 const sshRequest = require('../../../../utils/sshRequest');
 const jsonify = require('../../../../utils/jsonify');
 
-const checkServerStats = require('../../../../commands/server-listener/checkServerStats');
+const getServerStats = require('../../../../commands/server-listener/getServerStats');
 
 const MAX_CPU_USAGE_PERCENTAGE = 50;
 const MAX_MEMORY_USAGE_PERCENTAGE = 80;
@@ -9,8 +9,8 @@ const MAX_DISK_USAGE_PERCENTAGE = 60;
 
 module.exports = (req, res) => {
   sshRequest('exec', {
-    host: req.body.host,
-    command: checkServerStats()
+    host: req.session.last_connected_host,
+    command: getServerStats()
   }, (err, check_server_stats_response) => {
     if (err)
       return res.json({ err: err });
