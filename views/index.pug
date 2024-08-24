@@ -23,6 +23,8 @@ block main
       a.index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}` href=`/login?project_id=${project._id}&install`)
         .index-general-each-project-install-button-text= __('index-general-each-project-install-button-text')
   input.display-none#last-connected-host(value=last_connected_host)
+  .general-loading-wrapper.display-none
+    .general-loading-text= __('general-loading-text')
   .index-wrapper#index-wrapper(class=setFrontDisplayStyle(page, 'index/*'))
     .index-home-wrapper#index-home-wrapper(class=setFrontDisplayStyle(page, 'index/home'))
       .index-home-header-wrapper
@@ -194,17 +196,17 @@ block main
       .node-index-panel-wrapper
         .node-index-each-panel-wrapper.node-index-sync-status-panel
           .node-index-each-panel-title= __('node-index-each-panel-title-sync-status')
-          .node-index-each-panel-content#node-index-sync-status-content 950.34k
+          .node-index-each-panel-content#node-index-sync-status-content 0
         .node-index-each-panel-wrapper.node-index-cpu-panel
           .node-index-each-panel-title= __('node-index-each-panel-title-cpu')
           .node-index-each-panel-content#node-index-cpu-content 0%
           .node-index-each-panel-bar-wrapper
-            .node-index-each-panel-bar#node-index-cpu-bar
+            .node-index-each-panel-bar#node-index-cpu-bar(style='width: 0; min-width: 0')
         .node-index-each-panel-wrapper.node-index-memory-panel
           .node-index-each-panel-title= __('node-index-each-panel-title-memory')
           .node-index-each-panel-content#node-index-memory-content 0%
           .node-index-each-panel-bar-wrapper
-            .node-index-each-panel-bar#node-index-memory-bar
+            .node-index-each-panel-bar#node-index-memory-bar(style='width: 0; min-width: 0')
       .node-index-operations-wrapper
         each operation in ['start', 'stop', 'restart', 'delete']
           .node-index-each-operation-wrapper(class=(operation == 'delete' ? 'node-index-delete-operation-wrapper' : ''))

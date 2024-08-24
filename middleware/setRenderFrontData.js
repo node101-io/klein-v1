@@ -6,24 +6,15 @@ const ALLOWED_COLOR_THEME_LIST = ['dark', 'light'];
 const DEFAULT_COLOR_THEME = 'light';
 const INCLUDES = {
   css: [
-    'general/general',
+    'general/general', 'general/loading',
     'index/general', 'index/home', 'index/install', 'index/login', 'index/search',
     'node/general', 'node/index',
     'partials/header'
   ],
   js: [
+    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/preventMultiTab', 'functions/jsonify',
     'index/home', 'index/login', 'index/header', 'index/search', 'index/node',
-    'functions/localhostRequest',
-    'functions/generateRandomHEX',
-    'functions/webSocket',
-    'functions/nodeManager',
-    'functions/serverManager',
-    'functions/SSHKeyManager',
-    'functions/walletManager',
-    'functions/preferenceManager',
-    'functions/savedServersManager',
-    'functions/preventMultiTab',
-    'functions/jsonify'
+    'node/index'
   ]
 };
 

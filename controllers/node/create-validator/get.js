@@ -1,4 +1,5 @@
 module.exports = (req, res) => {
+  console.log("here");
   return res.render('index', {
     page: 'node/create-validator',
     title: 'Create Validator',
