@@ -6,7 +6,7 @@ const isAuth = require('../middleware/isAuth');
 const isConnectedToHost = require('../middleware/isConnectedToHost');
 const setRenderFrontData = require('../middleware/setRenderFrontData');
 
-const createValidatorGetController = require('../controllers/node/create-validator/get');
+const createValidatorGetController = require('../controllers/node/validator/get');
 const delegateGetController = require('../controllers/node/delegate/get');
 const editValidatorGetController = require('../controllers/node/edit-validator/get');
 const indexGetController = require('../controllers/node/index/get');
@@ -16,7 +16,7 @@ const sendTokenGetController = require('../controllers/node/send-token/get');
 const undelegateGetController = require('../controllers/node/undelegate/get');
 const unjailGetController = require('../controllers/node/unjail/get');
 const voteGetController = require('../controllers/node/vote/get');
-const walletsGetController = require('../controllers/node/wallets/get');
+const walletsGetController = require('../controllers/node/wallet/get');
 const createWalletGetController = require('../controllers/node/create-wallet/get');
 const recoverWalletGetController = require('../controllers/node/recover-wallet/get');
 const withdrawRewardsGetController = require('../controllers/node/withdraw-rewards/get');

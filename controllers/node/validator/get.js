@@ -1,7 +1,8 @@
 module.exports = (req, res) => {
+  console.log("here");
   return res.render('index', {
-    page: 'node/recover-wallet',
-    title: 'Recover Wallet',
+    page: 'node/validator',
+    title: 'node-validator-page-title',
     node: {
       title: 'Celestia',
       description: 'Celestia is a modular chain.',
@@ -10,17 +11,6 @@ module.exports = (req, res) => {
         alt: 'Agoric Logo'
       }],
       link: 'https://node101.io'
-    },
-    host: req.query.host,
-    short_input_list: [
-      {
-        id: 'key-name',
-        type: 'string',
-        title: 'Wallet Name',
-        placeholder: 'Input placeholder',
-        is_required: true
-      },
-    ],
-    long_input_list: []
+    }
   });
 };

@@ -10,7 +10,6 @@ module.exports = (req, res) => {
         alt: 'Celestia Logo'
       }],
       link: 'https://node101.io'
-    },
-    host: req.query.host
+    }
   });
 };

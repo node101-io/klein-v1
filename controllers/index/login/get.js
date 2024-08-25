@@ -13,10 +13,10 @@ module.exports = (req, res) => {
 
   fetch(`https://admin.klein.run/api/projects?id=${req.session.project_id}`, {}, (err, data) => {
     if (err)
-      return res.json({ err: err });
+      return res.json({ error: err });
 
     if (!data.success)
-      return res.json({ err: data.err });
+      return res.json({ error: data.error });
 
     req.session.current_project = data.project;
 

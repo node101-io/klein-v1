@@ -1,0 +1,25 @@
+:root {
+  --general-loading-font-size: 22px;
+}
+
+.general-loading-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  min-height: 100vh;
+  width: 100vw;
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-shadow-color);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  cursor: progress;
+}
+.general-loading-text {
+  font-weight: 600;
+  color: var(--text-title-color);
+  font-size: var(--general-loading-font-size);
+}
