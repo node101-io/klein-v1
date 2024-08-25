@@ -61,7 +61,7 @@
 	"node-wallets-mnemonic-input-title": "node-wallets-mnemonic-input-title",
 	"node-wallets-mnemonic-input-placeholder": "node-wallets-mnemonic-input-placeholder",
 	"node-wallets-mnemonic-input-each-title": "{{number}}. Word",
-	"node-general-title-create-wallet": "Create Wallet",
+	"node-general-title-create-wallet": "Create New Wallet",
 	"node-general-title-recover-wallet": "Recover Wallet",
 	"node-general-title-index": "Node Operations",
 	"node-index-each-operation-title-start": "Start Node",
