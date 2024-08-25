@@ -6,16 +6,13 @@ const isAuth = require('../middleware/isAuth');
 const isConnectedToHost = require('../middleware/isConnectedToHost');
 const setRenderFrontData = require('../middleware/setRenderFrontData');
 
-const createValidatorGetController = require('../controllers/node/validator/get');
-const delegateGetController = require('../controllers/node/delegate/get');
 const indexGetController = require('../controllers/node/index/get');
 const logsGetController = require('../controllers/node/logs/get');
-const redelegateGetController = require('../controllers/node/redelegate/get');
 const sendTokenGetController = require('../controllers/node/send-token/get');
-const undelegateGetController = require('../controllers/node/undelegate/get');
-const unjailGetController = require('../controllers/node/unjail/get');
+const stakingGetController = require('../controllers/node/staking/get');
+const validatorGetController = require('../controllers/node/validator/get');
 const voteGetController = require('../controllers/node/vote/get');
-const walletsGetController = require('../controllers/node/wallet/get');
+const walletGetController = require('../controllers/node/wallet/get');
 const withdrawRewardsGetController = require('../controllers/node/withdraw-rewards/get');
 
 router.get(
@@ -26,32 +23,11 @@ router.get(
     indexGetController
 );
 router.get(
-  '/create-validator',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    createValidatorGetController
-);
-router.get(
-  '/delegate',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    delegateGetController
-);
-router.get(
   '/logs',
     isAuth,
     isConnectedToHost,
     setRenderFrontData,
     logsGetController
-);
-router.get(
-  '/redelegate',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    redelegateGetController
 );
 router.get(
   '/send-token',
@@ -61,18 +37,18 @@ router.get(
     sendTokenGetController
 );
 router.get(
-  '/undelegate',
+  '/staking',
     isAuth,
     isConnectedToHost,
     setRenderFrontData,
-    undelegateGetController
+    stakingGetController
 );
 router.get(
-  '/unjail',
+  '/validator',
     isAuth,
     isConnectedToHost,
     setRenderFrontData,
-    unjailGetController
+    validatorGetController
 );
 router.get(
   '/vote',
@@ -82,11 +58,11 @@ router.get(
     voteGetController
 );
 router.get(
-  '/wallets',
+  '/wallet',
     isAuth,
     isConnectedToHost,
     setRenderFrontData,
-    walletsGetController
+    walletGetController
 );
 router.get(
   '/withdraw-rewards',

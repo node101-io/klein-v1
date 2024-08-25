@@ -1,47 +1,10 @@
 module.exports = (req, res) => {
+  if (!req.session.global_current_project || !req.session.global_current_project._id)
+    return res.redirect('/home');
+
   return res.render('index', {
     page: 'node/withdraw-rewards',
-    title: 'Withdraw Rewards',
-    node: {
-      title: 'Celestia',
-      description: 'Celestia is a modular chain.',
-      image: [{
-        url: 'https://node101.s3.eu-central-1.amazonaws.com/klein-project-celestiatestnet3-200w-200h',
-        alt: 'Agoric Logo'
-      }],
-      link: 'https://node101.io'
-    },
-    host: req.query.host,
-    short_input_list: [
-      {
-        id: 'fees',
-        type: 'text',
-        title: 'Fees',
-        placeholder: 'Input placeholder',
-        is_required: true
-      },
-      {
-        id: 'key',
-        type: 'text',
-        title: 'Key Name',
-        placeholder: 'Input placeholder',
-        is_required: true
-      },
-      {
-        id: 'to-valoper-address',
-        type: 'text',
-        title: 'To Valoper Address',
-        placeholder: 'Input placeholder',
-        is_required: true
-      },
-      {
-        id: 'withdraw-commission',
-        type: 'number',
-        title: 'Withdraw Commission',
-        placeholder: 'Input placeholder',
-        is_required: false
-      },
-    ],
-    long_input_list: []
+    title: __('node-withdraw-rewards-page-title'),
+    project: req.session.global_current_project
   });
 };

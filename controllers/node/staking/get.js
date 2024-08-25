@@ -3,8 +3,8 @@ module.exports = (req, res) => {
     return res.redirect('/home');
 
   return res.render('index', {
-    page: 'node/wallet',
-    title: __('node-wallet-page-title'),
+    page: 'node/staking',
+    title: __('node-staking-page-title'),
     project: req.session.global_current_project
   });
 };

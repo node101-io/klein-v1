@@ -4,11 +4,6 @@ const setFrontDisplayStyle = require('../utils/setFrontDisplayStyle');
 
 const ALLOWED_COLOR_THEME_LIST = ['dark', 'light'];
 const DEFAULT_COLOR_THEME = 'light';
-const DEFAULT_EMPTY_NODE = {
-  image: [{}],
-  urls: [{}],
-  system_requirements: {}
-};
 const DEFAULT_EMPTY_PROJECT = {
   image: [{}],
   urls: [{}],
@@ -37,7 +32,22 @@ const NODE_OPERATIONS = [
       },
       {
         id: 'unjail',
-        custom_content: true
+        short_input_list: [
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ]
       }
     ]
   },
@@ -228,9 +238,36 @@ const NODE_OPERATIONS = [
     id: 'withdraw-rewards',
     content: [
       {
-        id: '',
+        id: 'withdraw-rewards',
         short_input_list: [
-          
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'to-valoper-address',
+            type: 'text',
+            title: 'To Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'withdraw-commission',
+            type: 'number',
+            title: 'Withdraw Commission',
+            placeholder: 'Input placeholder',
+            is_required: false
+          },
         ]
       },
     ]
@@ -238,19 +275,203 @@ const NODE_OPERATIONS = [
   {
     id: 'staking',
     content: [
-      
+      {
+        id: 'delegate',
+        short_input_list: [
+          {
+            id: 'amount',
+            type: 'number',
+            title: 'Amount',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'to-valoper-address',
+            type: 'text',
+            title: 'To Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ],
+        long_input_list: [
+          {
+            id: 'amount',
+            type: 'number',
+            title: 'Amount',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ]
+      },
+      {
+        id: 'redelegate',
+        short_input_list: [
+          {
+            id: 'amount',
+            type: 'number',
+            title: 'Amount',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'from-valoper-address',
+            type: 'text',
+            title: 'From Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'to-valoper-address',
+            type: 'text',
+            title: 'To Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ],
+      },
+      {
+        id: 'undelegate',
+        short_input_list: [
+          {
+            id: 'amount',
+            type: 'number',
+            title: 'Amount',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'from-valoper-address',
+            type: 'text',
+            title: 'From Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ]
+      }
     ]
   },
   {
     id: 'vote',
     content: [
-      
+      {
+        id: 'vote',
+        short_input_list: [
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'proposal-id',
+            type: 'number',
+            title: 'Proposal ID',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'option',
+            type: 'radio',
+            choices: [
+              { id: 'yes', text: 'Yes' },
+              { id: 'no', text: 'No' },
+              { id: 'no-with-veto', text: 'No with veto' },
+              { id: 'abstain', text: 'Abstain' },
+            ],
+            title: 'Proposal ID',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ],
+      }
     ]
   },
   {
     id: 'send-token',
     content: [
-      
+      {
+        id: 'send-token',
+        short_input_list: [
+          {
+            id: 'amount',
+            type: 'number',
+            title: 'Amount',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'fees',
+            type: 'text',
+            title: 'Fees',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'key',
+            type: 'text',
+            title: 'Key Name',
+            placeholder: 'Input placeholder',
+            is_required: true
+          },
+          {
+            id: 'to-valoper-address',
+            type: 'text',
+            title: 'To Valoper Address',
+            placeholder: 'Input placeholder',
+            is_required: true
+          }
+        ]
+      }
     ]
   },
   {
@@ -307,7 +528,6 @@ module.exports = (req, res, next) => {
     res.locals.projects = [];
 
     res.locals.project = DEFAULT_EMPTY_PROJECT;
-    res.locals.node = DEFAULT_EMPTY_NODE;
     res.locals.node_operations = NODE_OPERATIONS;
     res.locals.node_operations_menu = NODE_OPERATIONS_MENU;
     res.locals.rent_servers = RENT_SERVERS;
