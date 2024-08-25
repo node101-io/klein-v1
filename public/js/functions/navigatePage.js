@@ -1,16 +1,39 @@
+let isPageLoading = false;
+
 function displayAllNone() {}; // Bütün wrapperlar display none
 
+function saveToSession(data, callback) {
+  if (!data || typeof data != 'object')
+    return callback(null);
+
+  localhostRequest('/session/set', 'POST', data, (err, res) => {
+    if (err) return callback(err);
+
+    return callback(null);
+  });
+};
+
 function navigatePage(page, data) {
-  if (!data) return; // throw error ama front yani
+  if (!page || typeof page != 'string' || !page.trim().length)
+    return;
 
-  if (page == '/login') {
-    if (data.project);
-    if (data.project.title);
+  if (isPageLoading) return;
+  isPageLoading = true;
 
-    document.querySelector('.index-login-project-title').innerText = data.project.title;
+  saveToSession(data, err => {
+    if (err) {
+      isPageLoading = false;
+      return;
+    };
 
     displayAllNone();
+    if (page == '/login') {
+      indexLoginLoadPage(data);
+      document.querySelector('.index-login-wrapper').style.display = 'flex';
+    } else if (page == '') {
 
-    document.querySelector('.index-login-wrapper').style.display = 'flex';
-  }
-}
+    }
+
+    isPageLoading = false;
+  });
+};

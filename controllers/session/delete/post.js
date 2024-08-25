@@ -1,11 +1,16 @@
 module.exports = (req, res) => {
-  if (!req.body.key || typeof req.body.key != 'string' || !req.body.key.trim().length)
+  if (!req.body.keys || !Array.isArray(req.body.keys) || !req.body.keys.length)
     return res.json({ error: 'bad_request' });
 
-  if (!req.session[key.trim()])
-    return res.json({ error: 'not_found' });
+  let count = 0;
 
-  req.session[key.trim()] = null;
+  req.body.keys.forEach(key => {
+    if (!key || typeof key != 'string' || !key.trim().length)
+      return;
 
-  res.json({});
+    req.session[key.trim()] = null;
+    count++;
+  });
+
+  res.json({ count });
 };

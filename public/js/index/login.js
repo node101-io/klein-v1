@@ -134,6 +134,10 @@ function addServerToSavedServersIfNotExists(data, callback) {
   });
 };
 
+function indexLoginOnLoad(data) {
+
+}
+
 window.addEventListener('load', _ => {
   const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');
   const loginRightPasswordInput = document.getElementById('index-login-right-password-input');

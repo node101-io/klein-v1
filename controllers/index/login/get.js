@@ -1,12 +1,17 @@
 const fetch = require("../../../utils/fetch");
 
+const RENT_SERVERS = {
+  'PQ Hosting':'https://node101.io',
+  'Contabo':'https://node101.io',
+  'Vultr':'https://node101.io',
+  'Digital Ocean':'https://node101.io'
+};
+
 module.exports = (req, res) => {
-  if (!req.query.project_id || typeof req.query.project_id != 'string' || !req.query.project_id.trim().length)
+  if (!req.session.project_id || typeof req.session.project_id != 'string' || !req.session.project_id.trim().length)
     return res.redirect('/home');
 
-  // req.session.current_project
-
-  fetch(`https://admin.klein.run/api/projects?id=${req.query.project_id}`, {}, (err, data) => {
+  fetch(`https://admin.klein.run/api/projects?id=${req.session.project_id}`, {}, (err, data) => {
     if (err)
       return res.json({ err: err });
 
@@ -21,12 +26,7 @@ module.exports = (req, res) => {
       project: data.project,
       will_install: req.query.hasOwnProperty('install'),
       host: req.query.host,
-      rent_servers: {
-        'PQ Hosting':'https://node101.io',
-        'Contabo':'https://node101.io',
-        'Vultr':'https://node101.io',
-        'Digital Ocean':'https://node101.io'
-      }
+      will_install_project: req.session.will_install_project ? true : false
     });
   });
 };
