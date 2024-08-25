@@ -6,10 +6,10 @@ module.exports = (req, res) => {
     if (!key || typeof key != 'string' || !key.trim().length || key.length > MAX_SESSION_KEY_LENGTH)
       continue;
 
-    const value = data[key];
+    const value = req.body[key];
 
     try {
-      const valueString = typeof item.value == 'string' ? item.value : JSON.stringify(item.value);
+      const valueString = typeof value == 'string' ? value : JSON.stringify(value);
   
       if (valueString.length > MAX_SESSION_VALUE_LENGTH)
         continue;

@@ -12,6 +12,8 @@ const installGetController = require('../controllers/index/install/get');
 const loginGetController = require('../controllers/index/login/get');
 const searchGetController = require('../controllers/index/search/get');
 
+const loginPostController = require('../controllers/index/login/post');
+
 router.get(
   '/',
     isAuth,
@@ -43,6 +45,12 @@ router.get(
     isAuth,
     setRenderFrontData,
     searchGetController
+);
+
+router.post(
+  '/login',
+    isAuth,
+    loginPostController
 );
 
 module.exports = router;

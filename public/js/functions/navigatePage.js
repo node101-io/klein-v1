@@ -1,6 +1,13 @@
 let isPageLoading = false;
 
-function displayAllNone() {}; // Bütün wrapperlar display none
+function displayAllNone() {
+  document.getElementById('index-wrapper').classList.add('display-none');
+  document.getElementById('index-home-wrapper').classList.add('display-none');
+  document.getElementById('index-search-wrapper').classList.add('display-none');
+  document.getElementById('index-login-wrapper').classList.add('display-none');
+  document.getElementById('index-installation-wrapper').classList.add('display-none');
+  // document.getElementById('node-wrapper').classList.add('display-none');
+};
 
 function saveToSession(data, callback) {
   if (!data || typeof data != 'object')
@@ -28,8 +35,10 @@ function navigatePage(page, data) {
 
     displayAllNone();
     if (page == '/login') {
-      indexLoginLoadPage(data);
-      document.querySelector('.index-login-wrapper').style.display = 'flex';
+      loadPageIndexLogin(data);
+      document.getElementById('index-wrapper').classList.remove('display-none');
+      document.getElementById('index-login-wrapper').classList.remove('display-none');
+      window.history.replaceState({}, '', '/login');
     } else if (page == '') {
 
     }
@@ -37,3 +46,7 @@ function navigatePage(page, data) {
     isPageLoading = false;
   });
 };
+
+window.onbeforeunload = () => {
+  return "Please don't leave the page :(";
+}

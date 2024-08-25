@@ -8,7 +8,6 @@ const setRenderFrontData = require('../middleware/setRenderFrontData');
 
 const createValidatorGetController = require('../controllers/node/validator/get');
 const delegateGetController = require('../controllers/node/delegate/get');
-const editValidatorGetController = require('../controllers/node/edit-validator/get');
 const indexGetController = require('../controllers/node/index/get');
 const logsGetController = require('../controllers/node/logs/get');
 const redelegateGetController = require('../controllers/node/redelegate/get');
@@ -17,8 +16,6 @@ const undelegateGetController = require('../controllers/node/undelegate/get');
 const unjailGetController = require('../controllers/node/unjail/get');
 const voteGetController = require('../controllers/node/vote/get');
 const walletsGetController = require('../controllers/node/wallet/get');
-const createWalletGetController = require('../controllers/node/create-wallet/get');
-const recoverWalletGetController = require('../controllers/node/recover-wallet/get');
 const withdrawRewardsGetController = require('../controllers/node/withdraw-rewards/get');
 
 router.get(
@@ -41,13 +38,6 @@ router.get(
     isConnectedToHost,
     setRenderFrontData,
     delegateGetController
-);
-router.get(
-  '/edit-validator',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    editValidatorGetController
 );
 router.get(
   '/logs',
@@ -97,20 +87,6 @@ router.get(
     isConnectedToHost,
     setRenderFrontData,
     walletsGetController
-);
-router.get(
-  '/recover-wallet',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    recoverWalletGetController
-);
-router.get(
-  '/create-wallet',
-    isAuth,
-    isConnectedToHost,
-    setRenderFrontData,
-    createWalletGetController
 );
 router.get(
   '/withdraw-rewards',

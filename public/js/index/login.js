@@ -113,7 +113,7 @@ function installNode(callback) {
     });
   });
 };
-
+ 
 function addServerToSavedServersIfNotExists(data, callback) {
   savedServersManager.getByHost(data.host, (err, saved_server) => {
     if (err && err != 'document_not_found')
@@ -134,9 +134,20 @@ function addServerToSavedServersIfNotExists(data, callback) {
   });
 };
 
-function indexLoginOnLoad(data) {
+function loadPageIndexLogin(data) {
+  loadingStart();
 
-}
+  const project_id = data.index_login_project_id;
+  const will_install = data.index_login_will_install;
+
+  localhostRequest('/login', 'POST', { project_id }, (err, project) => {
+    if (err) window.location = '/home';
+
+    // Update front with project information and will_install
+
+    loadingStop();
+  });
+};
 
 window.addEventListener('load', _ => {
   const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');

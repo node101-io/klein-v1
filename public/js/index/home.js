@@ -17,11 +17,9 @@ window.addEventListener('load', _ => {
     if (event.target.closest('.index-general-each-project-install-button')) {
       const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
 
-      window.location.href = `/login?project_id=${projectIdToInstall}&install`;
-
       navigatePage('/login', {
-        project_id: projectIdToInstall,
-        will_install_project: true
+        index_login_project_id: projectIdToInstall,
+        index_login_will_install: true
       });
     };
   });

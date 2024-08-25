@@ -1,7 +1,7 @@
-function generalLoadingStart() {
-  document.querySelector('.general-loading-wrapper').classList.add('display-none');
+function loadingStart() {
+  document.querySelector('.general-loading-wrapper').classList.remove('display-none');
 };
 
-function generalLoadingStop() {
-  document.querySelector('.general-loading-wrapper').classList.remove('display-none');
+function loadingStop() {
+  document.querySelector('.general-loading-wrapper').classList.add('display-none');
 };

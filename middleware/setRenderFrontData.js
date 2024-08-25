@@ -1,4 +1,3 @@
-const { create } = require('../utils/appKey');
 const SavedServers = require('../utils/savedServers');
 
 const setFrontDisplayStyle = require('../utils/setFrontDisplayStyle');
@@ -23,7 +22,7 @@ const INCLUDES = {
     'partials/header'
   ],
   js: [
-    'functions/localhostRequest', 'functions/generateRandomHEX', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/preventMultiTab', 'functions/jsonify',
+    'functions/generateRandomHEX', 'functions/loading', 'functions/localhostRequest', 'functions/navigatePage', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/preventMultiTab', 'functions/jsonify',
     'index/home', 'index/login', 'index/header', 'index/search', 'index/node',
     'node/index'
   ]
@@ -289,6 +288,12 @@ const NODE_OPERATIONS_MENU = [
     url: '/logs'
   }
 ];
+const RENT_SERVERS = {
+  'PQ Hosting':'https://node101.io',
+  'Contabo':'https://node101.io',
+  'Vultr':'https://node101.io',
+  'Digital Ocean':'https://node101.io'
+};
 
 module.exports = (req, res, next) => {
   SavedServers.getAll((err, saved_servers) => {
@@ -305,6 +310,7 @@ module.exports = (req, res, next) => {
     res.locals.node = DEFAULT_EMPTY_NODE;
     res.locals.node_operations = NODE_OPERATIONS;
     res.locals.node_operations_menu = NODE_OPERATIONS_MENU;
+    res.locals.rent_servers = RENT_SERVERS;
 
     res.locals.saved_server_list = saved_servers;
     res.locals.navbar_collapsed = req.session.navbar_collapsed;

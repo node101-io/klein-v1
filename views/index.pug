@@ -177,7 +177,7 @@ block main
           - for (let i = 0; i < 100; i++)
             svg.index-installation-progress-each-part(viewBox='0 0 6 8' xmlns='http://www.w3.org/2000/svg')
               path(d='M2.17224 8L5.05924 4.32551H6.00009V3.49922H5.05924L2.21091 0H0.992954L4.25371 3.98748L4.26016 3.73083L0.90918 8H2.17224Z')
-  .node-wrapper#node-wrapper(class=setFrontDisplayStyle(page, 'node/*'))
+  //- .node-wrapper#node-wrapper(class=setFrontDisplayStyle(page, 'node/*'))
     .node-general-navbar-wrapper
       .node-general-navbar-header-wrapper
         img.node-general-navbar-header-image(src=node.image[node.image.length - 1].url alt=`${__('node-navbar-header-image-alt')} ${node.title}`)
@@ -641,4 +641,4 @@ block main
         //-     path(d='M11 15C10.4477 15 10 15.4477 10 16C10 16.5523 10.4477 17 11 17H11.01C11.5623 17 12.01 16.5523 12.01 16C12.01 15.4477 11.5623 15 11.01 15H11Z')
         //-     path(fill-rule='evenodd' clip-rule='evenodd' d='M0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11ZM11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11C20 6.02944 15.9706 2 11 2Z')
         //-   .node-general-title-help-text= node.help
-  .settings-wrapper
+  //- .settings-wrapper#settings-wrapper
