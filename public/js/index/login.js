@@ -73,15 +73,15 @@ function installNode(callback) {
       const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
       const progressText = document.getElementById('index-installation-info-percentage');
 
-       script.dockerfile_content = `
-ARG GO_VERSION
-FROM golang:$GO_VERSION
+      script.dockerfile_content = `
+        ARG GO_VERSION
+        FROM golang:$GO_VERSION
 
-WORKDIR /root
+        WORKDIR /root
 
-EXPOSE 26656 26657 1317 9090
+        EXPOSE 26656 26657 1317 9090
 
-CMD [ "bash" ]`;
+        CMD [ "bash" ]`;
 
       const stream = nodeManager.installNode({
         docker_compose_content: script.docker_compose_content,
@@ -163,19 +163,22 @@ window.addEventListener('load', _ => {
           setLoginRightErrorMessage('');
 
           serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-            if (new URLSearchParams(window.location.search).has('install')) {
+            const queryParams = new URLSearchParams(window.location.search);
+
+            if (queryParams.has('install')) {
               if (err == 'running_node_instance') {
                 alert('Another node is already running on this server, please remove it first');
                 return window.location.href = '/node';
               };
 
-              installNode((err, res) => {
-                if (err)
-                  return setLoginRightErrorMessage(err);
+              return window.location.href = '/install?project_id=' + queryParams.get('project_id');
+              // installNode((err, res) => {
+              //   if (err)
+              //     return setLoginRightErrorMessage(err);
 
-                console.log('Node installed successfully');
-                return window.location.href = '/node';
-              });
+              //   console.log('Node installed successfully');
+              //   return window.location.href = '/node';
+              // });
             } else {
               if (err == 'running_node_instance')
                 return window.location.href = '/node';
@@ -190,8 +193,6 @@ window.addEventListener('load', _ => {
 
     if (event.target.closest('.index-login-right-remember-me-input')) {
       document.querySelector('.index-login-right-remember-me-icon').classList.toggle('display-none');
-
-      console.log(document.querySelector('.index-login-right-remember-me-input').checked);
     };
 
     if (event.target.closest('#index-login-right-each-input-visibility-show-button') || event.target.closest('#index-login-right-each-input-visibility-disabled')) {

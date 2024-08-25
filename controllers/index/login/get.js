@@ -4,12 +4,16 @@ module.exports = (req, res) => {
   if (!req.query.project_id || typeof req.query.project_id != 'string' || !req.query.project_id.trim().length)
     return res.redirect('/home');
 
+  // req.session.current_project
+
   fetch(`https://admin.klein.run/api/projects?id=${req.query.project_id}`, {}, (err, data) => {
     if (err)
       return res.json({ err: err });
 
     if (!data.success)
       return res.json({ err: data.err });
+
+    req.session.current_project = data.project;
 
     return res.render('index', {
       page: 'index/login',

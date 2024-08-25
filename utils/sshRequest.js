@@ -359,6 +359,7 @@ const sshRequest = (type, data, callback) => {
     if (!connection)
       return callback('not_connected');
 
+    console.log(connection.isReady())
     if (!connection.isReady())
       return callback('connection_lost');
 
