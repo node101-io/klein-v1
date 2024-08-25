@@ -38,7 +38,7 @@ function navigatePage(page, data) {
       loadPageIndexLogin(data);
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-login-wrapper').classList.remove('display-none');
-      window.history.replaceState({}, '', '/login');
+      window.history.replaceState({}, '', page);
     } else if (page == '') {
 
     }
@@ -46,7 +46,3 @@ function navigatePage(page, data) {
     isPageLoading = false;
   });
 };
-
-window.onbeforeunload = () => {
-  return "Please don't leave the page :(";
-}

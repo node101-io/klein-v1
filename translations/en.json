@@ -71,5 +71,7 @@
 	"node-index-each-panel-title-sync-status": "Sync Status",
 	"node-index-each-panel-title-cpu": "CPU",
 	"node-index-each-panel-title-memory": "Memory",
-	"node-general-each-short-input-error": "Invalid field"
+	"node-general-each-short-input-error": "Invalid field",
+	"general-loading-text": "general-loading-text",
+	"index-login-project-incentivized": "index-login-project-incentivized"
 }
