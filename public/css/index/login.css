@@ -139,6 +139,12 @@
   margin-bottom: var(--index-content-inner-gap);
 }
 
+.index-login-project-installation-information-wrapper {
+  height: fit-content;
+  min-height: fit-content;
+  flex-direction: column;
+}
+
 .index-login-project-requirements-wrapper {
   height: fit-content;
   min-height: fit-content;

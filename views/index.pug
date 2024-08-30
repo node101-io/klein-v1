@@ -86,10 +86,9 @@ block main
             .index-login-project-header-content-wrapper
               .index-login-project-title= project.name
               .index-login-project-description= project.chain_registry_identifier
-              if project.is_incentivized
-                .index-login-project-incentivized= __('index-login-project-incentivized')
+              .index-login-project-incentivized(class=project.is_incentivized ? '' : 'display-none')= __('index-login-project-incentivized')
           .index-login-project-stake-with-us= project.description
-          if (will_install)
+          .index-login-project-installation-information-wrapper(class=will_install_project ? '' : 'display-none')
             input.display-none#index-login-project-identifier(value=project.chain_registry_identifier)
             .index-login-project-requirements-wrapper
               .index-login-project-requirements-title= __('index-login-project-requirements-title')

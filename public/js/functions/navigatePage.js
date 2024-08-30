@@ -38,7 +38,7 @@ function navigatePage(page, data) {
       loadPageIndexLogin(data);
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-login-wrapper').classList.remove('display-none');
-      window.history.replaceState({}, '', '/login');
+      window.history.replaceState({}, '', page);
     } else if (page == '') {
 
     }
