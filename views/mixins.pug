@@ -55,3 +55,13 @@ mixin index-login-project-wrapper(project)
         a.index-login-project-each-rent-server(href=rent_servers[rent_server] target='_blank')= rent_server
         if i != Object.keys(rent_servers).length - 1
           .index-login-project-each-rent-server-divider
+mixin short-input-wrapper(input, id)
+  .node-general-each-short-input-wrapper
+    .node-general-each-short-input-title(class=(input ? 'node-general-each-short-input-title-required' : ''))= input.title
+    input.node-general-each-short-input(id=input.id type=input.type pattern=(input.pattern ? input.pattern : '') placeholder=input.placeholder)
+    .node-general-each-short-input-error.display-none= __('node-general-each-short-input-error')
+mixin long-input-wrapper(input, id)
+  .node-general-each-long-input-wrapper
+    .node-general-each-long-input-title(class=(input ? 'node-general-each-long-input-title-required' : ''))= input.title
+    input.node-general-each-long-input(id=id type=input.type placeholder=input.placeholder)
+    .node-general-each-long-input-error.display-none
