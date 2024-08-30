@@ -1,39 +1,45 @@
-// function
+function loadPageIndexSearch() {
+  loadingStart();
+
+  localhostRequest('/search', 'POST', {}, (err, projects) => {
+    if (err)
+      console.error(err);
+
+    localhostRequest('/templates/general-project-wrapper', 'POST', {
+      projects: projects
+    }, (err, html) => {
+      if (err)
+        console.error(err);
+
+      document.querySelector('.index-general-projects-wrapper').innerHTML = html;
+
+      loadingStop();
+    });
+  });
+};
 
 window.addEventListener('load', _ => {
   document.addEventListener('keydown', event => {
-    if (event.key == 'Enter') {
-      if (event.target.closest('.index-search-input')) {
-        localhostRequest(`/project?name=${event.target.value}`, 'GET', {}, (err, projects) => {
+    if (event.key == 'Enter' && event.target.closest('.index-search-input')) {
+      loadingStart();
+
+      localhostRequest('/search', 'POST', {
+        name: event.target.value
+      }, (err, projects) => {
+        if (err)
+          return console.error(err);
+
+        localhostRequest('/templates/general-project-wrapper', 'POST', {
+          projects: projects
+        }, (err, html) => {
           if (err)
             return console.error(err);
 
-          const projectTemplate = document.querySelector('.index-general-each-project-wrapper');
-          const projectsWrapper = document.getElementById('index-search-content-testnet-wrapper').firstChild;
+          document.getElementById('index-search-content-testnet-wrapper').firstChild.innerHTML = html;
 
-          projectsWrapper.innerHTML = '';
-
-          if (!projects.length)
-            projectsWrapper.innerHTML = 'No project found';
-
-
-          for (let i = 0; i < projects.length; i++) {
-            const projectElement = document.createElement('div');
-
-            projectElement.classList.add('index-general-each-project-wrapper');
-            projectElement.innerHTML = projectTemplate.innerHTML;
-
-            projectElement.querySelector('.index-general-each-project-image').src = projects[i].image[projects[i].image.length - 1].url;
-            projectElement.querySelector('.index-general-each-project-name').innerText = projects[i].name
-            projectElement.querySelector('.index-general-each-project-help-text').innerText = projects[i].description;
-            projectElement.querySelector('.index-general-each-project-help-link').href = projects[i].urls.web
-            projectElement.querySelector('.index-general-each-project-link').href = projects[i].urls.web
-            projectElement.querySelector('.index-general-each-project-install-button').id = `index-general-each-project-install-button-${projects[i]._id}`;
-
-            projectsWrapper.appendChild(projectElement);
-          };
+          loadingStop();
         });
-      };
+      });
     };
   });
 });

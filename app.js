@@ -6,6 +6,7 @@ const favicon = require('serve-favicon');
 const http = require('http');
 const i18n = require('i18n');
 const path = require('path');
+const pug = require('pug');
 const session = require('express-session');
 const {
   app: electronApp,
@@ -41,6 +42,7 @@ const projectRouteController = require('./routes/projectRoute');
 const sshRouteController = require('./routes/sshRoute');
 const savedServerRouteController = require('./routes/savedServerRoute');
 const sessionRouteController = require('./routes/sessionRoute');
+const templatesRouteController = require('./routes/templatesRoute');
 
 i18n.configure({
   locales: ['en', 'tr'],
@@ -72,6 +74,7 @@ expressApp.use('/project', projectRouteController);
 expressApp.use('/ssh', sshRouteController);
 expressApp.use('/saved-server', savedServerRouteController);
 expressApp.use('/session', sessionRouteController);
+expressApp.use('/templates', templatesRouteController);
 expressApp.use((req, res) => res.redirect('/'));
 
 const setupTrayMenu = _ => {

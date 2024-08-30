@@ -1,3 +1,26 @@
+function loadPageIndexLogin(data) {
+  loadingStart();
+
+  if (data.index_login_server_host)
+    document.getElementById('index-login-right-ip-address-input').value = data.index_login_server_host;
+
+  localhostRequest('/login', 'POST', {
+    project_id: data.index_login_project_id
+  }, (err, project) => {
+    if (err) window.location = '/home';
+
+    localhostRequest('/templates/index-login-project-wrapper', 'POST', {
+      project: project,
+    }, (err, html) => {
+      if (err) window.location = '/home';
+
+      document.querySelector('.index-login-left-inner-wrapper').innerHTML = html;
+
+      loadingStop();
+    });
+  });
+};
+
 function setLoginRightErrorMessage(message) {
   const loginRightErrorElement = document.querySelector('.index-login-right-error');
 
@@ -11,11 +34,6 @@ function setLoginRightErrorMessage(message) {
   } else {
     loginRightErrorElement.classList.add('display-none');
   };
-};
-
-function setLoginStyleAsLoading() {
-  document.querySelector('.index-login-right-button-icon').classList.add('display-none');
-  document.querySelector('.index-login-right-button-loading-icon').classList.remove('display-none');
 };
 
 function installNode(callback) {
@@ -134,35 +152,6 @@ function addServerToSavedServersIfNotExists(data, callback) {
   });
 };
 
-function loadPageIndexLogin(data) {
-  loadingStart();
-
-  const project_id = data.index_login_project_id;
-  const will_install = data.index_login_will_install;
-
-  localhostRequest('/login', 'POST', { project_id }, (err, project) => {
-    if (err) window.location = '/home';
-
-    // Update front with project information and will_install
-
-    document.querySelector('.index-login-project-link').href = project.urls.web;
-    document.querySelector('.index-login-project-image').src = project.image[project.image.length - 1].url;
-    document.querySelector('.index-login-project-title').innerText = project.name;
-    document.querySelector('.index-login-project-description').innerText = project.chain_registry_identifier;
-    document.querySelector('.index-login-project-incentivized').classList.toggle('display-none', !project.is_incentivized);
-    document.querySelector('.index-login-project-stake-with-us').innerText = project.description;
-
-    document.querySelector('.index-login-project-installation-information-wrapper').classList.toggle('display-none', !will_install);
-    document.getElementById('index-login-project-identifier').value = project.chain_registry_identifier;
-    document.querySelectorAll('.index-login-project-each-requirement-text')[0].innerText = project.system_requirements.cpu;
-    document.querySelectorAll('.index-login-project-each-requirement-text')[1].innerText = project.system_requirements.ram;
-    document.querySelectorAll('.index-login-project-each-requirement-text')[2].innerText = project.system_requirements.storage;
-    document.querySelectorAll('.index-login-project-each-requirement-text')[3].innerText = project.system_requirements.bandwidth;
-
-    loadingStop();
-  });
-};
-
 window.addEventListener('load', _ => {
   const loginRightIpAddressInput = document.getElementById('index-login-right-ip-address-input');
   const loginRightPasswordInput = document.getElementById('index-login-right-password-input');
@@ -172,7 +161,7 @@ window.addEventListener('load', _ => {
       const ipAddress = loginRightIpAddressInput.value;
       const password = loginRightPasswordInput.value;
 
-      setLoginStyleAsLoading();
+      loadingStart();
 
       serverManager.connect({
         host: ipAddress,

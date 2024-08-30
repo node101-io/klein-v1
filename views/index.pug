@@ -1,37 +1,6 @@
 extends ./partials/header
+include ./mixins.pug
 block main
-  mixin project-wrapper(project)
-    .index-general-each-project-wrapper
-      .index-general-each-project-inner-wrapper
-        img.index-general-each-project-image(src=project.image[project.image.length - 1].url alt=`${__('index-home-each-project-image-alt')} ${project.name}`)
-        .index-general-each-project-content-wrapper
-          .index-general-each-project-content-header-wrapper
-            .index-general-each-project-name= project.name
-            .index-general-each-project-help-wrapper
-              .index-general-each-project-help-text-wrapper
-                .index-general-each-project-help-text= project.description
-                a.index-general-each-project-help-link(href=project.urls.web target='_blank')= __('index-general-each-project-help-link')
-              svg.index-general-each-project-help-icon(viewBox='0 0 11 11' xmlns='http://www.w3.org/2000/svg')
-                path(d='M5.62912 3.51217C5.39636 3.47225 5.15698 3.51599 4.95338 3.63564C4.74978 3.7553 4.59509 3.94316 4.51673 4.16593C4.42509 4.42643 4.13963 4.56331 3.87914 4.47168C3.61864 4.38004 3.48175 4.09458 3.57339 3.83409C3.73013 3.38853 4.03949 3.01283 4.44669 2.77351C4.8539 2.5342 5.33265 2.44671 5.79817 2.52656C6.2637 2.60641 6.68594 2.84844 6.99011 3.20977C7.29422 3.57104 7.46069 4.02825 7.46006 4.50047C7.45983 5.26565 6.89253 5.77096 6.48741 6.04104C6.26959 6.18625 6.05534 6.29302 5.8975 6.36317C5.81788 6.39856 5.75082 6.42541 5.70251 6.44382C5.67831 6.45304 5.65869 6.46018 5.64441 6.46526L5.62704 6.47134L5.62151 6.47323L5.61956 6.47389L5.6188 6.47414C5.6188 6.47414 5.61817 6.47435 5.46006 6.00001L5.61817 6.47435C5.3562 6.56168 5.07304 6.4201 4.98572 6.15812C4.89845 5.89633 5.03978 5.61337 5.30142 5.52584L5.3094 5.52304C5.31709 5.52031 5.3297 5.51574 5.34651 5.50933C5.38023 5.49649 5.43037 5.47647 5.49136 5.44936C5.61478 5.3945 5.77552 5.31378 5.93271 5.20899C6.27751 4.97912 6.46006 4.73458 6.46006 4.50001L6.46006 4.49927C6.46041 4.26311 6.37717 4.03444 6.22508 3.85378C6.073 3.67311 5.86188 3.55209 5.62912 3.51217Z')
-                path(d='M5.5 7.5C5.22386 7.5 5 7.72386 5 8C5 8.27614 5.22386 8.5 5.5 8.5H5.505C5.78114 8.5 6.005 8.27614 6.005 8C6.005 7.72386 5.78114 7.5 5.505 7.5H5.5Z')
-                path(fill-rule='evenodd' clip-rule='evenodd' d='M0 5.5C0 2.46243 2.46243 0 5.5 0C8.53757 0 11 2.46243 11 5.5C11 8.53757 8.53757 11 5.5 11C2.46243 11 0 8.53757 0 5.5ZM5.5 1C3.01472 1 1 3.01472 1 5.5C1 7.98528 3.01472 10 5.5 10C7.98528 10 10 7.98528 10 5.5C10 3.01472 7.98528 1 5.5 1Z')
-            a.index-general-each-project-link(href=project.urls.web target='_blank')
-              svg.index-general-each-project-link-icon(viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg')
-                path(d='M12.394 11.7999L11.3168 5.28297L12.2032 4.39657L11.4038 3.5972L10.5174 4.48359L4.23676 3.56988L3.0893 4.71734L10.2453 5.72928L9.98853 5.46035L11.204 12.9899L12.394 11.7999Z')
-                rect(x='10.6045' y='5.99512' width='8.7613' height='1.13049' transform='rotate(135 10.6045 5.99512)')
-          .index-general-each-project-description
-      .index-general-each-project-install-button(id=`index-general-each-project-install-button-${project._id}`)
-        .index-general-each-project-install-button-text= __('index-general-each-project-install-button-text')
-  mixin short-input-wrapper(input, id)
-    .node-general-each-short-input-wrapper
-      .node-general-each-short-input-title(class=(input ? 'node-general-each-short-input-title-required' : ''))= input.title
-      input.node-general-each-short-input(id=input.id type=input.type pattern=(input.pattern ? input.pattern : '') placeholder=input.placeholder)
-      .node-general-each-short-input-error.display-none= __('node-general-each-short-input-error')
-  mixin long-input-wrapper(input, id)
-    .node-general-each-long-input-wrapper
-      .node-general-each-long-input-title(class=(input ? 'node-general-each-long-input-title-required' : ''))= input.title
-      input.node-general-each-long-input(id=id type=input.type placeholder=input.placeholder)
-      .node-general-each-long-input-error.display-none
   input.display-none#last-connected-host(value=last_connected_host)
   .general-loading-wrapper.display-none
     .general-loading-text= __('general-loading-text')
@@ -43,7 +12,7 @@ block main
       .index-home-content-wrapper#index-home-content-testnet-wrapper
         .index-general-projects-wrapper
           each project in projects
-            +project-wrapper(project)
+            +general-project-wrapper(project)
       .index-home-content-wrapper#index-home-content-mainnet-wrapper.display-none Soon...
     .index-search-wrapper#index-search-wrapper(class=setFrontDisplayStyle(page, 'index/search'))
       .index-search-input-wrapper
@@ -72,45 +41,12 @@ block main
       .index-search-content-wrapper#index-search-content-testnet-wrapper
         .index-general-projects-wrapper
           each project in projects
-            +project-wrapper(project)
+            +general-project-wrapper(project)
       .index-search-content-wrapper#index-search-content-mainnet-wrapper.display-none
     .index-login-wrapper#index-login-wrapper(class=setFrontDisplayStyle(page, 'index/login'))
       .index-login-left-wrapper
         .index-login-left-inner-wrapper
-          a.index-login-project-link(href=project.urls.web target='_blank')
-            svg.index-login-project-link-icon(viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg')
-              path(d='M24.9095 23.4832L22.7918 10.6705L24.5345 8.92782L22.9629 7.3562L21.2202 9.0989L8.87207 7.30249L6.61611 9.55845L20.6852 11.548L20.1803 11.0193L22.57 25.8227L24.9095 23.4832Z')
-              rect(x='21.3916' y='12.0713' width='17.2251' height='2.2226' transform='rotate(135 21.3916 12.0713)')
-          .index-login-project-header
-            img.index-login-project-image(src=project.image[project.image.length - 1].url alt=`${__('index-login-project-image-alt')} ${project.name}`)
-            .index-login-project-header-content-wrapper
-              .index-login-project-title= project.name
-              .index-login-project-description= project.chain_registry_identifier
-              .index-login-project-incentivized(class=project.is_incentivized ? '' : 'display-none')= __('index-login-project-incentivized')
-          .index-login-project-stake-with-us= project.description
-          .index-login-project-installation-information-wrapper(class=will_install_project ? '' : 'display-none')
-            input.display-none#index-login-project-identifier(value=project.chain_registry_identifier)
-            .index-login-project-requirements-wrapper
-              .index-login-project-requirements-title= __('index-login-project-requirements-title')
-              .index-login-project-requirements-inner-wrapper
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-cpu')
-                  .index-login-project-each-requirement-text= project.system_requirements.cpu
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-ram')
-                  .index-login-project-each-requirement-text= project.system_requirements.ram
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-storage')
-                  .index-login-project-each-requirement-text= project.system_requirements.storage
-                .index-login-project-each-requirement-wrapper
-                  .index-login-project-each-requirement-title= __('index-login-project-each-requirement-title-os')
-                  .index-login-project-each-requirement-text= project.system_requirements.os
-            .index-login-project-rent-server-title= __('index-login-project-rent-server-title')
-            .index-login-project-rent-server-wrapper
-              each rent_server, i in Object.keys(rent_servers)
-                a.index-login-project-each-rent-server(href=rent_servers[rent_server] target='_blank')= rent_server
-                if i != Object.keys(rent_servers).length - 1
-                  .index-login-project-each-rent-server-divider
+          +index-login-project-wrapper(project)
       .index-login-right-wrapper
         form.index-login-right-inner-wrapper
           .index-login-right-title= __('index-login-right-title')

@@ -12,7 +12,9 @@ const installGetController = require('../controllers/index/install/get');
 const loginGetController = require('../controllers/index/login/get');
 const searchGetController = require('../controllers/index/search/get');
 
+const homePostController = require('../controllers/index/home/post');
 const loginPostController = require('../controllers/index/login/post');
+const searchPostController = require('../controllers/index/search/post');
 
 router.get(
   '/',
@@ -48,9 +50,19 @@ router.get(
 );
 
 router.post(
+  '/home',
+    isAuth,
+    homePostController
+);
+router.post(
   '/login',
     isAuth,
     loginPostController
+);
+router.post(
+  '/search',
+    isAuth,
+    searchPostController
 );
 
 module.exports = router;

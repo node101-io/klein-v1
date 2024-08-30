@@ -1,19 +1,28 @@
 window.addEventListener('load', () => {
   const navbarWrapper = document.querySelector('.partials-header-navbar-wrapper');
-  const navbarResizeButton = document.querySelector('.partials-header-resize-button');
 
   document.addEventListener('click', event => {
     if (event.target.closest('.partials-header-each-button')) {
       const page = event.target.closest('.partials-header-each-button').id.replace('partials-header-each-button-', '')
 
       if (page == 'home') {
-        window.location.href = `/${page}`;
+        navigatePage('/home')
       } else if (page == 'search') {
-        window.location.href = `/${page}`;
+        navigatePage('/search')
       } else if (page == 'new-node') {
-        window.location.href = '/home';
-      } else if (page == 'settings') {
-        window.location.href = `/${page}`;
+        navigatePage('/home');
+      } else if (page == 'login') {
+        const project_id = event.target.closest('.partials-header-each-button').getAttribute('data-project-id');
+        const server_host = event.target.closest('.partials-header-each-button').getAttribute('data-server-host');
+
+        if (!project_id)
+          return navigatePage('/home');
+
+        navigatePage('/login', {
+          index_login_project_id: project_id,
+          index_login_will_install: true,
+          index_login_server_host: server_host
+        });
       };
     };
 

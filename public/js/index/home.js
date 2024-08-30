@@ -1,3 +1,23 @@
+function loadPageIndexHome(data) {
+  loadingStart();
+
+  localhostRequest('/home', 'POST', {}, (err, projects) => {
+    if (err)
+      console.error(err);
+
+    localhostRequest('/templates/general-project-wrapper', 'POST', {
+      projects: projects
+    }, (err, html) => {
+      if (err)
+        console.error(err);
+
+      document.querySelector('.index-general-projects-wrapper').innerHTML = html;
+
+      loadingStop();
+    });
+  });
+};
+
 window.addEventListener('load', _ => {
   document.addEventListener('click', event => {
     if (event.target.closest('.index-home-header-each-button')) {
@@ -12,15 +32,6 @@ window.addEventListener('load', _ => {
 
       document.getElementById(`index-home-content-${pageToDisplay}-wrapper`).classList.toggle('display-none');
       document.getElementById(`index-home-content-${pageToDisplay == 'mainnet' ? 'testnet' : 'mainnet'}-wrapper`).classList.add('display-none');
-    };
-
-    if (event.target.closest('.index-general-each-project-install-button')) {
-      const projectIdToInstall = event.target.closest('.index-general-each-project-install-button').id.replace('index-general-each-project-install-button-', '');
-
-      navigatePage('/login', {
-        index_login_project_id: projectIdToInstall,
-        index_login_will_install: true
-      });
     };
   });
 });

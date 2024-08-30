@@ -39,8 +39,16 @@ function navigatePage(page, data) {
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-login-wrapper').classList.remove('display-none');
       window.history.replaceState({}, '', page);
-    } else if (page == '') {
-
+    } else if (page == '/home') {
+      loadPageIndexHome(data);
+      document.getElementById('index-wrapper').classList.remove('display-none');
+      document.getElementById('index-home-wrapper').classList.remove('display-none');
+      window.history.replaceState({}, '', page);
+    } else if (page == '/search') {
+      loadPageIndexSearch(data);
+      document.getElementById('index-wrapper').classList.remove('display-none');
+      document.getElementById('index-search-wrapper').classList.remove('display-none');
+      window.history.replaceState({}, '', page);
     }
 
     isPageLoading = false;

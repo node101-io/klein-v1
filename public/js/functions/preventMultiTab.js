@@ -5,5 +5,6 @@ window.addEventListener('storage', event => {
     localStorage.page_available = Date.now();
   } else if (event.key == 'page_available') {
     alert('One more page already open');
+    window.close();
   };
 }, false);

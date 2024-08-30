@@ -22,7 +22,7 @@ block content
         .partials-header-each-subtitle= __('partials-header-subtitle-nodes')
         .partials-header-each-buttons-wrapper
           each server, i in saved_server_list
-            a.partials-header-each-button(href=server.project_id ? `/login?project_id=${server.project_id}` : '/login')
+            a.partials-header-each-button#partials-header-each-button-login(data-server-host=server.host data-project-id=server.project_id)
               if server.project_image
                 img.partials-header-each-button-icon(src=(server.project_image || '') style='border-radius: 30%;')
               else
