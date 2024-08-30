@@ -47,6 +47,6 @@ function navigatePage(page, data) {
   });
 };
 
-window.onbeforeunload = () => {
-  return "Please don't leave the page :(";
-}
+// window.onbeforeunload = () => {
+//   return "Please don't leave the page :(";
+// }

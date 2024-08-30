@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
   return res.render('index', {
     page: 'node/validator',
-    title: __('node-validator-page-title'),
+    title: res.__('node-validator-page-title'),
     project: req.session.global_current_project
   });
 };

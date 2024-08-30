@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
   return res.render('index', {
     page: 'node/vote',
-    title: __('node-vote-page-title'),
+    title: res.__('node-vote-page-title'),
     project: req.session.global_current_project
   });
 };

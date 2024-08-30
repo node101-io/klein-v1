@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
   return res.render('index', {
     page: 'node/logs',
-    title: __('node-logs-page-title'),
+    title: res.__('node-logs-page-title'),
     project: req.session.global_current_project
   });
 };

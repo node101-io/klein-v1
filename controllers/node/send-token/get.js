@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
   return res.render('index', {
     page: 'node/send-token',
-    title: 'Send Token',
+    title: res.__('node-send-token-page-title'),
     project: req.session.global_current_project
   });
 };

@@ -4,7 +4,7 @@ module.exports = (req, res) => {
 
   return res.render('index', {
     page: 'node/withdraw-rewards',
-    title: __('node-withdraw-rewards-page-title'),
+    title: res.__('node-withdraw-rewards-page-title'),
     project: req.session.global_current_project
   });
 };
