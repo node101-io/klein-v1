@@ -20,7 +20,7 @@ window.addEventListener('load', () => {
 
         navigatePage('/login', {
           index_login_project_id: project_id,
-          index_login_will_install: true,
+          index_login_will_install: false, // TODO: fix
           index_login_server_host: server_host
         });
       };

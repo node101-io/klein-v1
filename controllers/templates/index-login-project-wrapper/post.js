@@ -40,9 +40,13 @@ module.exports = (req, res) => {
   if ((!req.body.project || !typeCheckProject(req.body.project)))
     return res.json({ err: 'bad_request' });
 
+  if (!('will_install' in req.body) || typeof req.body.will_install != 'boolean')
+    return res.json({ err: 'bad_request' });
+
   return res.json({
     data: renderProjectWrapper({
       ...res.locals,
+      will_install: req.body.will_install,
       project: req.body.project
     })
   });

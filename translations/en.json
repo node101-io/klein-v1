@@ -168,5 +168,6 @@
 	"node-general-save-button-text-staking-redelegate": "node-general-save-button-text-staking-redelegate",
 	"node-general-save-button-text-staking-undelegate": "node-general-save-button-text-staking-undelegate",
 	"node-general-save-button-text-vote-vote": "node-general-save-button-text-vote-vote",
-	"node-general-save-button-text-send-token-send-token": "node-general-save-button-text-send-token-send-token"
+	"node-general-save-button-text-send-token-send-token": "node-general-save-button-text-send-token-send-token",
+	"index-login-project-incentivized": "index-login-project-incentivized"
 }

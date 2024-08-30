@@ -11,12 +11,21 @@ function loadPageIndexLogin(data) {
 
     localhostRequest('/templates/index-login-project-wrapper', 'POST', {
       project: project,
+      will_install: data.index_login_will_install
     }, (err, html) => {
       if (err) window.location = '/home';
 
       document.querySelector('.index-login-left-inner-wrapper').innerHTML = html;
 
-      loadingStop();
+      localhostRequest('/templates/index-login-right-button-wrapper', 'POST', {
+        will_install: data.index_login_will_install
+      }, (err, html) => {
+        if (err) window.location = '/home';
+
+        document.querySelector('.index-login-right-button-outer-wrapper').innerHTML = html;
+
+        loadingStop();
+      });
     });
   });
 };
@@ -25,15 +34,7 @@ function setLoginRightErrorMessage(message) {
   const loginRightErrorElement = document.querySelector('.index-login-right-error');
 
   loginRightErrorElement.innerText = message;
-
-  if (message) {
-    document.querySelector('.index-login-right-button-icon').classList.remove('display-none');
-    document.querySelector('.index-login-right-button-loading-icon').classList.add('display-none');
-
-    loginRightErrorElement.classList.remove('display-none');
-  } else {
-    loginRightErrorElement.classList.add('display-none');
-  };
+  loginRightErrorElement.classList.toggle('display-none', !message);
 };
 
 function installNode(callback) {
@@ -158,10 +159,10 @@ window.addEventListener('load', _ => {
 
   document.addEventListener('click', event => {
     if (event.target.closest('.index-login-right-button-wrapper')) {
-      const ipAddress = loginRightIpAddressInput.value;
-      const password = loginRightPasswordInput.value;
-
       loadingStart();
+
+      const ipAddress = loginRightIpAddressInput.value.trim();
+      const password = loginRightPasswordInput.value;
 
       serverManager.connect({
         host: ipAddress,
@@ -173,13 +174,14 @@ window.addEventListener('load', _ => {
         setLoginRightErrorMessage('');
 
         addServerToSavedServersIfNotExists({
-          host: ipAddress.trim()
+          host: ipAddress
         }, err => {
           if (err)
             return setLoginRightErrorMessage(err);
 
           setLoginRightErrorMessage('');
 
+          // TODO: fix after this line
           serverManager.checkAvailabilityForNodeInstallation((err, res) => {
             const queryParams = new URLSearchParams(window.location.search);
 
@@ -220,10 +222,7 @@ window.addEventListener('load', _ => {
     };
 
     if (event.target.closest('.index-login-right-each-input-inner-list-each-item')) {
-      loginRightPasswordInput.focus();
-      const value = event.target.closest('.index-login-right-each-input-inner-list-each-item').id.replace('index-login-right-each-input-list-each-item-', '');
-
-      loginRightIpAddressInput.value = value;
+      loginRightIpAddressInput.value = event.target.closest('.index-login-right-each-input-inner-list-each-item').id.replace('index-login-right-each-input-list-each-item-', '');;
 
       loginRightPasswordInput.focus();
     };

@@ -1,4 +1,4 @@
-function loadPageIndexSearch() {
+function loadPageIndexSearch(data) {
   loadingStart();
 
   localhostRequest('/search', 'POST', {}, (err, projects) => {

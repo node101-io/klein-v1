@@ -17,7 +17,7 @@ module.exports = (req, res) => {
       page: 'index/login',
       title: __('index-login-page-title'),
       project: data.project,
-      will_install_project: req.session.will_install_project ? true : false
+      index_login_will_install: req.session.index_login_will_install ? true : false
     });
   });
 };
