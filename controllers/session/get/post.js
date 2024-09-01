@@ -12,7 +12,7 @@ module.exports = (req, res) => {
   });
 
   if (!items.length)
-    return res.json({ error: 'bad_request' });
+    return res.json({ err: 'bad_request' });
 
-  res.json({ items });
+  res.json({ data: items });
 };

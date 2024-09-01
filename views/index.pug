@@ -1,7 +1,6 @@
 extends ./partials/header
 include ./mixins.pug
 block main
-  input.display-none#last-connected-host(value=last_connected_host)
   .general-loading-wrapper.display-none
     .general-loading-text= __('general-loading-text')
   .index-wrapper#index-wrapper(class=setFrontDisplayStyle(page, 'index/*'))

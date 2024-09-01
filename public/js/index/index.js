@@ -5,7 +5,7 @@ window.addEventListener('load', () => {
 
       navigatePage('/login', {
         index_login_project_id: projectIdToInstall,
-        index_login_will_install: true
+        index_login_will_install: true,
       });
     };
   });

@@ -15,12 +15,15 @@ window.addEventListener('load', () => {
         const project_id = event.target.closest('.partials-header-each-button').getAttribute('data-project-id');
         const server_host = event.target.closest('.partials-header-each-button').getAttribute('data-server-host');
 
-        if (!project_id)
+        if (!project_id) {
+          document.getElementById('index-login-right-ip-address-input').value = server_host;
+
           return navigatePage('/home');
+        };
 
         navigatePage('/login', {
           index_login_project_id: project_id,
-          index_login_will_install: false, // TODO: fix
+          index_login_will_install: false,
           index_login_server_host: server_host
         });
       };
