@@ -15,7 +15,7 @@ module.exports = (req, res) => {
 
     return res.render('index', {
       page: 'index/login',
-      title: __('index-login-page-title'),
+      title: res.__('index-login-page-title'),
       project: data.project,
       index_login_will_install: req.session.index_login_will_install ? true : false
     });

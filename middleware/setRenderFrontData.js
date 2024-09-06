@@ -18,7 +18,7 @@ const INCLUDES = {
   ],
   js: [
     'functions/generateRandomHEX', 'functions/loading', 'functions/localhostRequest', 'functions/navigatePage', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/preventMultiTab', 'functions/jsonify',
-    'index/home', 'index/index', 'index/login', 'index/header', 'index/search', 'index/node',
+    'index/home', 'index/install',  'index/index', 'index/login', 'index/header', 'index/search', 'index/node',
     'node/index'
   ]
 };

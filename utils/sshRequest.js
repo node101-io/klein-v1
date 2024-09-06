@@ -323,6 +323,8 @@ const sshRequest = (type, data, callback) => {
         return callback('unknown_error');
       }, SSH_HANDSHAKE_TIMEOUT);
     } catch (err) {
+      isCallbackCalled = true;
+
       if (err && err.message && typeof err.message == 'string' && err.message.includes(ERROR_MESSAGE_BAD_PASSPHRASE))
         return callback('bad_passphrase');
 

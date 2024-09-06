@@ -11,7 +11,7 @@ module.exports = (req, res) => {
     items[key.trim()] = req.session[key.trim()];
   });
 
-  if (!items.length)
+  if (!Object.keys(items).length)
     return res.json({ err: 'bad_request' });
 
   res.json({ data: items });

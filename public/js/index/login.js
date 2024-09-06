@@ -37,103 +37,10 @@ function setLoginRightErrorMessage(message) {
   loginRightErrorElement.classList.toggle('display-none', !message);
 };
 
-function installNode(callback) {
-  serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-    if (err == 'docker_not_installed')
-      serverManager.installDocker((err, res) => {
-        if (err)
-          return callback(err);
-
-        return installNode(callback);
-      });
-
-    if (err == 'docker_not_running')
-      serverManager.uninstallDocker((err, res) => {
-        if (err)
-          return callback(err);
-
-        serverManager.installDocker((err, res) => {
-          if (err)
-            return callback(err);
-
-          return installNode(callback);
-        });
-      });
-
-    if (err == 'server_listener_not_running' || err == 'server_listener_version_mismatch')
-      serverManager.uninstallServerListener((err, res) => {
-        if (err)
-          return callback(err);
-
-        serverManager.installServerListener((err, res) => {
-          if (err)
-            return callback(err);
-
-          return installNode(callback);
-        });
-      });
-
-    if (err)
-      return callback(err);
-
-    document.querySelector('.index-login-wrapper').classList.add('display-none');
-    document.querySelector('.index-installation-wrapper').classList.remove('display-none');
-
-    nodeManager.getInstallationScriptByProject({
-      network: 'cosmos',
-      project: document.getElementById('index-login-project-identifier').value,
-      is_mainnet: false
-    }, (err, script) => {
-      if (err)
-        return callback(err);
-
-      let completedStepCount = 0;
-
-      const progressParts = document.querySelectorAll('.index-installation-progress-each-part');
-      const progressText = document.getElementById('index-installation-info-percentage');
-
-      script.dockerfile_content = `
-        ARG GO_VERSION
-        FROM golang:$GO_VERSION
-
-        WORKDIR /root
-
-        EXPOSE 26656 26657 1317 9090
-
-        CMD [ "bash" ]`;
-
-      const stream = nodeManager.installNode({
-        docker_compose_content: script.docker_compose_content,
-        dockerfile_content: script.dockerfile_content,
-        project_route: script.project_route
-      }, data => {
-        const eachBuildLog = jsonify(data.data);
-
-        if (eachBuildLog && eachBuildLog.vertexes && Array.isArray(eachBuildLog.vertexes) && eachBuildLog.vertexes.length > 0 && eachBuildLog.vertexes.find(vertex => vertex.completed)) {
-          completedStepCount++;
-
-          const percentage = Math.floor(completedStepCount * 100 / script.steps_count);
-
-          progressText.innerText = progressText.innerText.startsWith('%') ? `%${percentage}` : `${percentage}%`;
-
-          for (let i = 0; i < percentage; i++)
-            progressParts[i].classList.add('index-installation-progress-each-part-colored');
-        };
-
-        console.log(`Progress: ${Math.floor(completedStepCount * 100 / script.steps_count)}%`, eachBuildLog);
-      }, (err, res) => {
-        stream.end();
-
-        if (err)
-          return callback(err);
-
-        return callback(null);
-      });
-    });
-  });
-};
-
 function addServerToSavedServersIfNotExists(data, callback) {
+  if (!data.is_checkbox_checked)
+    return callback(null);
+
   savedServersManager.getByHost(data.host, (err, saved_server) => {
     if (err && err != 'document_not_found')
       return callback(err);
@@ -171,40 +78,54 @@ window.addEventListener('load', _ => {
         if (err)
           return setLoginRightErrorMessage(err);
 
-        setLoginRightErrorMessage('');
-
         addServerToSavedServersIfNotExists({
+          is_checkbox_checked: document.querySelector('.index-login-right-remember-me-input').checked,
           host: ipAddress
         }, err => {
           if (err)
             return setLoginRightErrorMessage(err);
 
-          setLoginRightErrorMessage('');
+          localhostRequest('/session/get', 'POST', {
+            keys: ['index_login_will_install']
+          }, (err, session) => {
+            if (err)
+              return console.error(err);
 
-          // TODO: fix after this line
-          serverManager.checkAvailabilityForNodeInstallation((err, res) => {
-            const queryParams = new URLSearchParams(window.location.search);
+            if (session.index_login_will_install) {
+              serverManager.isAnyNodeInstanceRunning((err, is_node_instance_running) => {
+                if (err)
+                  return setLoginRightErrorMessage(err);
 
-            if (queryParams.has('install')) {
-              if (err == 'running_node_instance') {
-                alert('Another node is already running on this server, please remove it first');
-                return window.location.href = '/node';
-              };
+                if (!is_node_instance_running) // start installation
+                  return navigatePage('/install');
 
-              return window.location.href = '/install?project_id=' + queryParams.get('project_id');
-              // installNode((err, res) => {
-              //   if (err)
-              //     return setLoginRightErrorMessage(err);
+                serverManager.getServerReadyForNodeManagement((err, res) => {
+                  if (err)
+                    return setLoginRightErrorMessage(err);
 
-              //   console.log('Node installed successfully');
-              //   return window.location.href = '/node';
-              // });
+                  console.log('go to node and delete it first'); // TODO: add information dialog
+
+                  return navigatePage('/node');
+                });
+              });
             } else {
-              if (err == 'running_node_instance')
-                return window.location.href = '/node';
+              serverManager.isAnyNodeInstanceRunning((err, is_node_instance_running) => {
+                if (err)
+                  return setLoginRightErrorMessage(err);
 
-              alert('No node is running on this server, please install one first');
-              return window.location.href = '/home';
+                if (!is_node_instance_running) {
+                  console.log('go choose a node to install'); // TODO: add information dialog
+
+                  return navigatePage('/home');
+                };
+
+                serverManager.getServerReadyForNodeManagement((err, res) => {
+                  if (err)
+                    return setLoginRightErrorMessage(err);
+
+                  return navigatePage('/node');
+                });
+              });
             };
           });
         });

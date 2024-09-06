@@ -35,29 +35,12 @@ const makeServerManager = _ => {
     });
   };
 
-  const _installServerListener = (onData, callback) => {
-    _checkServerListenerAndMatchVersion(err => {
-      if (err && err != 'server_listener_not_running')
+  const _installServerListener = callback => {
+    localhostRequest('/ssh/server-listener/install', 'POST', {}, (err, res) => {
+      if (err)
         return callback(err);
 
-      if (err) {
-        const stream = makeStream(onData);
-
-        localhostRequest('/ssh/server-listener/install', 'POST', {
-          id: stream.id
-        }, (err, res) => {
-          stream.end();
-
-          if (err)
-            return callback(err);
-
-          return callback(null);
-        });
-
-        return stream;
-      };
-
-      return callback('server_listener_already_running');
+      return callback(null);
     });
   };
 
@@ -72,6 +55,111 @@ const makeServerManager = _ => {
 
         return callback(null);
       });
+    });
+  };
+
+  const _uninstallServerListenerIfInstalled = callback => {
+    _checkDocker(err => {
+      if (err)
+        return callback(null);
+
+      _checkServerListenerAndMatchVersion(err => {
+        if (err == 'server_listener_not_exist')
+          return callback(null);
+
+        _uninstallServerListener(err => {
+          if (err)
+            return callback(err);
+
+          return callback(null);
+        });
+      });
+    });
+  };
+
+  const _installDocker = callback => {
+    localhostRequest('/ssh/docker/install', 'POST', {}, (err, res) => {
+      if (err)
+        return callback(err);
+
+      return callback(null);
+    });
+  };
+
+  const _uninstallDocker = callback => {
+    localhostRequest('/ssh/docker/uninstall', 'POST', {}, (err, res) => {
+      if (err)
+        return callback(err);
+
+      return callback(null);
+    });
+  };
+
+  const _installDockerIfNotInstalled = callback => {
+    _checkDocker(err => {
+      if (err == 'docker_not_installed')
+        return _installDocker(callback);
+
+      if (err == 'docker_not_running')
+        return _uninstallDocker(err => {
+          if (err)
+            return callback(err);
+
+          return _installDocker(callback);
+        });
+
+      return callback(null);
+    });
+  };
+
+  const _installOrUpdateServerListenerIfDoesntExistOrOutdated = callback => {
+    _checkServerListenerAndMatchVersion(err => {
+      if (err == 'server_listener_not_exist')
+        return _installServerListener(callback);
+
+      if (err == 'server_listener_not_running')
+        return _uninstallServerListenerIfInstalled(err => {
+          if (err)
+            return callback(err);
+
+          return _installServerListener(callback);
+        });
+
+      if (err == 'server_listener_version_mismatch')
+        return _uninstallServerListenerIfInstalled(err => {
+          if (err)
+            return callback(err);
+
+          return _installServerListener(callback);
+        });
+
+      if (err)
+        return callback(err);
+
+      return callback(null);
+    });
+  };
+
+  const _isAnyNodeInstanceRunning = callback => {
+    _checkDocker(err => {
+      if (err)
+        return callback(null, false);
+
+      _checkRunningNodeInstance(err => {
+        if (err)
+          return callback(null, true);
+
+        return callback(null, false);
+      });
+    });
+  };
+
+  const _isEnoughResourcesAvailableForNodeInstallation = callback => {
+    localhostRequest('/ssh/server-listener/stats', 'POST', {}, (err, res) => {
+      if (err)
+        return callback(null, false);
+
+      return callback(null, true);
     });
   };
 
@@ -94,50 +182,24 @@ const makeServerManager = _ => {
         return callback(null);
       });
     },
-    uninstallDocker: callback => {
-      localhostRequest('/ssh/docker/uninstall', 'POST', {}, (err, res) => {
-        if (err)
-          return callback(err);
-
-        return callback(null);
-      });
-    },
-    installDocker: (onData, callback) => {
-      _checkDocker(err => {
-        if (!err)
-          return callback('docker_already_installed');
-
-        if (err != 'docker_not_installed' && err != 'docker_not_running')
-          return callback(err);
-
-        const stream = makeStream(onData);
-
-        localhostRequest('/ssh/docker/install', 'POST', {
-          id: stream.id
-        }, (err, res) => {
-          stream.end();
-
-          if (err)
-            return callback(err);
-
-          return callback(null);
-        });
-
-        return stream;
-      });
-    },
-    checkAvailabilityForNodeInstallation: callback => {
-      _checkDocker(err => {
+    getServerReadyForNodeInstallation: callback => {
+      _installDockerIfNotInstalled(err => {
         if (err) return callback(err);
 
-        _checkServerListenerAndMatchVersion(err => {
+        _installOrUpdateServerListenerIfDoesntExistOrOutdated(err => {
           if (err) return callback(err);
 
-          _checkRunningNodeInstance(err => {
+          _isAnyNodeInstanceRunning((err, is_node_instance_running) => {
             if (err) return callback(err);
 
-            _checkAvailableResources(err => {
+            if (is_node_instance_running)
+              return callback('node_instance_already_running');
+
+            _isEnoughResourcesAvailableForNodeInstallation((err, is_enough_resources_available) => {
               if (err) return callback(err);
+
+              if (!is_enough_resources_available)
+                return callback('not_enough_resources_available');
 
               return callback(null);
             });
@@ -145,16 +207,14 @@ const makeServerManager = _ => {
         });
       });
     },
-    installServerListener: _installServerListener,
-    uninstallServerListener: _uninstallServerListener,
-    updateServerListener: (onData, callback) => {
-      _uninstallServerListener(err => {
-        if (err)
-          return callback(err);
+    getServerReadyForNodeManagement: callback => {
+      _installOrUpdateServerListenerIfDoesntExistOrOutdated(err => {
+        if (err) return callback(err);
 
-        return _installServerListener(onData, callback);
+        return callback(null);
       });
-    }
+    },
+    isAnyNodeInstanceRunning: _isAnyNodeInstanceRunning,
   };
 };
 

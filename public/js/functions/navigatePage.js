@@ -6,7 +6,7 @@ function displayAllNone() {
   document.getElementById('index-search-wrapper').classList.add('display-none');
   document.getElementById('index-login-wrapper').classList.add('display-none');
   document.getElementById('index-installation-wrapper').classList.add('display-none');
-  // document.getElementById('node-wrapper').classList.add('display-none');
+  document.getElementById('node-wrapper').classList.add('display-none');
 };
 
 function saveToSession(data, callback) {
@@ -34,22 +34,34 @@ function navigatePage(page, data) {
     };
 
     displayAllNone();
+
     if (page == '/login') {
       loadPageIndexLogin(data);
+
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-login-wrapper').classList.remove('display-none');
-      window.history.replaceState({}, '', page);
     } else if (page == '/home') {
       loadPageIndexHome(data);
+
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-home-wrapper').classList.remove('display-none');
-      window.history.replaceState({}, '', page);
+    } else if (page == '/install') {
+      loadPageIndexInstallation(data);
+
+      document.getElementById('index-wrapper').classList.remove('display-none');
+      document.getElementById('index-installation-wrapper').classList.remove('display-none');
+    } else if (page == '/node') {
+      loadPageNode(data);
+
+      document.getElementById('node-wrapper').classList.remove('display-none');
     } else if (page == '/search') {
       loadPageIndexSearch(data);
+
       document.getElementById('index-wrapper').classList.remove('display-none');
       document.getElementById('index-search-wrapper').classList.remove('display-none');
-      window.history.replaceState({}, '', page);
-    }
+    };
+
+    window.history.replaceState({}, '', page);
 
     isPageLoading = false;
   });

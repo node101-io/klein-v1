@@ -32,9 +32,8 @@ module.exports = (req, res) => {
     if (err)
       return callback(err);
 
-    sshRequest('exec:stream', {
+    sshRequest('exec', {
       host: req.session.last_connected_host,
-      id: req.body.id,
       command: installServerListenerCommand(versions.serverListener)
     }, (err, install_server_listener_response) => {
       if (err)
