@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const ssh2 = require('ssh2');
+const ANSIToHTML = require('ansi-html-community')
 
 const jsonify = require('./jsonify');
 
@@ -432,6 +433,9 @@ const sshRequest = (type, data, callback) => {
 
                 if (stdout.length > 1024 * 100)
                   stdout = stdout.slice(stdout.length / 2);
+
+                if (data.ansi_to_html)
+                  stream_data = ANSIToHTML(stream_data);
 
                 ws.send(JSON.stringify({
                   id: data.id,

@@ -6,7 +6,8 @@ module.exports = (req, res) => {
   sshRequest('exec:stream', {
     host: req.session.last_connected_host,
     id: req.body.id,
-    command: checkContainerLogsCommand()
+    command: checkContainerLogsCommand(),
+    ansi_to_html: true
   }, (err, output) => {
     if (err)
       return res.json({ err: err });

@@ -1,4 +1,12 @@
+function loadPageNode(data) {
+  loadingStart();
+
+  loadingStop();
+};
+
 window.addEventListener('load', () => {
+  const logsWrapper = document.querySelector('.node-logs-wrapper');
+
   document.addEventListener('click', event => {
     if (event.target.closest('#node-general-save-button-create-wallet')) {
       const createWalletPage = document.getElementById('node-general-content-wrapper-create-wallet');
@@ -39,12 +47,20 @@ window.addEventListener('load', () => {
     };
   });
 
-  if (window.location.pathname == '/node/wallets') {
-    walletManager.listWallets((err, wallet_list) => {
-      if (err)
-        return console.error(err);
+  // use this to check logs
+  const logStream = nodeManager.checkLogs(data => {
+    logsWrapper.insertAdjacentHTML('afterbegin', data.data);
+  }, err => {
+    if (err)
+      return console.error(err);
+  });
 
-      //
-    });
-  };
+  // if (window.location.pathname == '/node/wallets') {
+  //   walletManager.listWallets((err, wallet_list) => {
+  //     if (err)
+  //       return console.error(err);
+
+  //     //
+  //   });
+  // };
 });

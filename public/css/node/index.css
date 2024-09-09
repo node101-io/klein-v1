@@ -167,3 +167,16 @@
   color: var(--text-color);
   outline: none;
 }
+
+.node-logs-wrapper {
+  width: 100%;
+  min-width: 100%;
+  flex: 1;
+  flex-direction: column-reverse;
+  justify-content: end;
+  padding: var(--node-content-inner-gap);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background-color: var(--background-highlight-color);
+  border-radius: var(--index-content-wrapper-curvature);
+}
