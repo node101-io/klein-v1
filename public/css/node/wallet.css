@@ -1,0 +1,88 @@
+.node-wallets-list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 100%;
+  height: fit-content;
+  min-height: fit-content;
+  margin-top: var(--node-content-padding);
+  gap: var(--node-content-inner-gap);
+}
+.node-wallets-each-wallet-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--node-wallets-each-wallet-height);
+  min-height: var(--node-wallets-each-wallet-height);
+  width: calc(50% - var(--node-content-inner-gap) / 2);
+  min-width: calc(50% - var(--node-content-inner-gap) / 2);
+  padding: var(--node-content-inner-padding);
+  background-color: var(--background-all-color);
+  border-radius: var(--node-wallets-each-wallet-curvature);
+}
+.node-wallets-each-wallet-address {
+  display: flex;
+  width: auto;
+  min-width: auto;
+  color: var(--input-placeholder-color);
+}
+.node-wallets-each-wallet-buttons-wrapper {
+  position: absolute;
+  display: flex;;
+  top: calc(.25 * var(--node-wallets-each-wallet-height));
+  right: calc(.25 * var(--node-wallets-each-wallet-height));
+  height: calc(.5 * var(--node-wallets-each-wallet-height));
+  min-height: calc(.5 * var(--node-wallets-each-wallet-height));
+  width: fit-content;
+  min-width: fit-content;
+  gap: var(--node-content-inner-gap);
+}
+.node-wallets-each-wallet-copy-button {
+  cursor: pointer;
+}
+.node-wallets-each-wallet-copy-button path {
+  stroke: var(--input-placeholder-color);
+}
+.node-wallets-each-wallet-copied-icon {
+  fill: var(--input-placeholder-color);
+  stroke: var(--input-placeholder-color);
+}
+.node-wallets-each-wallet-delete-button {
+  fill: var(--warning-color);
+  cursor: pointer;
+}
+
+.node-wallets-mnemonic-input-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  min-width: 100%;
+  gap: var(--node-content-inner-gap);
+  margin: var(--node-content-inner-gap) 0;
+}
+.node-wallets-mnemonic-input-each-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 100%;
+}
+.node-wallets-mnemonic-input-each-title {
+  font-weight: 300;
+  color: var(--text-subtitle-color);
+  font-size: var(--node-font-size-medium);
+}
+.node-wallets-mnemonic-input-each {
+  height: var(--node-general-input-height);
+  min-height: var(--node-general-input-height);
+  width: 100%;
+  min-width: 100%;
+  padding: var(--node-content-inner-padding) calc(2 * var(--node-content-inner-padding));
+  border-radius: var(--node-general-input-curvature);
+  border: none;
+  border-bottom: 1px solid var(--input-placeholder-color);
+  font-weight: 200;
+  font-size: var(--node-font-size-medium);
+  color: var(--text-color);
+  outline: none;
+}

@@ -10,6 +10,7 @@ const templatesGeneralProjectWrapperPostController = require('../controllers/tem
 const templatesIndexLoginProjectWrapperPostController = require('../controllers/templates/index-login-project-wrapper/post');
 const indexLoginRightButtonWrapperPostController = require('../controllers/templates/index-login-right-button-wrapper/post');
 const templatesIndexInstallationProjectWrapperPostController = require('../controllers/templates/index-installation-project-wrapper/post');
+const templatesNodeWalletsEachWalletWrapperPostController = require('../controllers/templates/node-wallets-each-wallet-wrapper/post');
 
 router.post(
   '/general-project-wrapper',
@@ -34,6 +35,12 @@ router.post(
     isAuth,
     setRenderFrontData,
     templatesIndexInstallationProjectWrapperPostController
+);
+router.post(
+  '/node-wallets-each-wallet-wrapper',
+    isAuth,
+    setRenderFrontData,
+    templatesNodeWalletsEachWalletWrapperPostController
 );
 
 module.exports = router;

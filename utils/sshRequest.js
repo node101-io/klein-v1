@@ -425,6 +425,9 @@ const sshRequest = (type, data, callback) => {
 
             stream
               .on('data', stream_data => {
+                if (ws.listenerCount('message') == 1)
+                  return stream.close();
+
                 connection.markAsSeen();
 
                 stream_data = Buffer.from(stream_data).toString('utf8');

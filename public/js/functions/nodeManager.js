@@ -162,6 +162,14 @@ const makeNodeManager = _ => {
 
       return stream;
     },
+    getStatus: callback => {
+      localhostRequest('/ssh/node/status', 'POST', {}, (err, res) => {
+        if (err)
+          return callback(err);
+
+        return callback(null, res);
+      });
+    },
     installSnapshot: (onData, callback) => {
       const stream = makeStream(onData);
 

@@ -96,3 +96,13 @@ mixin index-installation-project-wrapper(project)
               rect(x='10.6045' y='5.99512' width='8.7613' height='1.13049' transform='rotate(135 10.6045 5.99512)')
         .index-installation-project-description= project.chain_registry_identifier
     .index-installation-project-description= project.description
+mixin node-wallets-each-wallet-wrapper(address)
+  .node-wallets-each-wallet-wrapper
+    .node-wallets-each-wallet-address 123214124124214124241
+    .node-wallets-each-wallet-buttons-wrapper
+      svg.node-wallets-each-wallet-copy-button(viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg')
+        path(d='M17.5 14H19C20.1046 14 21 13.1046 21 12V5C21 3.89543 20.1046 3 19 3H12C10.8954 3 10 3.89543 10 5V6.5M5 10H12C13.1046 10 14 10.8954 14 12V19C14 20.1046 13.1046 21 12 21H5C3.89543 21 3 20.1046 3 19V12C3 10.8954 3.89543 10 5 10Z' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round')
+      svg.node-wallets-each-wallet-copied-icon.display-none(viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg')
+        path(fill='inherit' stroke='inherit' stroke-width='1' fill-rule='evenodd' clip-rule='evenodd' d='M19.8198 6.19526C20.0601 6.45561 20.0601 6.87772 19.8198 7.13807L9.9736 17.8047C9.73328 18.0651 9.34364 18.0651 9.10332 17.8047L4.18024 12.4714C3.93992 12.2111 3.93992 11.7889 4.18024 11.5286C4.42056 11.2682 4.8102 11.2682 5.05053 11.5286L9.53846 16.3905L18.9495 6.19526C19.1898 5.93491 19.5794 5.93491 19.8198 6.19526Z')
+      svg.node-wallets-each-wallet-delete-button(viewBox='-128 -128 1280 1280' xmlns='http://www.w3.org/2000/svg')
+        path(d='M 0 281.296 l 0 -68.355 q 1.953 -37.107 29.295 -62.496 t 64.449 -25.389 l 93.744 0 l 0 -31.248 q 0 -39.06 27.342 -66.402 t 66.402 -27.342 l 312.48 0 q 39.06 0 66.402 27.342 t 27.342 66.402 l 0 31.248 l 93.744 0 q 37.107 0 64.449 25.389 t 29.295 62.496 l 0 68.355 q 0 25.389 -18.553 43.943 t -43.943 18.553 l 0 531.216 q 0 52.731 -36.13 88.862 t -88.862 36.13 l -499.968 0 q -52.731 0 -88.862 -36.13 t -36.13 -88.862 l 0 -531.216 q -25.389 0 -43.943 -18.553 t -18.553 -43.943 z m 62.496 0 l 749.952 0 l 0 -62.496 q 0 -13.671 -8.789 -22.46 t -22.46 -8.789 l -687.456 0 q -13.671 0 -22.46 8.789 t -8.789 22.46 l 0 62.496 z m 62.496 593.712 q 0 25.389 18.553 43.943 t 43.943 18.553 l 499.968 0 q 25.389 0 43.943 -18.553 t 18.553 -43.943 l 0 -531.216 l -624.96 0 l 0 531.216 z m 62.496 -31.248 z m 31.248 0 z m 31.248 -718.704 l 374.976 0 l 0 -31.248 q 0 -13.671 -8.789 -22.46 t -22.46 -8.789 l -312.48 0 q -13.671 0 -22.46 8.789 t -8.789 22.46 l 0 31.248 z')
