@@ -4,18 +4,15 @@ const InstallLoader = ({ totalSteps = 100, onComplete, cancelled = false }) => {
     const [currentStep, setCurrentStep] = useState(0);
 
     useEffect(() => {
-        // Exit early if installation is cancelled
         if (cancelled) {
             return;
         }
 
-        // Calculate interval duration based on total steps and total duration
-        const totalDuration = Math.random() * 5000 + 5000;
+        const totalDuration = Math.random() * 5000 + 1000;
         const intervalDuration = totalDuration / totalSteps;
 
         const interval = setInterval(() => {
             setCurrentStep((prevStep) => {
-                // Stop when the current step reaches total steps
                 if (prevStep < totalSteps) {
                     return prevStep + 1;
                 } else {
@@ -25,11 +22,9 @@ const InstallLoader = ({ totalSteps = 100, onComplete, cancelled = false }) => {
             });
         }, intervalDuration);
 
-        // Clean up interval on component unmount or when cancelled changes
         return () => clearInterval(interval);
     }, [totalSteps, cancelled]);
 
-    // Use effect to handle completion after rendering
     useEffect(() => {
         if (currentStep === totalSteps && onComplete) {
             onComplete();

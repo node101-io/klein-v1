@@ -1,4 +1,3 @@
-// components/NodeExplorer.jsx
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -7,7 +6,7 @@ import HelpIcon from '@/assets/icons/help.svg';
 import { useRouter } from 'next/navigation';
 import { useSidebar } from '@/contexts/sidebar-context';
 import { fetchProjects } from '@/services/api';
-import NodeCard from '@/components/NodeCard';
+import NodeCard from '@/components/common/NodeCard';
 const NodeExplorer = () => {
     const [nodes, setNodes] = useState([]);
     const [network, setNetwork] = useState('all');
@@ -52,60 +51,70 @@ const NodeExplorer = () => {
 
     return (
         <>
-            <div className="mb-6 relative">
-                <Image
-                    src={SearchIcon}
-                    alt="Search"
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"
-                />
-                <input
-                    type="search"
-                    placeholder="Search nodes..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full max-w-xl pl-10 rounded-[16px] pr-4 py-2  
-              bg-white text-gray-900 
-              placeholder-gray-500
-              focus:outline-none focus:ring-0 focus:border-transparent"
-                />
-            </div>
-            <div className="space-x-2 mb-6">
-                {['all', 'mainnet', 'testnet'].map((net) => (
-                    <button
-                        key={net}
-                        onClick={() => setNetwork(net)}
-                        className={`px-4 py-2 bg-white text-[12px] rounded-[12px] transition-colors ${network === net
-                            ? 'border-[1px] border-black text-black'
-                            : ' text-gray-700 hover:bg-gray dark:bg-bg_dark_gray'
-                            }`}
-                    >
-                        {net.toUpperCase()}
-                    </button>
-                ))}
-            </div>
-
-            {error && <p className="text-red-500">{error}</p>}
-
-            {searchTerm && (
-                <div className="flex flex-wrap gap-6">
-                    <div className="w-full">
-                        <h2 className="text-xl font-semibold mb-4">Search Results</h2>
-                        <div className="grid gap-6 lg:grid-cols-3 2xl:grid-cols-4 grid-cols-2">
-                            {searchResults.length > 0 ? (
-                                searchResults.map((node) => (
-                                    <NodeCard
-                                        key={node.id}
-                                        node={node}
-                                        highlightText={highlightText}
-                                    />
-                                ))
-                            ) : (
-                                <p className="text-gray-500">No results found</p>
-                            )}
-                        </div>
+            <div className="flex flex-col w-full justify-center items-center">
+                <div className="mb-6 relative w-full max-w-[657px] flex justify-center">
+                    <div className="relative w-full max-w-[657px]">
+                        <Image
+                            src={SearchIcon}
+                            alt="Search"
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5"
+                        />
+                        <input
+                            type="search"
+                            placeholder="Search nodes..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 rounded-[16px] pr-4 py-2  
+                    bg-white text-gray-900 
+                    placeholder-gray-500
+                    focus:outline-none focus:ring-0 focus:border-transparent"
+                        />
                     </div>
                 </div>
-            )}
+
+                <div className="space-x-2 mb-6 flex justify-center">
+                    {['all', 'mainnet', 'testnet'].map((net) => (
+                        <button
+                            key={net}
+                            onClick={() => setNetwork(net)}
+                            className={`px-4 py-2 bg-white text-[12px] rounded-[12px] transition-colors ${network === net
+                                ? 'border-[1px] border-black text-black'
+                                : ' text-gray-700 hover:bg-gray dark:bg-bg_dark_gray'
+                                }`}
+                        >
+                            {net.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+
+
+            {error && <p className="text-red-500">{error}</p>
+            }
+
+            {
+                searchTerm && (
+                    <div className="flex flex-wrap gap-6">
+                        <div className="w-full">
+                            <h2 className="text-xl font-semibold mb-4">Search Results</h2>
+                            <div className="grid gap-6 lg:grid-cols-3 2xl:grid-cols-4 grid-cols-2">
+                                {searchResults.length > 0 ? (
+                                    searchResults.map((node) => (
+                                        <NodeCard
+                                            key={node.id}
+                                            node={node}
+                                            highlightText={highlightText}
+                                        />
+                                    ))
+                                ) : (
+                                    <p className="text-gray-500">No results found</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-4">All Projects</h2>
                 <div className="grid gap-6 lg:grid-cols-3 2xl:grid-cols-4 grid-cols-2">

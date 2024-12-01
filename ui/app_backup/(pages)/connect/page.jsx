@@ -97,16 +97,9 @@ const Page = () => {
               </button>
             </div>
           </div>
-          //  ) :
-          //  cancelled ? (
-          //    <div className="flex flex-col items-center justify-center h-full text-center">
-          //      <h1 className="text-3xl font-bold text-red-500 mb-4">Installation Cancelled</h1>
-          //      <p className="text-lg text-gray-700">You have cancelled the installation.</p>
-          //    </div>
         ) : selectedItem ? (
           <div className="p-4">
             <h1 className="text-xl font-bold mb-4">{selectedItem}</h1>
-            {/* Render content based on selectedItem */}
           </div>
         ) : (
           <div className="p-4">Please select an operation from the sidebar.</div>

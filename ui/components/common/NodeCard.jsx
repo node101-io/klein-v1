@@ -1,4 +1,3 @@
-// components/NodeCard.jsx
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import HelpIcon from '@/assets/icons/help.svg';
@@ -49,7 +48,7 @@ const NodeCard = ({ node, highlightText }) => {
             onClick={handleInstallClick}
             className="bg-white rounded-lg shadow-md p-4 flex flex-col border border-[#B715FF] border-opacity-0 hover:border-opacity-100"
         >
-            <div className="flex items-start mb-4 justify-between">
+            <div className="flex items-start  justify-between">
                 <div className="flex items-center">
                     {node.image ? (
                         <Image

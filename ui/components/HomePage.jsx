@@ -4,7 +4,7 @@ import Image from 'next/image';
 import SearchIcon from '@/assets/icons/search.svg';
 import HelpIcon from '@/assets/icons/help.svg';
 import ArrowIcon from '@/assets/icons/arrow.svg';
-import NodeCard from './NodeCard';
+import NodeCard from './common/NodeCard';
 
 const NodeExplorer = ({ nodes }) => {
     const [network, setNetwork] = useState('all');
@@ -33,7 +33,7 @@ const NodeExplorer = ({ nodes }) => {
             </div>
 
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-3 2xl:grid-cols-4 grid-cols-2">
                 {filteredNodes.map((node) => (
                     <NodeCard key={node.id} node={node} />
 

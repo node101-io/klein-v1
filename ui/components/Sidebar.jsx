@@ -8,13 +8,15 @@ import HomeIcon from '@/assets/icons/home.svg';
 import SearchIcon from '@/assets/icons/search.svg';
 import ChevronIcon from '@/assets/icons/chevron.svg';
 import NodeIcon from '@/assets/icons/node.svg';
-import NewNodeIcon from '@/assets/icons/new-node.svg';
 import SettingsIcon from '@/assets/icons/settings.svg';
 import HelpIcon from '@/assets/icons/help.svg';
+import UpdateIcon from '@/assets/icons/update.svg';
 import KleinFull from '@/assets/full-klein.svg';
 import KleinSmall from '@/assets/klein.svg';
+import AnimatedRocketIcon from '@/assets/icons/update/animated-rocket';
 
-const NavItem = ({ href, icon, title, shortcut, collapsed }) => {
+
+const NavItem = ({ href, icon, title, shortcut, collapsed, isUpdateButton = false }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -22,7 +24,11 @@ const NavItem = ({ href, icon, title, shortcut, collapsed }) => {
     <Link href={href} className={`block hover:bg-hover_gray rounded-lg overflow-hidden ${isActive ? 'bg-selected_bg' : ''}`}>
       <div className="flex items-center px-4 py-2 transition-all duration-300 ease-in-out" title={title}>
         <div className="flex-shrink-0">
-          <Image src={icon} alt={title} width={20} height={20} />
+          {isUpdateButton ? (
+            <AnimatedRocketIcon />
+          ) : (
+            <Image src={icon} alt={title} width={20} height={20} />
+          )}
         </div>
         <div
           className={`flex items-center flex-1 min-w-0 overflow-hidden transition-all duration-300 ease-in-out ${collapsed ? 'w-0 opacity-0' : 'w-auto opacity-100'
@@ -61,7 +67,7 @@ const NavSection = ({ title, items, collapsed }) => {
 };
 
 const Sidebar = () => {
-  const { collapsed, setCollapsed } = useSidebar();
+  const { collapsed, setCollapsed, hasUpdate } = useSidebar();
 
   const sidebarWidth = collapsed ? '95px' : '260px';
 
@@ -72,9 +78,15 @@ const Sidebar = () => {
   const mainNavItems = [
     { title: 'Home', href: '/', icon: HomeIcon, shortcut: 'Ctrl+H' },
     { title: 'Explore', href: '/explore', icon: SearchIcon, shortcut: 'Ctrl+F' },
-    { title: 'Node Overview', href: '/your-nodes', icon: NodeIcon, shortcut: 'Ctrl+A' },
-    { title: 'Settings', href: '/settings', icon: SettingsIcon, shortcut: '' },
+    { title: 'Node Overview', href: '/nodeoverview', icon: NodeIcon, shortcut: 'Ctrl+A' },
   ];
+
+  if (hasUpdate) {
+    mainNavItems.push({ title: 'Update', href: '/', icon: UpdateIcon, shortcut: '', isUpdateButton: true });
+  }
+
+  mainNavItems.push({ title: 'Settings', href: '/settings', icon: SettingsIcon, shortcut: '' });
+
 
   const helpNavItems = [
     { title: 'Help', href: '/help', icon: HelpIcon, shortcut: '' },
@@ -143,3 +155,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

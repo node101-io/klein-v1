@@ -1,4 +1,3 @@
-// app/layout.js
 import localFont from 'next/font/local';
 import './globals.css';
 import Sidebar from '@/components/Sidebar';

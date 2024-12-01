@@ -6,9 +6,10 @@ const SidebarContext = createContext();
 
 export const SidebarProvider = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [hasUpdate, setHasUpdate] = useState(false);
 
   return (
-    <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
+    <SidebarContext.Provider value={{ collapsed, setCollapsed, hasUpdate, setHasUpdate }}>
       {children}
     </SidebarContext.Provider>
   );
@@ -21,3 +22,4 @@ export const useSidebar = () => {
   }
   return context;
 };
+

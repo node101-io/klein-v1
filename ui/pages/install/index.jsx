@@ -1,24 +1,21 @@
-// pages/your-page.js
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
-import Sidebar from '@/components/connect/Sidebar-connect';
 import InstallLoader from '@/components/InstallLoader';
 import Warning from '@/assets/icons/warning.svg';
 
-import { fetchProjectById } from '@/services/api'; // Import the new function
+import { fetchProjectById } from '@/services/api';
 
 const Page = () => {
   const [installing, setInstalling] = useState(true);
   const [cancelled, setCancelled] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [node, setNode] = useState(null);
 
   const searchParams = useSearchParams();
+  const router = useRouter();
   const id = searchParams.get('id');
 
   useEffect(() => {
@@ -29,7 +26,6 @@ const Page = () => {
           setNode(projectData);
         } catch (error) {
           console.error('Error fetching project:', error);
-          setError('Failed to load project data.');
         }
       };
 
@@ -45,14 +41,9 @@ const Page = () => {
     return <div>Loading...</div>;
   }
 
-  const handleSelectItem = (item) => {
-    if (!installing) {
-      setSelectedItem(item);
-    }
-  };
-
   const handleInstallComplete = () => {
     setInstalling(false);
+    router.push(`/nodeoverview/?id=${id}`);
   };
 
   const handleCancel = () => {
@@ -62,12 +53,6 @@ const Page = () => {
 
   return (
     <div className="flex flex-row w-full h-full gap-x-4">
-      <div
-        className={`transition-opacity duration-300 ${installing ? 'opacity-50 pointer-events-none' : ''
-          }`}
-      >
-        <Sidebar node={node} selectedItem={selectedItem} onSelectItem={handleSelectItem} />
-      </div>
       <div className="px-12 flex-1 bg-gray rounded-xl overflow-hidden">
         {installing || cancelled ? (
           <div className="flex flex-col items-start justify-center pt-52">
@@ -85,12 +70,11 @@ const Page = () => {
                   <p className="text-sm mt-1 text-text_gray">
                     {node.chain_registry_identifier}
                   </p>
-
                 </div>
               </div>
               <p>
-                Stake your coins to our validators in the projects you choose. node101 gives you the
-                opportunity to stake the best projects.
+                Stake your coins to our validators in the projects you choose.
+                node101 gives you the opportunity to stake the best projects.
               </p>
               <div className="flex flex-row space-x-2">
                 <Image src={Warning} alt="Warning" width={22} height={22} />
@@ -115,13 +99,8 @@ const Page = () => {
               </button>
             </div>
           </div>
-        ) : selectedItem ? (
-          <div className="p-4">
-            <h1 className="text-xl font-bold mb-4">{selectedItem}</h1>
-            {/* Render content based on selectedItem */}
-          </div>
         ) : (
-          <div className="p-4">Please select an operation from the sidebar.</div>
+          <div>Installation complete. Redirecting to node overview...</div>
         )}
       </div>
     </div>

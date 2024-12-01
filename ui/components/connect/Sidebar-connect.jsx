@@ -2,15 +2,32 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+
+import ValidatorOperationsIcon from '@/assets/icons/validator-operations.svg';
 import NodeIcon from '@/assets/icons/node.svg';
 import ChevronIcon from '@/assets/icons/chevron.svg';
+import UpdateIcon from '@/assets/icons/update.svg';
+import StopIcon from '@/assets/icons/stop.svg';
+import RestartIcon from '@/assets/icons/restart.svg';
+import DeleteIcon from '@/assets/icons/delete.svg';
+import AnimatedRocketIcon from '@/assets/icons/update/animated-rocket';
+import { useSidebar } from '@/contexts/sidebar-context';
 
-const Sidebar = ({ node, selectedItem, onSelectItem }) => {
-    const [collapsed, setCollapsed] = useState(false);
-
-    const toggleCollapse = () => {
-        setCollapsed(!collapsed);
+const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
+    const [validatorCollapsed, setValidatorCollapsed] = useState(false);
+    const toggleValidatorCollapse = () => {
+        setValidatorCollapsed(!validatorCollapsed);
     };
+
+    const { hasUpdate } = useSidebar();
+
+
+    const nodeOperations = [
+        { name: 'Update', icon: UpdateIcon, show: hasUpdate },
+        { name: 'Stop Node', icon: StopIcon, show: true },
+        { name: 'Restart Node', icon: RestartIcon, show: true },
+        { name: 'Delete Node', icon: DeleteIcon, show: true },
+    ];
 
     const validatorOperations = [
         'Validator List',
@@ -28,11 +45,9 @@ const Sidebar = ({ node, selectedItem, onSelectItem }) => {
     ];
 
 
-
     return (
         <div className="h-full w-[260px] bg-gray dark:bg-bg_dark_gray rounded-xl">
             <div className="h-full flex flex-col">
-                {/* Node Info */}
                 <div className="flex items-start mb-4 justify-between p-4">
                     <div className="flex items-center">
                         <Image
@@ -54,34 +69,98 @@ const Sidebar = ({ node, selectedItem, onSelectItem }) => {
                         </div>
                     </div>
                 </div>
-                {/* Validator Operation Section */}
-                <div className="w-full px-4">
+
+                {/* Node Operations */}
+                <div className="w-full px-4 mt-4">
                     <button
-                        onClick={toggleCollapse}
+                        onClick={() => onSelectItem('Node Operations')}
+                        className={`flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none hover:bg-hover_gray rounded-lg pl-1 py-2`}
+                    >
+                        <Image
+                            src={NodeIcon}
+                            alt="Node Operations"
+                            width={20}
+                            height={20}
+                            className="mr-2"
+                        />
+                        <span>Node Overview</span>
+                    </button>
+                    <nav className="flex flex-col space-y-1 mt-2">
+                        {nodeOperations.map(
+                            (item, index) =>
+                                item.show && (
+                                    <button
+                                        key={index}
+                                        onClick={() => onNodeOperation(item.name)}
+                                        className={`flex w-full text-left py-2 hover:bg-hover_gray rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out`}
+                                    >
+                                        {item.name === 'Update' ? (
+                                            <div className="mr-2 ml-4 ">
+                                                <AnimatedRocketIcon />
+                                            </div>
+                                        ) : (
+                                            <Image
+                                                src={item.icon}
+                                                alt={item.name}
+                                                width={16}
+                                                height={16}
+                                                className="mr-2 ml-4"
+                                            />
+                                        )}
+
+                                        <span
+                                            className={`text-base font-normal leading-[20px] tracking-[-0.32px] text-text_gray`}
+                                        >
+                                            {item.name}
+                                        </span>
+                                    </button>
+                                )
+                        )}
+                    </nav>
+                </div>
+
+                {/* Validator Operations */}
+                <div className="w-full px-4 mt-4">
+                    <button
+                        onClick={toggleValidatorCollapse}
                         className="flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none"
                     >
-                        <Image src={NodeIcon} alt="Validator Operation" width={20} height={20} className="mr-2" />
-                        <span>Validator Operation</span>
+                        <Image
+                            src={ValidatorOperationsIcon}
+                            alt="Validator Operations"
+                            width={20}
+                            height={20}
+                            className="mr-2"
+                        />
+                        <span>Validator Operations</span>
                         <Image
                             src={ChevronIcon}
                             alt="Toggle"
                             width={16}
                             height={16}
-                            className={`ml-auto transform transition-transform duration-300 ${collapsed ? '-rotate-90' : 'rotate-0'}`}
+                            className={`ml-auto transform transition-transform duration-300 ${validatorCollapsed ? '-rotate-90' : 'rotate-0'
+                                }`}
                         />
                     </button>
-                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${collapsed ? 'max-h-0' : 'max-h-[1000px]'}`}>
+                    <div
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${validatorCollapsed ? 'max-h-0' : 'max-h-[1000px]'
+                            }`}
+                    >
                         <nav className="flex flex-col space-y-1 mt-2">
                             {validatorOperations.map((item, index) => (
                                 <button
                                     key={index}
                                     onClick={() => onSelectItem(item)}
                                     className={`block w-full text-left hover:bg-hover_gray rounded-lg overflow-hidden ${selectedItem === item ? 'bg-selected_bg' : ''
-                                        } transform transition-all duration-300 ease-in-out opacity-0 translate-y-2 animate-fade-in-down`}
-                                    style={{ animationDelay: `${index * 50}ms` }}
+                                        } transform transition-all duration-300 ease-in-out`}
                                 >
                                     <div className="flex items-center px-4 py-2">
-                                        <span className="text-base font-normal leading-[20px] tracking-[-0.32px] text-text_gray">
+                                        <span
+                                            className={`text-base font-normal leading-[20px] tracking-[-0.32px] ${selectedItem === item
+                                                ? 'font-bold'
+                                                : 'text-text_gray'
+                                                }`}
+                                        >
                                             {item}
                                         </span>
                                     </div>
@@ -95,5 +174,4 @@ const Sidebar = ({ node, selectedItem, onSelectItem }) => {
     );
 };
 
-export default Sidebar;
-
+export default NodeSidebar;

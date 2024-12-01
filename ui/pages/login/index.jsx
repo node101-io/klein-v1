@@ -4,11 +4,12 @@ import { useRouter } from 'next/router';
 import { fetchProjectById } from '@/services/api';
 
 
-import ArrowLink from "@/assets/icons/arrow.svg"
+import HelpIcon from "@/assets/icons/help.svg"
 import EyeIcon from "@/assets/icons/Eyeicon.svg"
 import EyeCloseIcon from "@/assets/icons/EyeCloseIcon.svg"
-import MockedAleo from "@/assets/nodes/aleo.svg"
+import WarningIcon from "@/assets/icons/warning.svg"
 import InstallIcon from "@/assets/icons/install-icon.svg"
+import Tooltip from '@/components/common/Tooltip';
 
 
 const LoginPage = () => {
@@ -59,42 +60,39 @@ const LoginPage = () => {
         <div className="flex flex-col md:flex-row h-full p-6 bg-gray rounded-xl">
             {/* Left Side */}
             <div className="flex-1 p-6">
-                <div className='w-full h-full flex flex-col justify-center'>
-
-                    <div className="flex justify-between">
-
-                        <div className="flex items-center mb-6">
+                <div className="w-full h-full flex flex-col justify-center">
+                    <div className="flex justify-start">
+                        <div className="flex items-center">
                             <Image
-                                // src={project.image[project.image.length - 1].url}
-                                src={MockedAleo}
+                                src={project.image[project.image.length - 1].url}
                                 alt={`Project image ${project.name}`}
                                 width={100}
                                 height={100}
                                 className="rounded-lg mr-4"
                             />
                             <div>
-                                <h1 className="text-3xl font-semibold">{project.name}</h1>
-                                <p className="text-lg text-gray-600">{project.chain_registry_identifier}</p>
-
-                                <div className="mt-2 px-2 py-[1.5px] border border-[#AAB3FF] rounded-lg text-xs text-[#AAB3FF] w-fit">
-                                    {project.properties.is_incentivized ? "Incentivized" : "Non-Incentivized"}
+                                <div className="flex items-center gap-x-2">
+                                    <h1 className="text-3xl font-semibold">{project.name}</h1>
+                                    <Tooltip content="Click here to learn about Aleo">
+                                        <a
+                                            href={project.urls.web}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-fit h-fit pt-1"
+                                        >
+                                            <Image src={HelpIcon} alt="Help Icon" width={20} height={20} />
+                                        </a>
+                                    </Tooltip>
                                 </div>
-
+                                <p className="text-lg text-gray-600">{project.chain_registry_identifier}</p>
+                                <div className="mt-2 px-2 py-1 border border-[#AAB3FF] rounded-lg text-xs text-[#AAB3FF] w-fit">
+                                    {project.properties.is_incentivized ? 'Incentivized' : 'Non-Incentivized'}
+                                </div>
                             </div>
                         </div>
-                        <a
-                            href={project.urls.web}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-fit h-fit"
-                        >
-                            <Image src={ArrowLink} alt="Arrow Link" width={34} height={34} />
-                        </a>
-
                     </div>
 
-
-                    <p className="mb-6 text-gray-700">{project.description}</p>
+                    <p className="my-6 text-gray-700">{project.description}</p>
 
                     {will_install && (
                         <div>
@@ -104,46 +102,33 @@ const LoginPage = () => {
                                 value={project.chain_registry_identifier}
                             />
 
-                            {/* Requirements */}
                             <div className="mb-6">
                                 <h2 className="text-[16px] text-text_purple mb-4">System Requirements</h2>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    <div className="flex justify-between items-center bg-[#EAEAEA] p-4 rounded-md">
-                                        <span className="text-gray-700">CPU</span>
-                                        <span className="text-text_purple">{project.system_requirements.cpu}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center bg-[#EAEAEA] p-4 rounded-md">
-                                        <span className="text-gray-700">RAM</span>
-                                        <span className="text-text_purple">{project.system_requirements.ram}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center bg-[#EAEAEA] p-4 rounded-md">
-                                        <span className="text-gray-700">Storage</span>
-                                        <span className="text-text_purple">{project.system_requirements.storage}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center bg-[#EAEAEA] p-4 rounded-md">
-                                        <span className="text-gray-700">OS</span>
-                                        <span className="text-text_purple">{project.system_requirements.os}</span>
-                                    </div>
+                                    {['CPU', 'RAM', 'Storage', 'OS'].map((item) => (
+                                        <RequirementItem
+                                            key={item}
+                                            label={item}
+                                            value={project.system_requirements[item.toLowerCase()]}
+                                        />
+                                    ))}
                                 </div>
                             </div>
 
-                            {/* Rent Server */}
                             <div>
                                 <h2 className="text-[16px] mb-4">Rent a Server</h2>
                                 <div className="flex items-center gap-4">
-                                    {Object.keys(rent_servers).map((rent_server, i) => (
-                                        <React.Fragment key={rent_server}>
+                                    {Object.entries(rent_servers).map(([name, url], index, array) => (
+                                        <React.Fragment key={name}>
                                             <a
-                                                href={rent_servers[rent_server]}
+                                                href={url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="text-[#A6A6A6] hover:underline"
                                             >
-                                                {rent_server}
+                                                {name}
                                             </a>
-                                            {i !== Object.keys(rent_servers).length - 1 && (
-                                                <span className="bg-[#A6A6A6] h-6 w-[1px] " />
-                                            )}
+                                            {index < array.length - 1 && <span className="bg-[#A6A6A6] h-6 w-[1px]" />}
                                         </React.Fragment>
                                     ))}
                                 </div>
@@ -151,12 +136,10 @@ const LoginPage = () => {
                         </div>
                     )}
                 </div>
-
             </div>
 
             {/* Right Side */}
             <div className="flex-1 p-6 flex flex-col justify-center items-center">
-                {/* Login Form */}
                 <div className="w-full max-w-md">
                     <h2 className="text-[36px] mb-6">Sign in to your server to continue!</h2>
                     <form onSubmit={handleLogin}>
@@ -231,14 +214,34 @@ const LoginPage = () => {
                         </div>
 
                         {error && <div className="mb-4 text-red-500">{error}</div>}
+                        <div className='flex flex-row gap-x-3'>
+                            <button
+                                type="submit"
+                                className="w-auto space-x-[100px] flex items-center justify-between py-2 px-4 bg-black text-white rounded-md hover:bg-[#000000d5] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <span className="mr-2">{will_install ? 'Install' : 'Login'}</span>
+                                <Image src={InstallIcon} alt="Arrow Link" width={24} height={24} />
+                            </button>
 
-                        <button
-                            type="submit"
-                            className="w-auto space-x-[100px] flex items-center justify-between py-2 px-4 bg-black text-white rounded-md hover:bg-[#000000d5] focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <span className="mr-2">{will_install ? 'Install' : 'Login'}</span>
-                            <Image src={InstallIcon} alt="Arrow Link" width={24} height={24} />
-                        </button>
+
+                            <div className="relative flex items-center group">
+                                <a
+                                    href={project.urls.web}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-fit h-fit pt-1"
+                                >
+                                    <Image src={WarningIcon} alt="Help Icon" width={24} height={24} />
+                                </a>
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden w-[252px] group-hover:block">
+                                    <div className="relative bg-black text-white text-xs rounded-md py-1 px-2 w-fit max-w-[252px] text-center">
+                                        Klein cares about privacy and security as core values of the decentralization of the world, so Klein does not keep, save, or share any information related to you or your node or server.
+                                        <div className="absolute left-1/2 transform -translate-x-1/2 top-full w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-black"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </form>
                 </div>
             </div>
@@ -247,3 +250,11 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+
+const RequirementItem = ({ label, value }) => (
+    <div className="flex justify-between items-center bg-[#EAEAEA] p-4 rounded-md">
+        <span className="text-gray-700">{label}</span>
+        <span className="text-text_purple">{value}</span>
+    </div>
+);
