@@ -17,10 +17,6 @@
   z-index: 2;
 }
 
-.rocketContainer:hover .rocket {
-  transform: rotate(140deg);
-}
-
 .rocketBody {
   animation: wobble 2s ease-in-out infinite;
 }
