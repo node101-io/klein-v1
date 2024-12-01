@@ -2,69 +2,37 @@
   display: inline-block;
   cursor: pointer;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+}
+
+.button:hover .rocket {
+  transform: rotate(45deg);
 }
 
 .rocket {
   transform-origin: center;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
   position: relative;
   z-index: 2;
 }
 
 .rocketContainer:hover .rocket {
-  transform: translateY(-5px) rotate(-10deg);
+  transform: rotate(140deg);
 }
 
 .rocketBody {
   animation: wobble 2s ease-in-out infinite;
 }
 
-.rocketWing {
-  animation: blink 1s ease-in-out infinite;
-}
-
 .rocketFlame {
-  animation: flicker 0.5s ease-in-out infinite alternate;
+  animation: flameFlicker 0.5s infinite;
+  transform-origin: bottom center;
 }
 
-.stars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.star {
-  position: absolute;
-  background-color: #4a5ee5;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  opacity: 0;
-}
-
-.rocketContainer:hover .star {
-  animation: twinkle 1s infinite;
-}
-
-.star:nth-child(1) {
-  top: 50%;
-  left: 0;
-}
-
-.star:nth-child(2) {
-  top: 30%;
-  right: 10%;
-}
-
-.star:nth-child(3) {
-  bottom: 10%;
-  left: 20%;
+.button:hover .rocketFlame {
+  animation: flameFlickerWithShadow 0.5s infinite;
+  transform-origin: bottom center;
 }
 
 @keyframes wobble {
@@ -73,42 +41,50 @@
     transform: rotate(0deg);
   }
   25% {
-    transform: rotate(3deg);
+    transform: rotate(1deg);
   }
   75% {
-    transform: rotate(-3deg);
+    transform: rotate(-1deg);
   }
 }
 
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
+@keyframes flameFlicker {
+  0% {
+    opacity: 0.8;
+    transform: scaleY(1);
   }
   50% {
-    opacity: 0.6;
-  }
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 0.5;
-    transform: scaleY(0.8);
-  }
-  100% {
     opacity: 1;
     transform: scaleY(1.1);
   }
+  100% {
+    opacity: 0.8;
+    transform: scaleY(1);
+  }
 }
 
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(1);
+@keyframes flameFlickerWithShadow {
+  0% {
+    opacity: 0.8;
+    transform: scaleY(1);
+    filter: drop-shadow(0 0 2px rgba(74, 94, 229, 0.8));
+  }
+  25% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(74, 94, 229, 1));
   }
   50% {
+    opacity: 0.9;
+    transform: scaleY(1.1);
+    filter: drop-shadow(0 0 3px rgba(74, 94, 229, 0.9));
+  }
+  75% {
     opacity: 1;
-    transform: scale(1.5);
+    filter: drop-shadow(0 0 5px rgba(74, 94, 229, 1));
+  }
+  100% {
+    opacity: 0.8;
+    transform: scaleY(1);
+    filter: drop-shadow(0 0 2px rgba(74, 94, 229, 0.8));
   }
 }

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
+import styles from '@/assets/icons/update/animated-rocket-icon.module.css';
 import ValidatorOperationsIcon from '@/assets/icons/validator-operations.svg';
 import NodeIcon from '@/assets/icons/node.svg';
 import ChevronIcon from '@/assets/icons/chevron.svg';
@@ -30,18 +31,13 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
     ];
 
     const validatorOperations = [
-        'Validator List',
+        'Wallet Operations',
         'Edit Validator',
         'Withdraw Rewards',
-        'Delegate',
-        'Redelegate',
+        'Staking Operations',
         'Vote',
-        'Unjail',
         'Send Token',
-        'Wallets',
         'Logs',
-        'BLS Key',
-        'Node Information',
     ];
 
 
@@ -74,14 +70,14 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
                 <div className="w-full px-4 mt-4">
                     <button
                         onClick={() => onSelectItem('Node Operations')}
-                        className={`flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none hover:bg-hover_gray rounded-lg pl-1 py-2`}
+                        className={`flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none hover:bg-hover_gray rounded-lg  py-2`}
                     >
                         <Image
                             src={NodeIcon}
                             alt="Node Operations"
                             width={20}
                             height={20}
-                            className="mr-2"
+                            className="mr-2 ml-2"
                         />
                         <span>Node Overview</span>
                     </button>
@@ -92,10 +88,10 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
                                     <button
                                         key={index}
                                         onClick={() => onNodeOperation(item.name)}
-                                        className={`flex w-full text-left py-2 hover:bg-hover_gray rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out`}
+                                        className={`${styles.button} flex w-full text-left py-2 hover:bg-hover_gray rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out`}
                                     >
                                         {item.name === 'Update' ? (
-                                            <div className="mr-2 ml-4 ">
+                                            <div className={`mr-2 ml-2`}>
                                                 <AnimatedRocketIcon />
                                             </div>
                                         ) : (
@@ -104,7 +100,7 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
                                                 alt={item.name}
                                                 width={16}
                                                 height={16}
-                                                className="mr-2 ml-4"
+                                                className="mr-2 ml-2"
                                             />
                                         )}
 
@@ -114,6 +110,7 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
                                             {item.name}
                                         </span>
                                     </button>
+
                                 )
                         )}
                     </nav>
@@ -123,7 +120,7 @@ const NodeSidebar = ({ node, selectedItem, onSelectItem, onNodeOperation }) => {
                 <div className="w-full px-4 mt-4">
                     <button
                         onClick={toggleValidatorCollapse}
-                        className="flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none"
+                        className="flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none ml-2"
                     >
                         <Image
                             src={ValidatorOperationsIcon}
