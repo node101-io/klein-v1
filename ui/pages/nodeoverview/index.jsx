@@ -7,6 +7,7 @@ import Sidebar from '@/components/connect/Sidebar-connect';
 import NodeOperations from '@/components/operations/node-overview/node-overview';
 
 import { fetchProjectById } from '@/services/api';
+import EditValidator from '@/components/operations/edit-validator.jsx/EditValidator';
 
 const NodeOverviewPage = () => {
     const [selectedItem, setSelectedItem] = useState('Node Operations');
@@ -57,12 +58,11 @@ const NodeOverviewPage = () => {
                 onNodeOperation={handleNodeOperation}
             />
             <div className="p-14 flex-1 bg-gray rounded-xl overflow-hidden">
-                {selectedItem === 'Node Operations' ? (
+                {selectedItem === 'Node Operations' && (
                     <NodeOperations />
-                ) : (
-                    <div className="p-4">
-                        <h1 className="text-xl font-bold mb-4">{selectedItem}</h1>
-                    </div>
+                )}
+                {selectedItem === 'Edit Validator' && (
+                    <EditValidator />
                 )}
             </div>
         </div>

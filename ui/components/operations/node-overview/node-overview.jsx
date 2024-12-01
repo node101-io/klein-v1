@@ -14,12 +14,12 @@ const NodeOperations = () => {
     const interval = setInterval(() => {
       setCurrentBlock(prev => {
         const next = prev + 1;
-        if (Math.random() < 0.20) {
+        if (Math.random() < 0.05) {
           setFailedBlocks(failed => [...failed, next]);
         }
         return next;
       });
-    }, 1000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
@@ -70,7 +70,8 @@ const NodeOperations = () => {
           color="red"
           details={['Lorem ipsum dolor sit amet consectetur']}
           warning={true}
-        />      </div>
+        />
+      </div>
     </div>
   );
 };

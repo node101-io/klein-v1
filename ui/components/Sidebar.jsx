@@ -81,9 +81,9 @@ const Sidebar = () => {
     { title: 'Node Overview', href: '/nodeoverview', icon: NodeIcon, shortcut: 'Ctrl+A' },
   ];
 
-  // if (hasUpdate) {
-  //   mainNavItems.push({ title: 'Update', href: '/', icon: UpdateIcon, shortcut: '', isUpdateButton: true });
-  // }
+  if (hasUpdate) {
+    mainNavItems.push({ title: 'Update', href: '/', icon: UpdateIcon, shortcut: '', isUpdateButton: true });
+  }
 
   mainNavItems.push({ title: 'Settings', href: '/settings', icon: SettingsIcon, shortcut: '' });
 
