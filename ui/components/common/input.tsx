@@ -4,7 +4,7 @@ interface InputProps {
   label?: string;
   helperText?: string;
   name: string;
-  value: string;
+  value?: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 

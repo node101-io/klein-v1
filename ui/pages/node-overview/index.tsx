@@ -3,11 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
+import { fetchProjectById } from "@/services/api";
+import { Project } from "@/types/projects.types";
+
 import Sidebar from "@/components/second-sidebar";
 import NodeOperations from "@/components/operations/overview/node-overview";
-import { fetchProjectById } from "@/services/api";
-import EditValidator from "@/components/operations/node-edit/edit-validator";
-import { Project } from "@/types/projects.types";
+import ValidatorOperation from "@/components/operations/validator-operations/validator-operations";
+import WalletOperations from "@/components/operations/wallet-operation/wallet-operation";
+import StakingOperations from "@/components/operations/staking-operations/staking-operations";
+import WithdrawRewards from "@/components/operations/withdraw-rewards/withdraw-rewards";
 
 const NodeOverviewPage: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>("Node Operations");
@@ -57,9 +61,12 @@ const NodeOverviewPage: React.FC = () => {
         hasUpdate={hasUpdate}
         onNodeOperation={handleNodeOperation}
       />
-      <div className="p-14 flex-1 bg-gray rounded-xl overflow-hidden">
+      <div className="p-14 flex-1 bg-gray rounded-xl overflow-auto">
         {selectedItem === "Node Operations" && <NodeOperations />}
-        {selectedItem === "Edit Validator" && <EditValidator />}
+        {selectedItem === "Validator Operations" && <ValidatorOperation />}
+        {selectedItem === "Wallet Operations" && <WalletOperations />}
+        {selectedItem === "Staking Operations" && <StakingOperations />}
+        {selectedItem === "Withdraw Rewards" && <WithdrawRewards />}
       </div>
     </div>
   );

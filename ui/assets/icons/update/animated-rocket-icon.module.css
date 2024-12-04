@@ -6,9 +6,9 @@
   height: 20px;
 }
 
-.button:hover .rocket {
+/* .button:hover .rocket {
   transform: rotate(45deg);
-}
+} */
 
 .rocket {
   transform-origin: center;

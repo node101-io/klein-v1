@@ -1,11 +1,9 @@
-// Define a type for an image object
 export interface Image {
   url: string;
   width: number;
   height: number;
 }
 
-// Define a type for the project properties
 export interface ProjectProperties {
   is_active: boolean;
   is_incentivized: boolean;
@@ -13,7 +11,6 @@ export interface ProjectProperties {
   is_visible: boolean;
 }
 
-// Define a type for system requirements
 export interface SystemRequirements {
   cpu?: string;
   ram?: string;
@@ -21,7 +18,6 @@ export interface SystemRequirements {
   os?: string;
 }
 
-// Define a type for translations
 export interface Translations {
   [languageCode: string]: {
     name: string;
@@ -29,19 +25,17 @@ export interface Translations {
   };
 }
 
-// Define a type for URLs
 export interface Urls {
   web: string;
 }
 
-// Define a type for a single project
 export interface Project {
   _id: string;
   name: string;
   chain_registry_identifier: string;
   description: string;
   image: Image[];
-  non_generic_tx_commands: any[]; // Replace with a specific type if needed
+  non_generic_tx_commands: any[];
   properties: ProjectProperties;
   system_requirements: SystemRequirements;
   urls: Urls;
@@ -49,7 +43,6 @@ export interface Project {
   is_completed: boolean;
 }
 
-// Define a type for the API response for fetching all projects
 export interface FetchProjectsResponse {
   success: boolean;
   projects: Project[];
@@ -59,13 +52,11 @@ export interface FetchProjectsResponse {
   search: string | null;
 }
 
-// Define a type for the API response for fetching a single project by ID
 export interface FetchProjectByIdResponse {
   success: boolean;
   project: Project;
 }
 
-// Define a transformed project type for your `fetchProjects` function
 export interface TransformedProject {
   id: string;
   name: string;

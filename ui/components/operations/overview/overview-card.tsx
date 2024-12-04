@@ -67,7 +67,7 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
         </div>
 
         <div className="flex items-center gap-2 pb-1">
-          <span className={`text-4xl font-bold ${getTextColor()}`}>
+          <span className={`text-[48px] font-medium ${getTextColor()}`}>
             {value}
           </span>
           {showWarning && (

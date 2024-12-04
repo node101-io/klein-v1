@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@/contexts/sidebar-context";
 
+import { NavItemProps, NavSectionProps } from "@/types/sidebar.types";
+
 import styles from "@/assets/icons/update/animated-rocket-icon.module.css";
 import HomeIcon from "@/assets/icons/home.svg";
 import SearchIcon from "@/assets/icons/search.svg";
@@ -16,7 +18,6 @@ import UpdateIcon from "@/assets/icons/update.svg";
 import KleinFull from "@/assets/full-klein.svg";
 import KleinSmall from "@/assets/klein.svg";
 import AnimatedRocketIcon from "@/assets/icons/update/animated-rocket";
-import { NavItemProps, NavSectionProps } from "@/types/sidebar.types";
 
 const NavItem = ({
   href,
@@ -105,7 +106,6 @@ const Sidebar = () => {
     setCollapsed(!collapsed);
   };
 
-  // Define main navigation items
   const mainNavItems: NavItemProps[] = [
     { title: "Home", href: "/", icon: HomeIcon, shortcut: "Ctrl+H", collapsed },
     {
@@ -133,7 +133,7 @@ const Sidebar = () => {
             isUpdateButton: true,
           },
         ]
-      : []), // Only include Update item if hasUpdate is true
+      : []),
     {
       title: "Settings",
       href: "/settings",

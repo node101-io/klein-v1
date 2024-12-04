@@ -44,7 +44,7 @@ const NodeOperations = () => {
   return (
     <div className="flex flex-col w-full h-full">
       <div className="flex gap-x-4 items-center mb-8">
-        <h1 className="text-xl font-light">Node Overview</h1>
+        <h1 className="text-[32px] font-light">Node Overview</h1>
         <Tooltip content="Click here to learn about Aleo">
           <a
             href="https://node101.io"

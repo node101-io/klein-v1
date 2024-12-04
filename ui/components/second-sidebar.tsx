@@ -46,7 +46,7 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({
 
   const validatorOperations: string[] = [
     "Wallet Operations",
-    "Edit Validator",
+    "Validator Operations",
     "Withdraw Rewards",
     "Staking Operations",
     "Vote",
@@ -79,7 +79,6 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({
           </div>
         </div>
 
-        {/* Node Operations */}
         <div className="w-full px-4 mt-4">
           <button
             onClick={() => onSelectItem("Node Operations")}
@@ -127,7 +126,6 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({
           </nav>
         </div>
 
-        {/* Validator Operations */}
         <div className="w-full px-4 mt-4">
           <button
             onClick={toggleValidatorCollapse}
