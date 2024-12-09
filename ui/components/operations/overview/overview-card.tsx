@@ -52,7 +52,7 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
   return (
     <div className="bg-white rounded-[24px] p-6 flex flex-col justify-between h-full">
       <div className="space-y-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ">
           <h2 className={`text-lg ${getTextColor()}`}>{title}</h2>
           {info && (
             <Tooltip content={info}>
@@ -66,8 +66,10 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-2 pb-1">
-          <span className={`text-[48px] font-medium ${getTextColor()}`}>
+        <div className="flex items-center gap-2 py-2">
+          <span
+            className={`text-[48px] leading-[20px] font-medium ${getTextColor()}`}
+          >
             {value}
           </span>
           {showWarning && (

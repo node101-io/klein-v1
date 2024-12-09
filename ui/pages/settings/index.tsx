@@ -51,7 +51,7 @@ const SettingsPage = () => {
   ];
 
   return (
-    <div className="h-full rounded-xl p-14 bg-gray dark:bg-bg_dark_gray flex">
+    <div className="h-screen rounded-xl p-14 bg-gray dark:bg-bg_dark_gray flex">
       {/* Sidebar */}
       <div className="flex h-full items-center">
         <div className="w-64  h-fit rounded-l-xl overflow-y-auto flex-shrink-0">

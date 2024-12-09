@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { ClipboardCopy, Trash2 } from "lucide-react";
 import Image from "next/image";
 
 import Input from "@/components/common/input";
-import HelpIcon from "@/assets/icons/help.svg";
 import Tooltip from "@/components/common/Tooltip";
+import HelpIcon from "@/assets/icons/help.svg";
+import CopyIcon from "@/assets/icons/copy.svg";
 import InstallIcon from "@/assets/icons/install-icon.svg";
+import DeleteIcon from "@/assets/icons/delete-wallet.svg";
 
 interface WalletEntry {
   id: string;
@@ -98,7 +99,6 @@ const WalletOperation = () => {
         </form>
       </div>
 
-      {/* Recover Wallet Section */}
       <div className="mb-12">
         <div className="flex items-center gap-x-2 mb-4">
           <h2 className="text-xl font-light">Recover Wallet</h2>
@@ -152,24 +152,33 @@ const WalletOperation = () => {
           {wallets.map((wallet) => (
             <div
               key={wallet.id}
-              className="flex items-center justify-between p-4 border border-gray-200 rounded-md"
+              className="flex items-center bg-[#EEE] justify-between p-2 rounded-md"
             >
               <div>
-                <div className="text-sm text-gray-500 mb-1">Label</div>
-                <div className="text-gray-700">{wallet.name}</div>
+                <div className="text-text_gray">{wallet.name}</div>
               </div>
               <div className="flex gap-x-2">
                 <button
                   onClick={() => handleCopyWallet(wallet)}
                   className="p-2 hover:bg-gray-100 rounded-md"
                 >
-                  <ClipboardCopy className="w-4 h-4 text-gray-600" />
+                  <Image
+                    src={CopyIcon}
+                    alt="Copy"
+                    width={16}
+                    height={16}
+                  />
                 </button>
                 <button
                   onClick={() => handleDeleteWallet(wallet.id)}
                   className="p-2 hover:bg-gray-100 rounded-md"
                 >
-                  <Trash2 className="w-4 h-4 text-gray-600" />
+                  <Image
+                    src={DeleteIcon}
+                    alt="Copy"
+                    width={16}
+                    height={16}
+                  />
                 </button>
               </div>
             </div>

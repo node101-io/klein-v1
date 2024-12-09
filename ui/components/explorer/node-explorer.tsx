@@ -6,7 +6,7 @@ import SearchIcon from "@/assets/icons/search.svg";
 import NodeCard from "@/components/common/node-card";
 import { fetchProjects } from "@/services/api";
 import { TransformedProject } from "@/types/projects.types";
-
+import NoResaults from "@/assets/icons/no-resaults.svg";
 const NodeExplorer: React.FC = () => {
   const [nodes, setNodes] = useState<TransformedProject[]>([]);
   const [network, setNetwork] = useState<"all" | "mainnet" | "testnet">("all");
@@ -112,7 +112,15 @@ const NodeExplorer: React.FC = () => {
                   />
                 ))
               ) : (
-                <p className="text-gray-500">No results found</p>
+                <>
+                  <Image
+                    src={NoResaults}
+                    width={105}
+                    height={60}
+                    alt="no resaults"
+                  />
+                  <p className="text-gray-500">No results found</p>
+                </>
               )}
             </div>
           </div>

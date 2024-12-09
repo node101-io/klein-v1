@@ -42,16 +42,24 @@ const InstallLoader: React.FC<InstallLoaderProps> = ({
   }, [currentStep, totalSteps, onComplete]);
 
   const percentage = Math.round((currentStep / totalSteps) * 100);
+  const isCompleted = currentStep === totalSteps && !cancelled;
+
+  let displayText = "Installing";
+  let textColor = "text-text_gray";
+
+  if (cancelled) {
+    displayText = "Installation Cancelled";
+    textColor = "text-red-500";
+  } else if (isCompleted) {
+    displayText = "";
+    textColor = "text-blue-500";
+  }
 
   return (
     <div className="flex flex-col justify-center h-full w-full">
       <div className="flex justify-between mb-2">
-        <span
-          className={`text-lg ${cancelled ? "text-red-500" : "text-text_gray"}`}
-        >
-          {cancelled ? "Installation Cancelled" : "Installing"}
-        </span>
-        {!cancelled && (
+        <span className={`text-lg ${textColor}`}>{displayText}</span>
+        {!cancelled && !isCompleted && (
           <span className="text-lg text-text_gray">{percentage}%</span>
         )}
       </div>
@@ -68,7 +76,9 @@ const InstallLoader: React.FC<InstallLoaderProps> = ({
               cancelled
                 ? "text-red-500"
                 : index < currentStep
-                ? "text-blue-500"
+                ? isCompleted
+                  ? "text-blue-500"
+                  : "text-blue-500"
                 : "text-gray-300"
             }`}
           >

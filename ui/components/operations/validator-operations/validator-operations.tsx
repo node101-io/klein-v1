@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import Input from "@/components/common/input";
-import InstallIcon from "@/assets/icons/install-icon.svg";
 import Tooltip from "@/components/common/Tooltip";
 import HelpIcon from "@/assets/icons/help.svg";
 import CreateValidator from "./create-validator";
@@ -34,27 +32,27 @@ const ValidatorOperations = () => {
       </div>
 
       <div className="mb-8">
-        <div className="border-b border-gray-200">
+        <div className="">
           <nav
             className="-mb-px flex"
             aria-label="Tabs"
           >
             <button
               onClick={() => setActiveTab("create")}
-              className={`w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+              className={`w-1/4 py-4 px-1 text-center font-medium text-sm ${
                 activeTab === "create"
-                  ? "border-black text-black"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-b-[1px] border-b-blue_klein text-black"
+                  : "text-gray-700 hover:bg-gray dark:bg-bg_dark_gray"
               }`}
             >
               Create Validator
             </button>
             <button
               onClick={() => setActiveTab("edit")}
-              className={`w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm ${
+              className={`w-1/4 py-4 px-1 text-center font-medium text-sm ${
                 activeTab === "edit"
-                  ? "border-black text-black"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? "border-b-[1px] border-b-blue_klein text-black"
+                  : "text-gray-700 hover:bg-gray dark:bg-bg_dark_gray"
               }`}
             >
               Edit Validator

@@ -12,6 +12,7 @@ import ValidatorOperation from "@/components/operations/validator-operations/val
 import WalletOperations from "@/components/operations/wallet-operation/wallet-operation";
 import StakingOperations from "@/components/operations/staking-operations/staking-operations";
 import WithdrawRewards from "@/components/operations/withdraw-rewards/withdraw-rewards";
+import VoteOperation from "@/components/operations/vote/vote-operation";
 
 const NodeOverviewPage: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>("Node Operations");
@@ -67,6 +68,7 @@ const NodeOverviewPage: React.FC = () => {
         {selectedItem === "Wallet Operations" && <WalletOperations />}
         {selectedItem === "Staking Operations" && <StakingOperations />}
         {selectedItem === "Withdraw Rewards" && <WithdrawRewards />}
+        {selectedItem === "Vote" && <VoteOperation />}
       </div>
     </div>
   );

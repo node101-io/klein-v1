@@ -100,7 +100,11 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({
                   <button
                     key={index}
                     onClick={() => onNodeOperation(item.name)}
-                    className={`${styles.button} flex w-full text-left py-2 hover:bg-hover_gray rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out`}
+                    className={`${styles.button} flex w-full text-left py-2 ${
+                      item.name === "Delete Node"
+                        ? "hover:bg-red-300"
+                        : "hover:bg-hover_gray"
+                    } rounded-lg overflow-hidden transform transition-all duration-300 ease-in-out`}
                   >
                     {item.name === "Update" ? (
                       <div className={`mr-2 ml-2`}>
@@ -129,7 +133,7 @@ const NodeSidebar: React.FC<NodeSidebarProps> = ({
         <div className="w-full px-4 mt-4">
           <button
             onClick={toggleValidatorCollapse}
-            className="flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none ml-2"
+            className="flex items-center w-full text-left text-xs font-medium uppercase text-text_gray mb-2 focus:outline-none hover:bg-hover_gray py-2 rounded-lg pl-2"
           >
             <Image
               src={ValidatorOperationsIcon}
