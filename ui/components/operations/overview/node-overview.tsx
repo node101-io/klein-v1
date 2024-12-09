@@ -82,7 +82,7 @@ const NodeOperations = () => {
           value={cpu.toFixed(2) + "%"}
           info="Current CPU usage of the node"
           color="blue"
-          details={["Lorem ipsum dolor sit amet consectetur"]}
+          details={[]}
         />
 
         <OverviewCard
@@ -90,7 +90,7 @@ const NodeOperations = () => {
           value={memory.toFixed(2) + "%"}
           info="Current memory usage of the node"
           color="red"
-          details={["Lorem ipsum dolor sit amet consectetur"]}
+          details={[]}
         />
       </div>
     </div>

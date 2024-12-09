@@ -49,6 +49,17 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
 
   const showWarning = isValueOverThreshold();
 
+  let performanceMessage = "";
+  if (title === "CPU") {
+    performanceMessage = isValueOverThreshold()
+      ? "There is a lot of pressure on your machine's CPU"
+      : "Your CPU performs well enough";
+  } else if (title === "Memory") {
+    performanceMessage = isValueOverThreshold()
+      ? "There is a lot of pressure on your machine's Memory"
+      : "Your Memory performs well enough";
+  }
+
   return (
     <div className="bg-white rounded-[24px] p-6 flex flex-col justify-between h-full">
       <div className="space-y-2">
@@ -88,12 +99,19 @@ const OverviewCard: React.FC<OverviewCardProps> = ({
           )}
         </div>
 
-        {details && (
-          <div className="space-y-1 text-sm text-text_gray pb-4">
-            {details.map((detail, index) => (
-              <p key={index}>{detail}</p>
-            ))}
-          </div>
+        {title === "CPU" || title === "Memory" ? (
+          <p className="space-y-1 text-sm text-text_gray">
+            {performanceMessage}
+          </p>
+        ) : (
+          details &&
+          details.length > 0 && (
+            <div className="space-y-1 text-sm text-text_gray pb-4">
+              {details.map((detail, index) => (
+                <p key={index}>{detail}</p>
+              ))}
+            </div>
+          )
         )}
       </div>
 
