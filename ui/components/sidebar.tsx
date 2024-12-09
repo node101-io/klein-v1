@@ -19,6 +19,10 @@ import KleinFull from "@/assets/full-klein.svg";
 import KleinSmall from "@/assets/klein.svg";
 import AnimatedRocketIcon from "@/assets/icons/update/animated-rocket";
 
+import AddServerIcon from "@/assets/icons/add-server.svg";
+import Celistia from "@/assets/nodes/celistia.svg";
+import Agoric from "@/assets/nodes/agoric.svg";
+
 const NavItem = ({
   href,
   icon,
@@ -35,7 +39,7 @@ const NavItem = ({
       href={href}
       className={`${
         styles.button
-      } block hover:bg-hover_gray rounded-lg overflow-hidden ${
+      } block hover:bg-hover_gray -ml-2 rounded-lg overflow-hidden  ${
         isActive ? "bg-selected_bg" : ""
       }`}
     >
@@ -50,8 +54,8 @@ const NavItem = ({
             <Image
               src={icon}
               alt={title}
-              width={20}
-              height={20}
+              width={24}
+              height={24}
             />
           )}
         </div>
@@ -78,7 +82,7 @@ const NavSection = ({ title, items, collapsed }: NavSectionProps) => {
   return (
     <>
       <div
-        className={`w-full flex items-center text-xs font-medium uppercase text-text_gray mb-2 transition-all duration-300 ease-in-out mt-4 ${
+        className={`w-full flex items-center text-xs whitespace-nowrap font-medium uppercase text-text_gray mb-2 transition-all duration-300 ease-in-out mt-4 ${
           collapsed ? "justify-center" : "justify-start pl-4"
         }`}
       >
@@ -141,6 +145,23 @@ const Sidebar = () => {
       shortcut: "",
       collapsed,
     },
+  ];
+
+  const yourNodesItems: NavItemProps[] = [
+    {
+      title: "Add a new server",
+      href: "/add-server",
+      icon: AddServerIcon,
+      shortcut: "Ctrl+A",
+      collapsed: false,
+    },
+    {
+      title: "Celistia",
+      href: "/node/celistia",
+      icon: Celistia,
+      collapsed: false,
+    },
+    { title: "Agoric", href: "/node/archway", icon: Agoric, collapsed: false },
   ];
 
   const helpNavItems: NavItemProps[] = [
@@ -209,6 +230,13 @@ const Sidebar = () => {
             items={mainNavItems}
             collapsed={collapsed}
           />
+          <div className="pt-4">
+            <NavSection
+              title="Your Nodes"
+              items={yourNodesItems}
+              collapsed={collapsed}
+            />
+          </div>
         </div>
         <div className="w-full pb-6 px-6 overflow-hidden">
           <NavSection
