@@ -13,7 +13,7 @@ import SearchIcon from "@/assets/icons/search.svg";
 import ChevronIcon from "@/assets/icons/chevron.svg";
 import NodeIcon from "@/assets/icons/node.svg";
 import SettingsIcon from "@/assets/icons/settings.svg";
-import HelpIcon from "@/assets/icons/help.svg";
+import HelpIcon from "@/assets/icons/socialmedia/telegram.svg";
 import UpdateIcon from "@/assets/icons/update.svg";
 import KleinFull from "@/assets/full-klein.svg";
 import KleinSmall from "@/assets/klein.svg";

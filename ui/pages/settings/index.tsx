@@ -2,13 +2,17 @@
 
 import React, { useRef, useState } from "react";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+
 import { ToggleSwitch } from "@/components/common/ui/toggle-switch";
-import HelpIcon from "@/assets/icons/help.svg";
+
 import LogoutIcon from "@/assets/icons/settings/logout-icon.svg";
 import UKFlag from "@/assets/icons/settings/uk-flag.svg";
 import TRFlag from "@/assets/icons/settings/tr-flag.svg";
 import DeleteIcon from "@/assets/icons/settings/delete-icon.svg";
-import { useTheme } from "next-themes";
+import GitHubIcon from "@/assets/icons/socialmedia/github.svg";
+import TelegramIcon from "@/assets/icons/socialmedia/telegram.svg";
+import XIcon from "@/assets/icons/socialmedia/twitter.svg";
 
 const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
@@ -51,11 +55,11 @@ const SettingsPage = () => {
   ];
 
   return (
-    <div className="h-screen rounded-xl p-14 bg-gray dark:bg-bg_dark_gray flex">
+    <div className="h-full  rounded-xl  bg-gray dark:bg-bg_dark_gray flex">
       {/* Sidebar */}
       <div className="flex h-full items-center">
-        <div className="w-64  h-fit rounded-l-xl overflow-y-auto flex-shrink-0">
-          <div className="p-6 space-y-8">
+        <div className="w-64 h-full rounded-l-xl overflow-y-auto flex-shrink-0 flex flex-col justify-between">
+          <div className="p-6 space-y-8 flex-grow flex flex-col justify-center">
             <h2 className="text-sm font-medium text-text_gray">APP SETTINGS</h2>
 
             <div className="space-y-4">
@@ -125,6 +129,48 @@ const SettingsPage = () => {
               Log out
             </button>
           </div>
+
+          <div className="p-4 mb-12 flex items-center justify-center space-x-4">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text_gray hover:text-black"
+            >
+              <Image
+                src={GitHubIcon}
+                alt="GitHub"
+                width={20}
+                height={20}
+              />
+            </a>
+            <a
+              href="https://t.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text_gray hover:text-black"
+            >
+              <Image
+                src={TelegramIcon}
+                alt="Telegram"
+                width={20}
+                height={20}
+              />
+            </a>
+            <a
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text_gray hover:text-black"
+            >
+              <Image
+                src={XIcon}
+                alt="X"
+                width={20}
+                height={20}
+              />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -135,21 +181,13 @@ const SettingsPage = () => {
         className="flex-1 overflow-y-auto  rounded-r-xl"
       >
         <div className="max-w-3xl mx-auto p-14">
-          <div className="flex gap-x-4 items-center mb-8">
-            <h1 className="text-[32px] font-light text-[#525252]">Settings</h1>
-            <Image
-              src={HelpIcon}
-              alt="Help Icon"
-              width={20}
-              height={20}
-            />
-          </div>
+          <div className="flex gap-x-4 items-center mb-8"></div>
 
           <div
             ref={themeRef}
             className="mb-12"
           >
-            <h2 className="text-xl font-light text-[#525252] mb-6">THEME</h2>
+            <h2 className="text-sm font-light text-[#525252] mb-6">THEME</h2>
             <div className="flex items-center justify-between">
               <span className="text-[#525252]">Dark Mode</span>
               <ToggleSwitch
@@ -164,7 +202,7 @@ const SettingsPage = () => {
             ref={languageRef}
             className="mb-12"
           >
-            <h2 className="text-xl font-light text-[#525252] mb-6">LANGUAGE</h2>
+            <h2 className="text-sm font-light text-[#525252] mb-6">LANGUAGE</h2>
             <div className="space-y-4">
               <button
                 onClick={() => setLanguage("EN")}
@@ -201,7 +239,7 @@ const SettingsPage = () => {
             ref={passwordsRef}
             className="mb-12"
           >
-            <h2 className="text-xl font-light text-[#525252] mb-6">
+            <h2 className="text-sm font-light text-[#525252] mb-6">
               PASSWORDS & PRIVACY
             </h2>
             <div className="space-y-4">
@@ -223,7 +261,7 @@ const SettingsPage = () => {
             ref={oneKeyRef}
             className="mb-12"
           >
-            <h2 className="text-xl font-light text-[#525252] mb-6">ONE-KEY</h2>
+            <h2 className="text-sm font-light text-[#525252] mb-6">ONE-KEY</h2>
             <div className="space-y-6">
               <p className="text-[#525252]">
                 Klein allows you to manage your nodes on more than one server.
@@ -238,15 +276,22 @@ const SettingsPage = () => {
                 device or Klein.
               </p>
               <div className="space-y-4">
-                <h3 className="font-medium text-[#525252]">
+                <h3 className="font-medium text-text_purple text-[16px]">
                   One-Key Feature Active Servers
                 </h3>
                 {activeServers.map((server, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-4 bg-gray-100 rounded-md"
+                    className="flex w-fit space-x-8 items-center justify-between p-4 rounded-md"
                   >
-                    <span className="text-[#525252]">{server.name}</span>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        // checked={...}  onChange={...}
+                        className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      />
+                      <span className="text-[#525252]">{server.name}</span>
+                    </label>
                     <button className="text-blue-600 hover:text-blue-700 flex items-center gap-2">
                       {server.status === "Delete" && (
                         <Image
@@ -268,7 +313,7 @@ const SettingsPage = () => {
             ref={privacyRef}
             className="mb-12"
           >
-            <h2 className="text-xl font-light text-[#525252] mb-6">PRIVACY</h2>
+            <h2 className="text-sm font-light text-[#525252] mb-6">PRIVACY</h2>
             <div className="space-y-6">
               <h3 className="font-medium text-[#525252]">
                 How Klein Uses Your Data

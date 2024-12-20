@@ -16,7 +16,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex max-w-[400px] flex-col">
       {label && (
         <label
           htmlFor={name}

@@ -47,19 +47,6 @@ const WithdrawRewards = () => {
       </div>
 
       <div className="mb-12">
-        <div className="flex items-center gap-x-2 mb-4">
-          <h2 className="text-xl font-light text-[#525252]">
-            withdrawRewardForm
-          </h2>
-          <Tooltip content="Learn about delegating tokens">
-            <Image
-              src={HelpIcon}
-              alt="Help"
-              width={16}
-              height={16}
-            />
-          </Tooltip>
-        </div>
         <form
           onSubmit={handleDelegateSubmit}
           className="space-y-8"

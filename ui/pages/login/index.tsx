@@ -9,7 +9,7 @@ import EyeCloseIcon from "@/assets/icons/EyeCloseIcon.svg";
 import InstallIcon from "@/assets/icons/install-icon.svg";
 import Tooltip from "@/components/common/Tooltip";
 import { Project } from "@/types/projects.types";
-
+import axios from "axios";
 interface RequirementItemProps {
   label: string;
   value?: string;
@@ -30,6 +30,10 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [project, setProject] = useState<Project | null>(null);
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
   const router = useRouter();
   const { id } = router.query as { id: string };
 
@@ -49,9 +53,35 @@ const LoginPage: React.FC = () => {
     }
   }, [id]);
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push(`/install?id=${id}`);
+    setIsLoading(true);
+    setErrorMessage("");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:10101/ssh/connection/start",
+        {
+          host: ipAddress,
+          password,
+        }
+      );
+      if (response.data.err === "authentication_failed") {
+        setErrorMessage("Authentication failed. Please check your password.");
+        console.log(response.data);
+      } else if (response.data.err === "invalid_host") {
+        setErrorMessage("Invalid host. Please check your IP address.");
+        console.log(response.data);
+      } else {
+        setSuccessMessage("Successfully logged in!");
+        console.log(response.data);
+        router.push(`/install?id=${id}`);
+      }
+    } catch (err) {
+      setErrorMessage("An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!project) {
@@ -115,11 +145,10 @@ const LoginPage: React.FC = () => {
 
           {willInstall && (
             <div>
-              <input
+              {/* <input
                 type="hidden"
-                id="index-login-project-identifier"
                 value={project.chain_registry_identifier}
-              />
+              /> */}
 
               <div className="mb-6">
                 <h2 className="text-[16px] text-text_purple mb-4">
@@ -255,7 +284,14 @@ const LoginPage: React.FC = () => {
               type="submit"
               className="flex w-fit gap-x-12 py-2 px-4 bg-black text-white rounded-md hover:bg-opacity-90 focus:outline-none"
             >
-              {willInstall ? "Install" : "Login"}
+              {isLoading
+                ? willInstall
+                  ? "Installing..."
+                  : "Logging in..."
+                : willInstall
+                ? "Install"
+                : "Login"}
+
               <Image
                 src={InstallIcon}
                 alt="Install Icon"
@@ -263,6 +299,10 @@ const LoginPage: React.FC = () => {
                 height={24}
               />
             </button>
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            {successMessage && (
+              <p style={{ color: "green" }}>{successMessage}</p>
+            )}
           </form>
         </div>
       </div>
