@@ -81,3 +81,8 @@ dist
 .DS_Store
 
 .idea
+.turbo
+node_modules
+*.tsbuildinfo
+.vscode
+.prettierrc
