@@ -29,15 +29,30 @@ module.exports = (req, res) => {
     if (!check_server_stats_response.stdout.disk || !check_server_stats_response.stdout.disk.total || !check_server_stats_response.stdout.disk.used || !check_server_stats_response.stdout.disk.available)
       return res.json({ err: 'server_stats_error' });
 
-    if (parseFloat(check_server_stats_response.stdout.cpu.average_used) > MAX_CPU_USAGE_PERCENTAGE)
-      return res.json({ err: 'resource_usage_high' });
+    check_server_stats_response.stdout.cpu.average_used = parseFloat(check_server_stats_response.stdout.cpu.average_used);
+    check_server_stats_response.stdout.memory.used = parseFloat(check_server_stats_response.stdout.memory.used);
+    check_server_stats_response.stdout.memory.total = parseFloat(check_server_stats_response.stdout.memory.total);
+    check_server_stats_response.stdout.disk.used = parseFloat(check_server_stats_response.stdout.disk.used);
+    check_server_stats_response.stdout.disk.total = parseFloat(check_server_stats_response.stdout.disk.total);
 
-    if (parseFloat(check_server_stats_response.stdout.memory.used) / parseFloat(check_server_stats_response.stdout.memory.total) * 100 > MAX_MEMORY_USAGE_PERCENTAGE)
-      return res.json({ err: 'resource_usage_high' });
+    const isCpuUsageHigh = check_server_stats_response.stdout.cpu.average_used > MAX_CPU_USAGE_PERCENTAGE;
+    const isMemoryUsageHigh = check_server_stats_response.stdout.memory.used / check_server_stats_response.stdout.memory.total * 100 > MAX_MEMORY_USAGE_PERCENTAGE;
+    const isDiskUsageHigh = check_server_stats_response.stdout.disk.used / check_server_stats_response.stdout.disk.total * 100 > MAX_DISK_USAGE_PERCENTAGE;
 
-    if (parseFloat(check_server_stats_response.stdout.disk.used) / parseFloat(check_server_stats_response.stdout.disk.total) * 100 > MAX_DISK_USAGE_PERCENTAGE)
-      return res.json({ err: 'resource_usage_high' });
-
-    return res.json({ data: check_server_stats_response.stdout });
+    return res.json({ data: {
+      is_any_stat_high: isCpuUsageHigh || isMemoryUsageHigh || isDiskUsageHigh,
+      cpu: {
+        ...check_server_stats_response.stdout.cpu,
+        is_high: isCpuUsageHigh
+      },
+      memory: {
+        ...check_server_stats_response.stdout.memory,
+        is_high: isMemoryUsageHigh
+      },
+      disk: {
+        ...check_server_stats_response.stdout.disk,
+        is_high: isDiskUsageHigh
+      },
+    }});
   });
 };

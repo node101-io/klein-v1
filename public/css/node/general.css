@@ -77,7 +77,7 @@
 }
 .node-general-navbar-header-title {
   font-weight: 400;
-  color: var(--text-color);
+  color: var(--text-title-color);
   font-size: var(--node-font-size-big);
 }
 .node-general-navbar-header-description {

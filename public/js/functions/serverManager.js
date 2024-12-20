@@ -26,15 +26,6 @@ const makeServerManager = _ => {
     });
   };
 
-  const _checkAvailableResources = callback => {
-    localhostRequest('/ssh/server-listener/stats', 'POST', {}, (err, res) => {
-      if (err)
-        return callback(err);
-
-      return callback(null);
-    });
-  };
-
   const _installServerListener = callback => {
     localhostRequest('/ssh/server-listener/install', 'POST', {}, (err, res) => {
       if (err)
@@ -154,9 +145,18 @@ const makeServerManager = _ => {
     });
   };
 
-  const _isEnoughResourcesAvailableForNodeInstallation = callback => {
-    localhostRequest('/ssh/server-listener/stats', 'POST', {}, (err, res) => {
+  const _getServerStats = callback => {
+    localhostRequest('/ssh/server-listener/stats', 'POST', {}, (err, stats) => {
       if (err)
+        return callback(err);
+
+      return callback(null, stats);
+    });
+  };
+
+  const _isEnoughResourcesAvailableForNodeInstallation = callback => {
+    _getServerStats((err, stats) => {
+      if (err || stats.is_any_stat_high)
         return callback(null, false);
 
       return callback(null, true);
@@ -215,6 +215,7 @@ const makeServerManager = _ => {
       });
     },
     isAnyNodeInstanceRunning: _isAnyNodeInstanceRunning,
+    getServerStats: _getServerStats
   };
 };
 

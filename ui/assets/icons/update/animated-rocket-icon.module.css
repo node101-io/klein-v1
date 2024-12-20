@@ -1,0 +1,86 @@
+.rocketContainer {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+/* .button:hover .rocket {
+  transform: rotate(45deg);
+} */
+
+.rocket {
+  transform-origin: center;
+  transition: transform 0.5s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.rocketBody {
+  animation: wobble 2s ease-in-out infinite;
+}
+
+.rocketFlame {
+  animation: flameFlicker 0.5s infinite;
+  transform-origin: bottom center;
+}
+
+.button:hover .rocketFlame {
+  animation: flameFlickerWithShadow 0.5s infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(1deg);
+  }
+  75% {
+    transform: rotate(-1deg);
+  }
+}
+
+@keyframes flameFlicker {
+  0% {
+    opacity: 0.8;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes flameFlickerWithShadow {
+  0% {
+    opacity: 0.8;
+    transform: scaleY(1);
+    filter: drop-shadow(0 0 2px rgba(74, 94, 229, 0.8));
+  }
+  25% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(74, 94, 229, 1));
+  }
+  50% {
+    opacity: 0.9;
+    transform: scaleY(1.1);
+    filter: drop-shadow(0 0 3px rgba(74, 94, 229, 0.9));
+  }
+  75% {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(74, 94, 229, 1));
+  }
+  100% {
+    opacity: 0.8;
+    transform: scaleY(1);
+    filter: drop-shadow(0 0 2px rgba(74, 94, 229, 0.8));
+  }
+}

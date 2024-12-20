@@ -18,7 +18,7 @@ module.exports = (req, res) => {
         chain_id: get_sync_status_response.stdout.result.node_info.network,
         moniker: get_sync_status_response.stdout.result.node_info.moniker,
         latest_block_height: get_sync_status_response.stdout.result.sync_info.latest_block_height,
-        is_synced: !get_sync_status_response.stdout.result.sync_info.catching_up
+        is_syncing: get_sync_status_response.stdout.result.sync_info.catching_up
     } });
   });
 };

@@ -13,13 +13,13 @@ const INCLUDES = {
   css: [
     'general/general', 'general/loading',
     'index/general', 'index/home', 'index/install', 'index/login', 'index/search',
-    'node/general', 'node/index',
+    'node/general', 'node/index', 'node/wallet', 'node/logs',
     'partials/header'
   ],
   js: [
     'functions/generateRandomHEX', 'functions/loading', 'functions/localhostRequest', 'functions/navigatePage', 'functions/webSocket', 'functions/nodeManager', 'functions/serverManager', 'functions/SSHKeyManager', 'functions/walletManager', 'functions/preferenceManager', 'functions/savedServersManager', 'functions/preventMultiTab', 'functions/jsonify',
-    'index/home', 'index/install',  'index/index', 'index/login', 'index/header', 'index/search', 'index/node',
-    'node/index'
+    'index/home', 'index/install',  'index/index', 'index/login', 'index/header', 'index/search',
+    'node/general', 'node/index', 'node/logs', 'node/wallet'
   ]
 };
 const RENT_SERVERS = {
