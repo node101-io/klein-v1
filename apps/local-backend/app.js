@@ -1,5 +1,5 @@
 const autoUpdater = require('update-electron-app');
-const bodyParser = require('body-parser');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const favicon = require('serve-favicon');
@@ -56,9 +56,11 @@ expressApp.set('views', path.join(__dirname, 'views'));
 
 expressApp.use(express.static(path.join(__dirname, 'public')));
 expressApp.use(favicon(path.join(__dirname, 'public', 'img/icons/favicon.ico')));
-expressApp.use(bodyParser.json());
-expressApp.use(bodyParser.urlencoded({ extended: true }));
+expressApp.use(express.json());
 expressApp.use(i18n.init);
+expressApp.use(cors({
+  origin: (_origin, callback) => callback(null, true)
+}));
 expressApp.use(WebSocketServer.getPortHandler(WEBSOCKET_PORT));
 expressApp.use(session({
   secret: 'node101', // TODO: change this data/ yoksa oluştur varsa al
