@@ -1,4 +1,4 @@
-const Cache = require('../../../Cache');
+const Cache = require('../../../utils/Cache');
 const Notification = require('../../../models/notification/Notification');
 
 module.exports = (req, res) => {

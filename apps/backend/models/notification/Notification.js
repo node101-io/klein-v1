@@ -2,7 +2,7 @@ const async = require('async');
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const Cache = require('../../Cache');
+const Cache = require('../../utils/Cache');
 
 const formatTranslations = require('./functions/formatTranslations');
 const getNotification = require('./functions/getNotification');
