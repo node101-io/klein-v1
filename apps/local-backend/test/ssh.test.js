@@ -29,17 +29,17 @@ describe('type checks', _ => {
 });
 
 describe('connect', _ => {
-  it('should call callback with "bad_request" if type is "connect:password" and data.host is not provided', done => {
-    sshRequest('connect:password', {}, (err, res) => {
+  it('should call callback with "bad_request" if type is "connect" and data.host is not provided', done => {
+    sshRequest('connect', {}, (err, res) => {
       expect(err).toBe('bad_request');
       done();
     });
   });
 
-  it('should call callback with "authentication_failed" if type is "connect:password" and host is correct but password is not', done => {
+  it('should call callback with "authentication_failed" if type is "connect" and host is correct but password is not', done => {
     expect(process.env.TEST_HOST).toBeTruthy();
 
-    sshRequest('connect:password', {
+    sshRequest('connect', {
       host: process.env.TEST_HOST,
       password: 'badpassword'
     }, (err, res) => {
@@ -48,11 +48,11 @@ describe('connect', _ => {
     });
   }, 5000);
 
-  it('should connect and disconnect successfully if type is "connect:password" and host and password are correct', done => {
+  it('should connect and disconnect successfully if type is "connect" and host and password are correct', done => {
     expect(process.env.TEST_HOST).toBeTruthy();
     expect(process.env.TEST_HOST_PASSWORD).toBeTruthy();
 
-    sshRequest('connect:password', {
+    sshRequest('connect', {
       host: process.env.TEST_HOST,
       password: process.env.TEST_HOST_PASSWORD
     }, (err, res) => {
@@ -67,17 +67,17 @@ describe('connect', _ => {
     });
   });
 
-  it('should call callback with "bad_request" if type is "connect:key" and data.host is not provided', done => {
-    sshRequest('connect:key', {}, (err, res) => {
+  it('should call callback with "bad_request" if type is "connect" and data.host is not provided', done => {
+    sshRequest('connect', {}, (err, res) => {
       expect(err).toBe('bad_request');
       done();
     });
   });
 
-  it('should call callback with "bad_request" if type is "connect:key" and data.path is not provided', done => {
+  it('should call callback with "bad_request" if type is "connect" and data.path is not provided', done => {
     expect(process.env.TEST_HOST).toBeTruthy();
 
-    sshRequest('connect:key', {
+    sshRequest('connect', {
       host: process.env.TEST_HOST
     }, (err, res) => {
       expect(err).toBe('bad_request');
@@ -85,10 +85,10 @@ describe('connect', _ => {
     });
   });
 
-  it('should call callback with "document_not_found" if type is "connect:key" and host is correct but filename is not', done => {
+  it('should call callback with "document_not_found" if type is "connect" and host is correct but filename is not', done => {
     expect(process.env.TEST_HOST).toBeTruthy();
 
-    sshRequest('connect:key', {
+    sshRequest('connect', {
       host: process.env.TEST_HOST,
       filename: 'bad_filename'
     }, (err, res) => {

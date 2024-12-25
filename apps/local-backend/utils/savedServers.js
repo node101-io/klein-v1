@@ -60,7 +60,7 @@ const SavedServers = {
       return callback(null, server);
     });
   },
-  save: (server, callback) => {
+  saveIfNotExist: (server, callback) => {
     if (!server || typeof server != 'object')
       return callback('bad_request');
 
@@ -71,7 +71,7 @@ const SavedServers = {
       if (err) return callback(err);
 
       if (saved_servers.find(saved_server => saved_server.host == server.host))
-        saved_servers = saved_servers.filter(saved_server => saved_server.host != server.host);
+        return callback(null, saved_servers);
 
       saved_servers.push({
         host: server.host,

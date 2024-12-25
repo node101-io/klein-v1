@@ -12,18 +12,18 @@ const createFolderIfNotExists = (host, path, callback) => {
     if (err && err != 'document_not_found')
       return callback(err);
 
-    if (err)
-      sshRequest('sftp:mkdir', {
-        host: host,
-        path: path
-      }, (err, data) => {
-        if (err)
-          return callback(err);
-
-        return callback(null);
-      });
-    else
+    if (!err)
       return callback(null);
+
+    sshRequest('sftp:mkdir', {
+      host: host,
+      path: path
+    }, (err, data) => {
+      if (err)
+        return callback(err);
+
+      return callback(null);
+    });
   });
 };
 

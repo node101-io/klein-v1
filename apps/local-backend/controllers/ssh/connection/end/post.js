@@ -1,10 +1,9 @@
-const sshRequest = require('../../../../utils/sshRequest');
+const ServerManager = require('../../../../utils/ServerManager');
 
 module.exports = (req, res) => {
-  sshRequest('disconnect', req.body, (err, data) => {
-    if (err) return res.json({ err: err });
-
-    req.session.last_connected_host = null;
+  ServerManager.disconnect(req.body.host, (err) => {
+    if (err)
+      return res.json({ err: err });
 
     return res.json({});
   });

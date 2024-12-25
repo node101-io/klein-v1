@@ -13,6 +13,8 @@ const SFTP_STATUS_CODES = ssh2.utils.sftp.STATUS_CODE;
 const ENCRYPTED_KEY_MESSAGE = 'Encrypted';
 const ERROR_MESSAGE_BAD_PASSPHRASE = 'bad passphrase';
 
+const VALID_IP_REGEX = /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/;
+
 const END_EXPIRED_CONNECTIONS_EXPIRATION_TIME = 60 * 1000;
 const END_EXPIRED_CONNECTIONS_INTERVAL = 30 * 1000;
 const SSH_CONNECTION_EXPIRATION_TIME = 15 * 60 * 1000;
@@ -21,8 +23,7 @@ const SSH_KEEP_ALIVE_INTERVAL = 10000;
 const SSH_KEEP_ALIVE_MAX_TRY = 3;
 
 const TYPE_VALUES = [
-  'connect:key',
-  'connect:password',
+  'connect',
   'disconnect',
   'check_connection',
   'exec',
@@ -160,12 +161,12 @@ const sshRequest = (type, data, callback) => {
   if (!data || typeof data != 'object')
     return callback('bad_request');
 
-  if (!data.host || typeof data.host != 'string' || !data.host.trim().length)
+  if (!data.host || typeof data.host != 'string' || !data.host.trim().length || !VALID_IP_REGEX.test(data.host))
     return callback('bad_request');
 
   const ws = WebSocketServer.get();
 
-  if (type == 'connect:password' || type == 'connect:key') {
+  if (type == 'connect') {
     if (connections.getByHost(data.host)) {
       if (connections.getByHost(data.host).isReady()) {
         return callback(null);
@@ -186,34 +187,33 @@ const sshRequest = (type, data, callback) => {
     if (data.port && typeof data.port == 'number' && 0 < data.port)
       connectData.port = Number(data.port);
 
-    if (type == 'connect:password') {
-      if (!data.password || typeof data.password != 'string' || !data.password.length)
-        return callback('bad_request');
+    if (
+      (!data.password || typeof data.password != 'string' || !data.password.length) &&
+      (!data.filename || typeof data.filename != 'string' || !data.filename.trim().length)
+    )
+      return callback('bad_request');
 
+    if (data.password && typeof data.password == 'string' && data.password.length) {
       connectData.password = data.password;
-    } else if (type == 'connect:key') {
-      if (!data.filename || typeof data.filename != 'string' || !data.filename.trim().length)
-        return callback('bad_request');
+    } else {
+      // TODO: fix async
+      // Preferences.get('sshFolderPath', (err, sshFolderPath) => {
+      //   const privateKeyPath = path.join(sshFolderPath, data.filename.trim().replace(/\.pub$/, ''));
 
-      data.filename = data.filename.trim().replace(/\.pub$/, '');
+      //   if (!fs.existsSync(privateKeyPath))
+      //     return callback('document_not_found');
 
-      Preferences.get('sshFolderPath', (err, sshFolderPath) => {
-        const privateKeyPath = path.join(sshFolderPath, data.filename);
+      //   const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
 
-        if (!fs.existsSync(privateKeyPath))
-          return callback('document_not_found');
+      //   connectData.privateKey = privateKey;
 
-        const privateKey = fs.readFileSync(privateKeyPath, 'utf8');
+      //   if (isSSHKeyEncrypted(privateKey)) {
+      //     if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
+      //       return callback('bad_request');
 
-        connectData.privateKey = privateKey;
-
-        if (isSSHKeyEncrypted(privateKey)) {
-          if (!data.passphrase || typeof data.passphrase != 'string' || !data.passphrase.trim().length)
-            return callback('bad_request');
-
-          connectData.passphrase = data.passphrase;
-        };
-      });
+      //     connectData.passphrase = data.passphrase;
+      //   };
+      // });
     };
 
     const connection = connections.create(data.id, data.host);
@@ -236,6 +236,7 @@ const sshRequest = (type, data, callback) => {
         isHandshakeEventFired = true;
       })
       .on('error', err => {
+        console.error('æsfasfasf', err);
         console.error('error', err.level);
         isCallbackCalled = true;
 

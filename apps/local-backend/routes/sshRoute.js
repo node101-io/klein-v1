@@ -5,11 +5,8 @@ const router = express.Router();
 const isAuth = require('../middleware/isAuth');
 
 const endConnectionPostController = require('../controllers/ssh/connection/end/post');
+const checkConnectionPostController = require('../controllers/ssh/connection/check/post');
 const startConnectionPostController = require('../controllers/ssh/connection/start/post');
-
-const checkDockerPostController = require('../controllers/ssh/docker/check/post');
-const installDockerPostController = require('../controllers/ssh/docker/install/post');
-const uninstallDockerPostController = require('../controllers/ssh/docker/uninstall/post');
 
 const createLocalKeysPostController = require('../controllers/ssh/key/local/create/post');
 const removeLocalKeysPostController = require('../controllers/ssh/key/local/remove/post');
@@ -61,6 +58,11 @@ router.post(
     endConnectionPostController
 );
 router.post(
+  '/connection/check',
+    isAuth,
+    checkConnectionPostController
+);
+router.post(
   '/connection/start',
     isAuth,
     startConnectionPostController
@@ -95,22 +97,6 @@ router.post(
   '/key/remote/show',
     isAuth,
     showRemoteKeysPostController
-);
-
-router.post(
-  '/docker/check',
-    isAuth,
-    checkDockerPostController
-);
-router.post(
-  '/docker/install',
-    isAuth,
-    installDockerPostController
-);
-router.post(
-  '/docker/uninstall',
-    isAuth,
-    uninstallDockerPostController
 );
 
 router.post(
