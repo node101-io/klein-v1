@@ -64,8 +64,10 @@ const LoginPage: React.FC = () => {
         {
           host: ipAddress,
           password,
+          will_install: true, // TODO: fix
         }
       );
+      console.log(response.data);
       if (response.data.err === "authentication_failed") {
         setErrorMessage("Authentication failed. Please check your password.");
         console.log(response.data);
