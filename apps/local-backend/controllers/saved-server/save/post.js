@@ -1,7 +1,7 @@
 const SavedServers = require('../../../utils/saved-servers');
 
 module.exports = (req, res) => {
-  SavedServers.save(req.body.server, (err, saved_servers) => {
+  SavedServers.saveIfNotExist(req.body.server, (err, saved_servers) => {
     if (err)
       return res.json({ err: err });
 
