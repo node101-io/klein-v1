@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -20,8 +22,6 @@ import KleinSmall from "@/assets/klein.svg";
 import AnimatedRocketIcon from "@/assets/icons/update/animated-rocket";
 
 import AddServerIcon from "@/assets/icons/add-server.svg";
-import Celistia from "@/assets/nodes/celistia.svg";
-import Agoric from "@/assets/nodes/agoric.svg";
 
 const NavItem = ({
   href,
@@ -37,9 +37,7 @@ const NavItem = ({
   return (
     <Link
       href={href}
-      className={`${
-        styles.button
-      } block hover:bg-hover_gray -ml-2 rounded-lg overflow-hidden  ${
+      className={`${styles.button} block hover:bg-hover_gray -ml-2 rounded-lg overflow-hidden ${
         isActive ? "bg-selected_bg" : ""
       }`}
     >
@@ -51,12 +49,7 @@ const NavItem = ({
           {isUpdateButton ? (
             <AnimatedRocketIcon />
           ) : (
-            <Image
-              src={icon}
-              alt={title}
-              width={24}
-              height={24}
-            />
+            <Image src={icon} alt={title} width={24} height={24} />
           )}
         </div>
         <div
@@ -90,11 +83,7 @@ const NavSection = ({ title, items, collapsed }: NavSectionProps) => {
       </div>
       <nav className="flex flex-col space-y-1">
         {items.map((item, index) => (
-          <NavItem
-            key={index}
-            {...item}
-            collapsed={collapsed}
-          />
+          <NavItem key={index} {...item} collapsed={collapsed} />
         ))}
       </nav>
     </>
@@ -103,12 +92,44 @@ const NavSection = ({ title, items, collapsed }: NavSectionProps) => {
 
 const Sidebar = () => {
   const { collapsed, setCollapsed, hasUpdate } = useSidebar();
+  const [savedServers, setSavedServers] = useState<any[]>([]); 
 
   const sidebarWidth = collapsed ? "95px" : "260px";
 
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
+  useEffect(() => {
+
+    (async () => {
+      try {
+        const res = await axios.get("http://localhost:10101/saved-server/get");
+        if (res.data.err) {
+          console.error("Error fetching saved servers:", res.data.err);
+        } else {
+          setSavedServers(res.data.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching saved servers:", err);
+      }
+    })();
+  }, []);
+
+  const toggleSidebar = () => setCollapsed(!collapsed);
+
+  const yourNodesItems: NavItemProps[] = [
+    {
+      title: "Add a new server",
+      href: "/login?from=sidebar",
+      icon: AddServerIcon,
+      shortcut: "Ctrl+A",
+      collapsed: false,
+    },
+    ...savedServers.map((server) => ({
+      title: server.host || "Unnamed Server",
+      href: `/login?id=${server.project_id || ""}&from=sidebar`,
+      icon: server.project_image || NodeIcon,
+      collapsed: false,
+    })),
+  ];
+
 
   const mainNavItems: NavItemProps[] = [
     { title: "Home", href: "/", icon: HomeIcon, shortcut: "Ctrl+H", collapsed },
@@ -147,23 +168,6 @@ const Sidebar = () => {
     },
   ];
 
-  const yourNodesItems: NavItemProps[] = [
-    {
-      title: "Add a new server",
-      href: "/add-server",
-      icon: AddServerIcon,
-      shortcut: "Ctrl+A",
-      collapsed: false,
-    },
-    {
-      title: "Celistia",
-      href: "/node/celistia",
-      icon: Celistia,
-      collapsed: false,
-    },
-    { title: "Agoric", href: "/node/archway", icon: Agoric, collapsed: false },
-  ];
-
   const helpNavItems: NavItemProps[] = [
     { title: "Help", href: "/help", icon: HelpIcon, shortcut: "", collapsed },
   ];
@@ -174,6 +178,7 @@ const Sidebar = () => {
       style={{ width: sidebarWidth }}
     >
       <div className="h-full flex flex-col items-center">
+        {/* Logo section */}
         <div
           className="mb-12 mt-8 relative overflow-hidden transition-all duration-300 ease-in-out"
           style={{ width: collapsed ? "40px" : "160px", height: "30px" }}
@@ -188,8 +193,8 @@ const Sidebar = () => {
             <Image
               src={KleinFull}
               alt="Klein Full Logo"
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{ objectFit: "contain" }}
             />
           </div>
           <div
@@ -202,11 +207,12 @@ const Sidebar = () => {
             <Image
               src={KleinSmall}
               alt="Klein Small Logo"
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{ objectFit: "contain" }}
             />
           </div>
         </div>
+
         <div className="relative w-full">
           <button
             className="absolute top-4 -right-3 bg-white rounded-full p-1 shadow-md transition-all duration-300 ease-in-out hover:scale-110 active:scale-95"
@@ -216,20 +222,12 @@ const Sidebar = () => {
             }}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <Image
-              src={ChevronIcon}
-              alt=""
-              width={24}
-              height={24}
-            />
+            <Image src={ChevronIcon} alt="" width={24} height={24} />
           </button>
         </div>
+
         <div className="w-full h-full px-6 overflow-hidden">
-          <NavSection
-            title="Main"
-            items={mainNavItems}
-            collapsed={collapsed}
-          />
+          <NavSection title="Main" items={mainNavItems} collapsed={collapsed} />
           <div className="pt-4">
             <NavSection
               title="Your Nodes"
@@ -238,12 +236,9 @@ const Sidebar = () => {
             />
           </div>
         </div>
+
         <div className="w-full pb-6 px-6 overflow-hidden">
-          <NavSection
-            title=""
-            items={helpNavItems}
-            collapsed={collapsed}
-          />
+          <NavSection title="" items={helpNavItems} collapsed={collapsed} />
         </div>
       </div>
     </div>
