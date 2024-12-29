@@ -1,4 +1,4 @@
-const ServerManager = require('../../../../utils/ServerManager');
+const ServerManager = require('../../../../utils/server-manager');
 
 module.exports = (req, res) => {
   ServerManager.checkConnection(req.body.host, (err, is_connected) => {

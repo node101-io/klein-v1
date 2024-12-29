@@ -1,4 +1,4 @@
-const SavedServers = require('../../../utils/savedServers');
+const SavedServers = require('../../../utils/saved-servers');
 
 module.exports = (req, res) => {
   SavedServers.save(req.body.server, (err, saved_servers) => {

@@ -1,4 +1,4 @@
-const SavedServers = require('../../../utils/savedServers');
+const SavedServers = require('../../../utils/saved-servers');
 
 module.exports = (req, res) => {
   SavedServers.deleteByHost(req.body.host, (err, saved_servers) => {

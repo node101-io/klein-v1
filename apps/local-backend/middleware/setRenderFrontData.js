@@ -1,4 +1,4 @@
-const SavedServers = require('../utils/savedServers');
+const SavedServers = require('../utils/saved-servers');
 
 const setFrontDisplayStyle = require('../utils/setFrontDisplayStyle');
 

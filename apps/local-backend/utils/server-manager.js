@@ -1,5 +1,7 @@
 const sshRequest = require('./sshRequest');
 
+const SavedServers = require('../utils/saved-servers');
+
 const checkDockerExistentCommand = require('../commands/docker/checkExistent');
 const checkDockerSetupCommand = require('../commands/docker/checkSetup');
 

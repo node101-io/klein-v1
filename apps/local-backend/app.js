@@ -23,7 +23,7 @@ dotenv.config();
 const AppKey = require('./utils/appKey');
 const Notifications = require('./utils/notifications');
 const Preferences = require('./utils/preferences');
-const SavedServers = require('./utils/savedServers');
+const SavedServers = require('./utils/saved-servers');
 const WebSocketServer = require('./utils/webSocketServer');
 
 const APP_PORT = process.env.APP_PORT || 10101;

@@ -1,4 +1,4 @@
-const SavedServers = require('../../../utils/savedServers');
+const SavedServers = require('../../../utils/saved-servers');
 
 module.exports = (req, res) => {
   if (!req.query.host || typeof req.query.host != 'string' || !req.query.host.trim().length)
