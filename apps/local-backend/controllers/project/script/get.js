@@ -12,7 +12,7 @@ module.exports = (req, res) => {
   if (!req.query.is_mainnet || typeof req.query.is_mainnet != 'string' || (req.query.is_mainnet != 'true' && req.query.is_mainnet != 'false'))
     return res.json({ err: 'bad_request' });
 
-  const url = `https://raw.githubusercontent.com/node101-io/klein-scripts-v1/main/${req.query.network}/${JSON.parse(req.query.is_mainnet) ? 'mainnet' : 'testnet'}/${req.query.project}`;
+  const url = `https://raw.githubusercontent.com/node101-io/klein-v1/main/packages/scripts/${req.query.network}/${JSON.parse(req.query.is_mainnet) ? 'mainnet' : 'testnet'}/${req.query.project}`;
 
   fetch(`${url}/docker-compose.yaml`, {
     json: false,

@@ -1,0 +1,44 @@
+services:
+  celestia:
+    build:
+      context: .
+      args:
+        GO_VERSION: 1.22
+        REPO: REPO_PLACEHOLDER
+        PROJECT_FOLDER: celestia-app
+        VERSION: VERSION_PLACEHOLDER
+        DAEMON_NAME: celestia-appd
+        CHAIN_ID: CHAIN_ID_PLACEHOLDER
+        MONIKER: MONIKER_PLACEHOLDER
+        GENESIS_FILE: GENESIS_FILE_PLACEHOLDER # TODO: example.rpc/genesis_chunked
+        DAEMON_HOME: /root/.celestia-app
+        ADDRBOOK: https://snapshots.polkachu.com/testnet-addrbook/celestia/addrbook.json
+        PEERS: PEERS_PLACEHOLDER
+        SEEDS: SEEDS_PLACEHOLDER
+        MIN_GAS_PRICE: MIN_GAS_PRICE_PLACEHOLDER
+        AVERAGE_GAS_PRICE: AVERAGE_GAS_PRICE_PLACEHOLDER
+        DENOM: DENOM_PLACEHOLDER
+        SNAPSHOT: https://testnet-files.itrocket.net/celestia/snap_celestia.tar.lz4
+    container_name: klein-node
+    restart: always
+    ports:
+      - 127.0.0.1:26657:26657
+      - 26656:26656
+      - 1317:1317
+      - 9090:9090
+    volumes:
+      - klein-node-volume:/root/.celestia-app
+      - klein-scripts-volume:/root/klein-scripts
+volumes:
+  klein-node-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: $HOME/klein-node-volume
+  klein-scripts-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: $HOME/klein-scripts-volume
