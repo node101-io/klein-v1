@@ -22,6 +22,7 @@ const RequirementItem: React.FC<RequirementItemProps> = ({ label, value }) => (
   </div>
 );
 
+
 const LoginPage: React.FC = () => {
   const [ipAddress, setIpAddress] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -35,7 +36,11 @@ const LoginPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const router = useRouter();
-  const { id } = router.query as { id: string };
+  const { id, from } = router.query as { id?: string; from?: string };
+
+  const isSidebarLogin = from === "sidebar"; 
+  const showSystemRequirements = !isSidebarLogin;
+  const buttonLabel = isSidebarLogin ? "Login" : "Install";
 
   useEffect(() => {
     if (id) {
@@ -48,7 +53,6 @@ const LoginPage: React.FC = () => {
           setError("Failed to load project data.");
         }
       };
-
       getProjectData();
     }
   }, [id]);
@@ -64,22 +68,25 @@ const LoginPage: React.FC = () => {
         {
           host: ipAddress,
           password,
-          will_install: true, // TODO: fix
+          will_install: !isSidebarLogin, 
         }
       );
       console.log(response.data);
+
       if (response.data.err === "authentication_failed") {
         setErrorMessage("Authentication failed. Please check your password.");
-        console.log(response.data);
       } else if (response.data.err === "invalid_host") {
         setErrorMessage("Invalid host. Please check your IP address.");
-        console.log(response.data);
       } else {
         setSuccessMessage("Successfully logged in!");
-        console.log(response.data);
-        router.push(`/install?id=${id}`);
+        if (isSidebarLogin) {
+          router.push("/node-overview");
+        } else {
+          router.push(`/install?id=${id}`);
+        }
       }
     } catch (err) {
+      console.error(err);
       setErrorMessage("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
@@ -89,14 +96,6 @@ const LoginPage: React.FC = () => {
   if (!project) {
     return <div>Loading project data...</div>;
   }
-
-  const willInstall = true;
-
-  const rentServers: Record<string, string> = {
-    AWS: "https://aws.amazon.com",
-    "Google Cloud": "https://cloud.google.com",
-    Azure: "https://azure.microsoft.com",
-  };
 
   return (
     <div className="flex flex-col md:flex-row h-full p-6 bg-gray rounded-xl">
@@ -115,19 +114,14 @@ const LoginPage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-x-2">
                   <h1 className="text-3xl font-semibold">{project.name}</h1>
-                  <Tooltip content="Click here to learn about Aleo">
+                  <Tooltip content={`Click here to learn about ${project.name}`}>
                     <a
                       href={project.urls.web}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-fit h-fit pt-1"
                     >
-                      <Image
-                        src={HelpIcon}
-                        alt="Help Icon"
-                        width={20}
-                        height={20}
-                      />
+                      <Image src={HelpIcon} alt="Help Icon" width={20} height={20} />
                     </a>
                   </Tooltip>
                 </div>
@@ -145,13 +139,8 @@ const LoginPage: React.FC = () => {
 
           <p className="my-6 text-gray-700">{project.description}</p>
 
-          {willInstall && (
+          {showSystemRequirements && (
             <div>
-              {/* <input
-                type="hidden"
-                value={project.chain_registry_identifier}
-              /> */}
-
               <div className="mb-6">
                 <h2 className="text-[16px] text-text_purple mb-4">
                   System Requirements
@@ -174,23 +163,32 @@ const LoginPage: React.FC = () => {
               <div>
                 <h2 className="text-[16px] mb-4">Rent a Server</h2>
                 <div className="flex items-center gap-4">
-                  {Object.entries(rentServers).map(
-                    ([name, url], index, array) => (
-                      <React.Fragment key={name}>
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#A6A6A6] hover:underline"
-                        >
-                          {name}
-                        </a>
-                        {index < array.length - 1 && (
-                          <span className="bg-[#A6A6A6] h-6 w-[1px]" />
-                        )}
-                      </React.Fragment>
-                    )
-                  )}
+                  <a
+                    href="https://aws.amazon.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A6A6A6] hover:underline"
+                  >
+                    AWS
+                  </a>
+                  <span className="bg-[#A6A6A6] h-6 w-[1px]" />
+                  <a
+                    href="https://cloud.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A6A6A6] hover:underline"
+                  >
+                    Google Cloud
+                  </a>
+                  <span className="bg-[#A6A6A6] h-6 w-[1px]" />
+                  <a
+                    href="https://azure.microsoft.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A6A6A6] hover:underline"
+                  >
+                    Azure
+                  </a>
                 </div>
               </div>
             </div>
@@ -202,7 +200,9 @@ const LoginPage: React.FC = () => {
       <div className="flex-1 p-6 flex flex-col justify-center items-center">
         <div className="w-full max-w-md">
           <h2 className="text-[36px] mb-6">
-            Sign in to your server to continue!
+            {isSidebarLogin
+              ? "Sign in to your server!"
+              : "Sign in to your server to continue!"}
           </h2>
           <form onSubmit={handleLogin}>
             <div className="mb-4">
@@ -287,24 +287,14 @@ const LoginPage: React.FC = () => {
               className="flex w-fit gap-x-12 py-2 px-4 bg-black text-white rounded-md hover:bg-opacity-90 focus:outline-none"
             >
               {isLoading
-                ? willInstall
-                  ? "Installing..."
-                  : "Logging in..."
-                : willInstall
-                ? "Install"
-                : "Login"}
-
-              <Image
-                src={InstallIcon}
-                alt="Install Icon"
-                width={24}
-                height={24}
-              />
+                ? isSidebarLogin
+                  ? "Logging in..."
+                  : "Installing..."
+                : buttonLabel}
+              <Image src={InstallIcon} alt="Install Icon" width={24} height={24} />
             </button>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            {successMessage && (
-              <p style={{ color: "green" }}>{successMessage}</p>
-            )}
+            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
           </form>
         </div>
       </div>
